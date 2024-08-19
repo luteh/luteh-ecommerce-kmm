@@ -12,3 +12,8 @@ This is a Kotlin Multiplatform project targeting Android, iOS.
 
 
 Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+
+
+Relax, this is just the beginning.
+
+My "Pet" project to channel my creativity in Kotlin Multiplatform Mobile development.
