@@ -1,0 +1,40 @@
+mutation Login($password: String!, $email: String!) {
+    login(password: $password, email: $email)
+}
+
+mutation CreateUser($email: String!, $password: String!, $name: String!, $phone: String!, $role_id: Int!) {
+    createUser(email: $email, password: $password, name: $name, phone: $phone, role_id: $role_id) {
+        id
+        email
+        name
+        phone
+        role_id
+    }
+}
+
+mutation UpdateUser($id: ID!, $email: String, $password: String) {
+    updateUser(id: $id, email: $email, password: $password) {
+        id
+        email
+        name
+        phone
+        role_id
+    }
+}
+
+query GetUser($id: ID!){
+    getUser(id: $id){
+        id
+        email
+        name
+        phone
+        role_id
+    }
+}
+
+query GetRoles{
+    getRoles {
+        id
+        name
+    }
+}

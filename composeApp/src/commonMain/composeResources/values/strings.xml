@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Luteh Ecommerce</string>
+    <string name="try_again">Try again</string>
+    <string name="data_is_empty">Data is empty</string>
+    <string name="sign_in_with_google">Sign In with Google</string>
+    <string name="go_to_website">Go to Website</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="or">or</string>
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="name">Name</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="register">Register</string>
+    <string name="don_t_have_an_account">Don\'t have an account?</string>
+    <string name="register_here">Register here</string>
+    <string name="your_role">Your Role</string>
+</resources>
