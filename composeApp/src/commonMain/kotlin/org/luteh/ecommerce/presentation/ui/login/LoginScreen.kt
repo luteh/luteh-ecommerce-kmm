@@ -81,7 +81,7 @@ fun LoginScreen(
                         modifier = Modifier
                             .padding(16.dp)
                     ) {
-                        RoundedTextField(ß
+                        RoundedTextField(
                             modifier = Modifier.fillMaxWidth(),
                             valueText = state.value.email,
                             onValueChange = {
