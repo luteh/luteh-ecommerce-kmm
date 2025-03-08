@@ -13,16 +13,17 @@ data class ProductDetailModel(
 ) {
     companion object {
         val dummy
-            get() = ProductDetailModel(
-                id = "habeo",
-                thumbnailImageUrl = "https://search.yahoo.com/search?p=melius",
-                name = "Verna Murray",
-                price = 16.17,
-                shopName = "Bobbie Davis",
-                rating = 18.19,
-                ratingCount = 5025,
-                description = "volumus",
-                imageUrls = listOf()
-            )
+            get() =
+                ProductDetailModel(
+                    id = "habeo",
+                    thumbnailImageUrl = "https://search.yahoo.com/search?p=melius",
+                    name = "Verna Murray",
+                    price = 16.17,
+                    shopName = "Bobbie Davis",
+                    rating = 18.19,
+                    ratingCount = 5025,
+                    description = "volumus",
+                    imageUrls = listOf(),
+                )
     }
 }

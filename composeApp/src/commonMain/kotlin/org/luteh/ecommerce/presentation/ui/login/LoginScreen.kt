@@ -54,9 +54,7 @@ fun LoginScreen(
     LaunchedEffect(key1 = Unit) {
         vm.effect.collect { effect ->
             when (effect) {
-                is LoginViewModel.Effect.ShowToast -> snackbarHostState.showSnackbar(
-                    effect.message
-                )
+                is LoginViewModel.Effect.ShowToast -> snackbarHostState.showSnackbar(effect.message)
 
                 LoginViewModel.Effect.NavigateToMainScreen -> onNavigateToMainScreen()
                 LoginViewModel.Effect.NavigateToRegisterScreen -> onNavigateToRegisterScreen()
@@ -66,10 +64,8 @@ fun LoginScreen(
 
     Scaffold(snackbarHost = { SnackbarHost(hostState = snackbarHostState) }) { paddingValue ->
         Box(
-            modifier = Modifier
-                .padding(paddingValue)
-                .fillMaxSize(),
-            contentAlignment = Alignment.Center
+            modifier = Modifier.padding(paddingValue).fillMaxSize(),
+            contentAlignment = Alignment.Center,
         ) {
             when (state.value.loginState) {
                 ResultState.Loading -> {
@@ -77,63 +73,50 @@ fun LoginScreen(
                 }
 
                 else -> {
-                    Column(
-                        modifier = Modifier
-                            .padding(16.dp)
-                    ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
                         RoundedTextField(
                             modifier = Modifier.fillMaxWidth(),
                             valueText = state.value.email,
                             onValueChange = {
-                                vm.processEvent(
-                                    LoginViewModel.Event.OnChangeEmailText(
-                                        it
-                                    )
-                                )
+                                vm.processEvent(LoginViewModel.Event.OnChangeEmailText(it))
                             },
                             labelText = stringResource(Res.string.email),
                             singleLine = true,
                             keyboardType = KeyboardType.Email,
-                            imeAction = ImeAction.Next
+                            imeAction = ImeAction.Next,
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         RoundedTextField(
                             modifier = Modifier.fillMaxWidth(),
                             valueText = state.value.password,
                             onValueChange = {
-                                vm.processEvent(
-                                    LoginViewModel.Event.OnChangePasswordText(
-                                        it
-                                    )
-                                )
+                                vm.processEvent(LoginViewModel.Event.OnChangePasswordText(it))
                             },
                             labelText = stringResource(Res.string.password),
                             visualTransformation = PasswordVisualTransformation('*'),
                             singleLine = true,
                             keyboardType = KeyboardType.Password,
-                            imeAction = ImeAction.Next
+                            imeAction = ImeAction.Next,
                         )
                         Spacer(modifier = Modifier.height(32.dp))
-                        Button(modifier = Modifier
-                            .fillMaxWidth()
-                            .height(50.dp),
+                        Button(
+                            modifier = Modifier.fillMaxWidth().height(50.dp),
                             shape = RoundedCornerShape(12.dp),
-                            onClick = { vm.processEvent(LoginViewModel.Event.OnClickLoginButton) }
+                            onClick = { vm.processEvent(LoginViewModel.Event.OnClickLoginButton) },
                         ) {
                             Text(text = stringResource(Res.string.login))
                         }
                         Spacer(modifier = Modifier.height(4.dp))
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Center
+                            horizontalArrangement = Arrangement.Center,
                         ) {
                             Text(text = stringResource(Res.string.don_t_have_an_account))
                             Spacer(modifier = Modifier.width(2.dp))
                             Text(
                                 text = stringResource(Res.string.register_here),
-                                modifier = Modifier
-                                    .padding(start = 4.dp)
-                                    .clickable {
+                                modifier =
+                                    Modifier.padding(start = 4.dp).clickable {
                                         vm.processEvent(LoginViewModel.Event.OnClickRegisterButton)
                                     },
                                 color = Color.Blue,
@@ -142,11 +125,13 @@ fun LoginScreen(
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
                             text = stringResource(Res.string.or),
-                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                            modifier = Modifier.align(Alignment.CenterHorizontally),
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         GoogleSignInButton(
-                            onClick = { vm.processEvent(LoginViewModel.Event.OnClickGoogleSignInButton) }
+                            onClick = {
+                                vm.processEvent(LoginViewModel.Event.OnClickGoogleSignInButton)
+                            }
                         )
                     }
                 }

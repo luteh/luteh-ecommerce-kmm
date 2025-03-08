@@ -30,13 +30,11 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 @Preview
-fun LoadingView(
-    modifier: Modifier = Modifier
-) {
+fun LoadingView(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         CircularProgressIndicator()
     }
@@ -48,13 +46,13 @@ fun ErrorImageView(iconSize: Dp = 100.dp) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.background(color = MaterialTheme.colorScheme.errorContainer)
+        modifier = Modifier.background(color = MaterialTheme.colorScheme.errorContainer),
     ) {
         Icon(
             Icons.Rounded.Error,
             contentDescription = null,
             tint = MaterialTheme.colorScheme.onErrorContainer,
-            modifier = Modifier.size(iconSize)
+            modifier = Modifier.size(iconSize),
         )
     }
 }
@@ -67,9 +65,7 @@ fun ErrorView(
     onClickRetry: () -> Unit,
 ) {
     Column(
-        modifier = modifier
-            .padding(paddingValues)
-            .padding(16.dp),
+        modifier = modifier.padding(paddingValues).padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -79,29 +75,21 @@ fun ErrorView(
             textAlign = TextAlign.Center,
         )
         Spacer(Modifier.height(8.dp))
-        OutlinedButton(onClick = onClickRetry) {
-            Text(text = stringResource(Res.string.try_again))
-        }
+        OutlinedButton(onClick = onClickRetry) { Text(text = stringResource(Res.string.try_again)) }
     }
 }
 
 @Composable
 @Preview
 private fun ErrorViewPreview() {
-    ErrorView(message = "Something went wrong") {
-    }
+    ErrorView(message = "Something went wrong") {}
 }
 
 @Composable
 @Preview
-fun EmptyView(
-    modifier: Modifier = Modifier,
-    paddingValues: PaddingValues = PaddingValues(0.dp),
-) {
+fun EmptyView(modifier: Modifier = Modifier, paddingValues: PaddingValues = PaddingValues(0.dp)) {
     Column(
-        modifier = modifier
-            .padding(paddingValues)
-            .padding(16.dp),
+        modifier = modifier.padding(paddingValues).padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {

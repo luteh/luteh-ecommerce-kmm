@@ -5,5 +5,5 @@ data class RegisterParam(
     val password: String,
     val name: String,
     val phone: String,
-    val roleId: String
+    val roleId: String,
 )

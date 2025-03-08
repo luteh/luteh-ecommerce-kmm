@@ -33,100 +33,68 @@ import org.luteh.ecommerce.presentation.ui.register.RegisterViewModel
 @Composable
 internal fun RegisterForm(
     state: RegisterViewModel.State,
-    processEvent: (event: RegisterViewModel.Event) -> Unit
+    processEvent: (event: RegisterViewModel.Event) -> Unit,
 ) {
-    Column(
-        modifier = Modifier
-            .padding(16.dp)
-    ) {
+    Column(modifier = Modifier.padding(16.dp)) {
         RoundedTextField(
             modifier = Modifier.fillMaxWidth(),
             valueText = state.email,
-            onValueChange = {
-                processEvent(
-                    RegisterViewModel.Event.OnChangeEmailText(
-                        it
-                    )
-                )
-            },
+            onValueChange = { processEvent(RegisterViewModel.Event.OnChangeEmailText(it)) },
             labelText = stringResource(Res.string.email),
             singleLine = true,
             keyboardType = KeyboardType.Email,
-            imeAction = ImeAction.Next
+            imeAction = ImeAction.Next,
         )
         Spacer(modifier = Modifier.height(16.dp))
         RoundedTextField(
             modifier = Modifier.fillMaxWidth(),
             valueText = state.password,
-            onValueChange = {
-                processEvent(
-                    RegisterViewModel.Event.OnChangePasswordText(
-                        it
-                    )
-                )
-            },
+            onValueChange = { processEvent(RegisterViewModel.Event.OnChangePasswordText(it)) },
             labelText = stringResource(Res.string.password),
             visualTransformation = PasswordVisualTransformation('*'),
             singleLine = true,
             keyboardType = KeyboardType.Password,
-            imeAction = ImeAction.Next
+            imeAction = ImeAction.Next,
         )
         Spacer(modifier = Modifier.height(16.dp))
         RoundedTextField(
             modifier = Modifier.fillMaxWidth(),
             valueText = state.name,
-            onValueChange = {
-                processEvent(
-                    RegisterViewModel.Event.OnChangeNameText(
-                        it
-                    )
-                )
-            },
+            onValueChange = { processEvent(RegisterViewModel.Event.OnChangeNameText(it)) },
             labelText = stringResource(Res.string.name),
             singleLine = true,
             keyboardType = KeyboardType.Text,
-            imeAction = ImeAction.Next
+            imeAction = ImeAction.Next,
         )
         Spacer(modifier = Modifier.height(16.dp))
         RoundedTextField(
             modifier = Modifier.fillMaxWidth(),
             valueText = state.phone,
-            onValueChange = {
-                processEvent(
-                    RegisterViewModel.Event.OnChangePhoneText(
-                        it
-                    )
-                )
-            },
+            onValueChange = { processEvent(RegisterViewModel.Event.OnChangePhoneText(it)) },
             labelText = stringResource(Res.string.phone_number),
             singleLine = true,
             keyboardType = KeyboardType.Phone,
-            imeAction = ImeAction.Done
+            imeAction = ImeAction.Done,
         )
         Spacer(modifier = Modifier.height(16.dp))
         RoundedDropdownField(
             modifier = Modifier.fillMaxWidth(),
             items = state.getRolesResult.getOrNull().orEmpty(),
             selectedItemText = state.selectedRole?.name.orEmpty(),
-            onItemSelected = {
-                processEvent(RegisterViewModel.Event.OnSelectRoleOption(it))
-            },
+            onItemSelected = { processEvent(RegisterViewModel.Event.OnSelectRoleOption(it)) },
             labelText = stringResource(Res.string.your_role),
-            dropdownItemText = { text, _ ->
-                Text(text = text.name)
-            }
+            dropdownItemText = { text, _ -> Text(text = text.name) },
         )
         Spacer(modifier = Modifier.height(32.dp))
         state.registerResult.let { registerResult ->
             when (registerResult) {
                 ResultState.Loading -> LoadingView()
                 else -> {
-                    Button(modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp),
+                    Button(
+                        modifier = Modifier.fillMaxWidth().height(50.dp),
                         shape = RoundedCornerShape(12.dp),
                         enabled = state.enableRegisterButton,
-                        onClick = { processEvent(RegisterViewModel.Event.OnClickRegisterButton) }
+                        onClick = { processEvent(RegisterViewModel.Event.OnClickRegisterButton) },
                     ) {
                         Text(text = stringResource(Res.string.register))
                     }
@@ -139,7 +107,5 @@ internal fun RegisterForm(
 @Composable
 @Preview
 private fun RegisterFormPreview() {
-    LutehTheme {
-        RegisterForm(RegisterViewModel.State(), {})
-    }
+    LutehTheme { RegisterForm(RegisterViewModel.State(), {}) }
 }

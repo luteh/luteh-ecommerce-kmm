@@ -7,5 +7,5 @@ data class ProductModel(
     val price: Double,
     val shopName: String,
     val rating: Double,
-    val ratingCount: Int
+    val ratingCount: Int,
 )

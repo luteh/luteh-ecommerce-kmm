@@ -37,12 +37,12 @@ fun <T> RoundedDropdownField(
             readOnly = true,
             trailingIcon = {
                 Icon(imageVector = Icons.Filled.ArrowDropDown, contentDescription = null)
-            }
+            },
         )
         DropdownMenu(
             modifier = dropDownModifier,
             expanded = expanded,
-            onDismissRequest = { expanded = false }
+            onDismissRequest = { expanded = false },
         ) {
             items.forEachIndexed { index, item ->
                 DropdownMenuItem(
@@ -50,12 +50,11 @@ fun <T> RoundedDropdownField(
                     onClick = {
                         onItemSelected(items[index])
                         expanded = false
-                    })
+                    },
+                )
             }
         }
-        Spacer(modifier = Modifier
-            .matchParentSize()
-            .clickable { expanded = true })
+        Spacer(modifier = Modifier.matchParentSize().clickable { expanded = true })
     }
 }
 
@@ -67,7 +66,6 @@ private fun RoundedDropdownFieldPreview() {
         selectedItemText = "Item 1",
         onItemSelected = {},
         labelText = "Label",
-        dropdownItemText = { text, _ ->
-            Text(text = text)
-        })
+        dropdownItemText = { text, _ -> Text(text = text) },
+    )
 }

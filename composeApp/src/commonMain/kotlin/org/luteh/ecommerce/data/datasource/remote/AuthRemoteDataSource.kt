@@ -5,13 +5,14 @@ import org.luteh.ecommerce.CreateUserMutation
 import org.luteh.ecommerce.GetRolesQuery
 import org.luteh.ecommerce.LoginMutation
 
-class AuthRemoteDataSource(
-    private val apolloClient: ApolloClient
-) {
+class AuthRemoteDataSource(private val apolloClient: ApolloClient) {
 
     suspend fun login(email: String, password: String): LoginMutation.Data {
-        val data = apolloClient.mutation(LoginMutation(password = password, email = email))
-            .execute().dataOrThrow()
+        val data =
+            apolloClient
+                .mutation(LoginMutation(password = password, email = email))
+                .execute()
+                .dataOrThrow()
         if (data.login.isNullOrBlank()) {
             throw RuntimeException("No user was found")
         }

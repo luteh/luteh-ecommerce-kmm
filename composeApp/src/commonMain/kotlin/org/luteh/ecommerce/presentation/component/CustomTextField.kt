@@ -44,63 +44,66 @@ fun RoundedTextField(
     imeAction: ImeAction = ImeAction.Default,
     trailingIcon: @Composable (() -> Unit)? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
-    colors: TextFieldColors = OutlinedTextFieldDefaults.colors()
+    colors: TextFieldColors = OutlinedTextFieldDefaults.colors(),
 ) {
-    var mObscured by remember { mutableStateOf(visualTransformation is PasswordVisualTransformation) }
+    var mObscured by remember {
+        mutableStateOf(visualTransformation is PasswordVisualTransformation)
+    }
 
     Column {
         OutlinedTextField(
             modifier = modifier,
-            visualTransformation = if (mObscured) PasswordVisualTransformation() else VisualTransformation.None,
+            visualTransformation =
+                if (mObscured) PasswordVisualTransformation() else VisualTransformation.None,
             value = valueText,
             onValueChange = onValueChange,
             shape = RoundedCornerShape(12.dp),
             enabled = enabled,
-            label = if (labelText.isNullOrBlank()) null else {
-                {
-                    Text(text = labelText)
-                }
-            },
+            label =
+                if (labelText.isNullOrBlank()) null
+                else {
+                    { Text(text = labelText) }
+                },
             readOnly = readOnly,
             singleLine = singleLine,
             leadingIcon = leadingIcon,
-            trailingIcon = trailingIcon
-                ?: if (visualTransformation is PasswordVisualTransformation) {
-                    {
-
-                        val icon =
-                            if (mObscured) Icons.Rounded.VisibilityOff else Icons.Rounded.Visibility
-                        Icon(
-                            modifier = Modifier.clickable { mObscured = !mObscured },
-                            imageVector = icon,
-                            contentDescription = null
-                        )
-                    }
-                } else null,
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = keyboardType,
-                imeAction = imeAction
-            ),
+            trailingIcon =
+                trailingIcon
+                    ?: if (visualTransformation is PasswordVisualTransformation) {
+                        {
+                            val icon =
+                                if (mObscured) Icons.Rounded.VisibilityOff
+                                else Icons.Rounded.Visibility
+                            Icon(
+                                modifier = Modifier.clickable { mObscured = !mObscured },
+                                imageVector = icon,
+                                contentDescription = null,
+                            )
+                        }
+                    } else null,
+            keyboardOptions =
+                KeyboardOptions.Default.copy(keyboardType = keyboardType, imeAction = imeAction),
             placeholder = {
                 Text(
                     text = placeholderText,
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        fontWeight = FontWeight.Medium,
-                    )
+                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
                 )
             },
-            supportingText = if (supportingText.isNullOrBlank()) null else {
-                {
-                    Text(
-                        text = supportingText,
-                        style = MaterialTheme.typography.bodySmall.copy(
-                            fontWeight = FontWeight.Medium
+            supportingText =
+                if (supportingText.isNullOrBlank()) null
+                else {
+                    {
+                        Text(
+                            text = supportingText,
+                            style =
+                                MaterialTheme.typography.bodySmall.copy(
+                                    fontWeight = FontWeight.Medium
+                                ),
                         )
-                    )
-                }
-            },
+                    }
+                },
             isError = isError,
-            colors = colors
+            colors = colors,
         )
     }
 }

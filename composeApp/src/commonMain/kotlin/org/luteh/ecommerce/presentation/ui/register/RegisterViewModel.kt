@@ -9,7 +9,9 @@ import org.luteh.ecommerce.presentation.core.BaseViewModel
 import org.luteh.ecommerce.presentation.core.ResultState
 
 class RegisterViewModel(private val authRepository: AuthRepository) :
-    BaseViewModel<RegisterViewModel.State, RegisterViewModel.Event, RegisterViewModel.Effect>(State()) {
+    BaseViewModel<RegisterViewModel.State, RegisterViewModel.Event, RegisterViewModel.Effect>(
+        State()
+    ) {
 
     init {
         getUserRoles()
@@ -31,41 +33,42 @@ class RegisterViewModel(private val authRepository: AuthRepository) :
     private fun submitRegistration() {
         viewModelScope.launch {
             updateState { it.copy(registerResult = ResultState.Loading) }
-            authRepository.register(
-                RegisterParam(
-                    email = state.value.email,
-                    password = state.value.password,
-                    name = state.value.name,
-                    phone = state.value.phone,
-                    roleId = state.value.selectedRole!!.id
+            authRepository
+                .register(
+                    RegisterParam(
+                        email = state.value.email,
+                        password = state.value.password,
+                        name = state.value.name,
+                        phone = state.value.phone,
+                        roleId = state.value.selectedRole!!.id,
+                    )
                 )
-            ).fold(
-                { exception ->
-                    updateState { it.copy(registerResult = ResultState.Error(exception)) }
-                    sendEffect(Effect.ShowToast(exception.message ?: "Something went wrong"))
-                },
-                {
-                    updateState { it.copy(registerResult = ResultState.Success(Unit)) }
-                    sendEffect(Effect.ShowToast("Registration successful"))
-                    sendEffect(Effect.NavigateBack)
-                }
-
-            )
+                .fold(
+                    { exception ->
+                        updateState { it.copy(registerResult = ResultState.Error(exception)) }
+                        sendEffect(Effect.ShowToast(exception.message ?: "Something went wrong"))
+                    },
+                    {
+                        updateState { it.copy(registerResult = ResultState.Success(Unit)) }
+                        sendEffect(Effect.ShowToast("Registration successful"))
+                        sendEffect(Effect.NavigateBack)
+                    },
+                )
         }
     }
 
     private fun getUserRoles() {
         viewModelScope.launch {
             updateState { it.copy(getRolesResult = ResultState.Loading) }
-            authRepository.getUserRoles().fold(
-                { exception ->
-                    updateState { it.copy(getRolesResult = ResultState.Error(exception)) }
-                    sendEffect(Effect.ShowToast(exception.message ?: "Something went wrong"))
-                },
-                { data ->
-                    updateState { it.copy(getRolesResult = ResultState.Success(data)) }
-                }
-            )
+            authRepository
+                .getUserRoles()
+                .fold(
+                    { exception ->
+                        updateState { it.copy(getRolesResult = ResultState.Error(exception)) }
+                        sendEffect(Effect.ShowToast(exception.message ?: "Something went wrong"))
+                    },
+                    { data -> updateState { it.copy(getRolesResult = ResultState.Success(data)) } },
+                )
         }
     }
 
@@ -97,7 +100,8 @@ class RegisterViewModel(private val authRepository: AuthRepository) :
     private fun validateForm() {
         updateState {
             it.copy(
-                enableRegisterButton = it.email.isNotBlank() &&
+                enableRegisterButton =
+                    it.email.isNotBlank() &&
                         it.password.isNotBlank() &&
                         it.name.isNotBlank() &&
                         it.phone.isNotBlank() &&
@@ -114,22 +118,30 @@ class RegisterViewModel(private val authRepository: AuthRepository) :
         val name: String = "",
         val phone: String = "",
         val selectedRole: UserRole? = null,
-        val enableRegisterButton: Boolean = false
+        val enableRegisterButton: Boolean = false,
     )
 
     sealed interface Event {
         data class OnChangeEmailText(val value: String) : Event
+
         data class OnChangePasswordText(val value: String) : Event
+
         data class OnChangeNameText(val value: String) : Event
+
         data class OnChangePhoneText(val value: String) : Event
+
         data class OnSelectRoleOption(val value: UserRole) : Event
+
         data object OnClickRegisterButton : Event
+
         data object OnClickRefreshButton : Event
+
         data object OnClickBackButton : Event
     }
 
     sealed interface Effect {
         data class ShowToast(val message: String) : Effect
+
         data object NavigateBack : Effect
     }
 }

@@ -25,21 +25,15 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun GoogleSignInButton(
-    onClick: () -> Unit
-) {
+fun GoogleSignInButton(onClick: () -> Unit) {
     Button(
         onClick = onClick,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(50.dp),
+        modifier = Modifier.fillMaxWidth().height(50.dp),
         shape = RoundedCornerShape(12.dp),
         colors = ButtonDefaults.buttonColors(White),
-        elevation = ButtonDefaults.buttonElevation(defaultElevation = 10.dp)
+        elevation = ButtonDefaults.buttonElevation(defaultElevation = 10.dp),
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 painter = painterResource(Res.drawable.ic_google),
                 contentDescription = "Google icon",
@@ -50,7 +44,7 @@ fun GoogleSignInButton(
                 color = Black,
                 fontWeight = FontWeight.W600,
                 fontSize = 16.sp,
-                modifier = Modifier.padding(start = 10.dp)
+                modifier = Modifier.padding(start = 10.dp),
             )
         }
     }

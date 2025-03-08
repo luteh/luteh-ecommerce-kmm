@@ -40,46 +40,56 @@ fun RegisterScreen(vm: RegisterViewModel = koinInject(), onNavigateBack: () -> U
         vm.effect.collect { effect ->
             when (effect) {
                 RegisterViewModel.Effect.NavigateBack -> onNavigateBack()
-                is RegisterViewModel.Effect.ShowToast -> snackbarHostState.showSnackbar(effect.message)
+                is RegisterViewModel.Effect.ShowToast ->
+                    snackbarHostState.showSnackbar(effect.message)
             }
         }
     }
 
-    Scaffold(snackbarHost = { SnackbarHost(hostState = snackbarHostState) }, topBar = {
-        TopAppBar(
-            title = {
-                Text(
-                    text = stringResource(Res.string.register),
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
-            },
-            colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary),
-            navigationIcon = {
-                IconButton(onClick = { vm.processEvent(RegisterViewModel.Event.OnClickBackButton) }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onPrimary,
+    Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(Res.string.register),
+                        color = MaterialTheme.colorScheme.onPrimary,
                     )
-                }
-            }
-        )
-    }) { paddingValues ->
+                },
+                colors =
+                    TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primary
+                    ),
+                navigationIcon = {
+                    IconButton(
+                        onClick = { vm.processEvent(RegisterViewModel.Event.OnClickBackButton) }
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onPrimary,
+                        )
+                    }
+                },
+            )
+        },
+    ) { paddingValues ->
         Box(
-            modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize(),
-            contentAlignment = Alignment.Center
+            modifier = Modifier.padding(paddingValues).fillMaxSize(),
+            contentAlignment = Alignment.Center,
         ) {
             state.value.getRolesResult.let { result ->
                 when (result) {
-                    is ResultState.Error -> ErrorView(message = result.exception.message.orEmpty()) {
-                        vm.processEvent(RegisterViewModel.Event.OnClickRefreshButton)
-                    }
+                    is ResultState.Error ->
+                        ErrorView(message = result.exception.message.orEmpty()) {
+                            vm.processEvent(RegisterViewModel.Event.OnClickRefreshButton)
+                        }
 
-                    is ResultState.Success -> RegisterForm(state.value, processEvent = { event ->
-                        vm.processEvent(event)
-                    })
+                    is ResultState.Success ->
+                        RegisterForm(
+                            state.value,
+                            processEvent = { event -> vm.processEvent(event) },
+                        )
 
                     else -> {
                         LoadingView(modifier = Modifier.align(Alignment.Center))
@@ -89,5 +99,3 @@ fun RegisterScreen(vm: RegisterViewModel = koinInject(), onNavigateBack: () -> U
         }
     }
 }
-
-

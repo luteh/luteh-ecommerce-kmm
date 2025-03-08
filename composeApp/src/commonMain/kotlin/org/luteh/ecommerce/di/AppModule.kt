@@ -23,15 +23,13 @@ fun appModule() = module {
     single { provideApolloClient() }
 }
 
-private fun provideApolloClient(
-): ApolloClient {
-    val serverUrl = if (getPlatform().isIos) {
-        "http://localhost:4000/graphql"
-    } else {
-        "http://10.0.2.2:4000/graphql"
-    }
+private fun provideApolloClient(): ApolloClient {
+    val serverUrl =
+        if (getPlatform().isIos) {
+            "http://localhost:4000/graphql"
+        } else {
+            "http://10.0.2.2:4000/graphql"
+        }
 
-    return ApolloClient.Builder()
-        .serverUrl(serverUrl)
-        .build();
+    return ApolloClient.Builder().serverUrl(serverUrl).build()
 }

@@ -18,9 +18,7 @@ import org.luteh.ecommerce.presentation.ui.register.RegisterScreen
 @Composable
 @Preview
 fun App() {
-    KoinApplication(application = {
-        modules(appModule())
-    }) {
+    KoinApplication(application = { modules(appModule()) }) {
         LutehTheme {
             val navigator = rememberNavController()
 
@@ -28,39 +26,40 @@ fun App() {
                 NavHost(
                     navController = navigator,
                     startDestination = AppNavigation.Login.route,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 ) {
                     composable(route = AppNavigation.Login.route) {
                         LoginScreen(
                             onNavigateToMainScreen = {},
                             onNavigateToRegisterScreen = {
                                 navigator.navigate(AppNavigation.Register.route)
-                            })
+                            },
+                        )
                     }
                     composable(route = AppNavigation.Register.route) {
-                        RegisterScreen(onNavigateBack = {
-                            navigator.popBackStack()
-                        })
+                        RegisterScreen(onNavigateBack = { navigator.popBackStack() })
                     }
                 }
             }
 
-//            var showContent by remember { mutableStateOf(false) }
-//            Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-//                Button(onClick = { showContent = !showContent }) {
-//                    Text("Click me!")
-//                }
-//                AnimatedVisibility(showContent) {
-//                    val greeting = remember { Greeting().greet() }
-//                    Column(
-//                        Modifier.fillMaxWidth(),
-//                        horizontalAlignment = Alignment.CenterHorizontally
-//                    ) {
-//                        Image(painterResource(Res.drawable.compose_multiplatform), null)
-//                        Text("Compose: $greeting")
-//                    }
-//                }
-//            }
+            //            var showContent by remember { mutableStateOf(false) }
+            //            Column(Modifier.fillMaxWidth(), horizontalAlignment =
+            // Alignment.CenterHorizontally) {
+            //                Button(onClick = { showContent = !showContent }) {
+            //                    Text("Click me!")
+            //                }
+            //                AnimatedVisibility(showContent) {
+            //                    val greeting = remember { Greeting().greet() }
+            //                    Column(
+            //                        Modifier.fillMaxWidth(),
+            //                        horizontalAlignment = Alignment.CenterHorizontally
+            //                    ) {
+            //                        Image(painterResource(Res.drawable.compose_multiplatform),
+            // null)
+            //                        Text("Compose: $greeting")
+            //                    }
+            //                }
+            //            }
         }
     }
 }
