@@ -9,4 +9,6 @@ sealed class AppNavigation(val route: String, val arguments: List<NamedNavArgume
     data object Login : AppNavigation(route = "Login", arguments = emptyList())
 
     data object Register : AppNavigation(route = "Register", arguments = emptyList())
+
+    data object Home : AppNavigation(route = "Home", arguments = emptyList())
 }

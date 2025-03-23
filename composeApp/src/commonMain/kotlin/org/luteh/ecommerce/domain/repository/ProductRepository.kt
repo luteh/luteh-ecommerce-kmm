@@ -5,4 +5,6 @@ import org.luteh.ecommerce.domain.model.ProductDetailModel
 
 interface ProductRepository {
     suspend fun getProduct(id: String): Either<Exception, ProductDetailModel>
+
+    suspend fun getProducts(): Either<Exception, List<ProductDetailModel>>
 }

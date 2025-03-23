@@ -7,11 +7,13 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navOptions
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.KoinApplication
 import org.luteh.ecommerce.di.appModule
 import org.luteh.ecommerce.presentation.navigation.AppNavigation
 import org.luteh.ecommerce.presentation.theme.LutehTheme
+import org.luteh.ecommerce.presentation.ui.home.HomeScreen
 import org.luteh.ecommerce.presentation.ui.login.LoginScreen
 import org.luteh.ecommerce.presentation.ui.register.RegisterScreen
 
@@ -30,7 +32,15 @@ fun App() {
                 ) {
                     composable(route = AppNavigation.Login.route) {
                         LoginScreen(
-                            onNavigateToMainScreen = {},
+                            onNavigateToMainScreen = {
+                                navigator.navigate(
+                                    AppNavigation.Home.route,
+                                    navOptions {
+                                        popUpTo(AppNavigation.Login.route) { inclusive = true }
+                                        launchSingleTop = true
+                                    },
+                                )
+                            },
                             onNavigateToRegisterScreen = {
                                 navigator.navigate(AppNavigation.Register.route)
                             },
@@ -39,6 +49,7 @@ fun App() {
                     composable(route = AppNavigation.Register.route) {
                         RegisterScreen(onNavigateBack = { navigator.popBackStack() })
                     }
+                    composable(route = AppNavigation.Home.route) { HomeScreen() }
                 }
             }
 

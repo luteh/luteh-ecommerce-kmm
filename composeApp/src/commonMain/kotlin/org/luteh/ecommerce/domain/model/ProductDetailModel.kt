@@ -25,5 +25,32 @@ data class ProductDetailModel(
                     description = "volumus",
                     imageUrls = listOf(),
                 )
+
+        val dummies
+            get() =
+                listOf(
+                    ProductDetailModel(
+                        id = "habeo",
+                        thumbnailImageUrl = "https://search.yahoo.com/search?p=melius",
+                        name = "Verna Murray",
+                        price = 16.17,
+                        shopName = "Bobbie Davis",
+                        rating = 18.19,
+                        ratingCount = 5025,
+                        description = "volumus",
+                        imageUrls = listOf(),
+                    ),
+                    ProductDetailModel(
+                        id = "habeo",
+                        thumbnailImageUrl = "https://search.yahoo.com/search?p=melius",
+                        name = "Verna Murray",
+                        price = 16.17,
+                        shopName = "Bobbie Davis",
+                        rating = 18.19,
+                        ratingCount = 5025,
+                        description = "volumus",
+                        imageUrls = listOf(),
+                    ),
+                )
     }
 }

@@ -2,6 +2,8 @@ package org.luteh.ecommerce.di
 
 import com.apollographql.apollo.ApolloClient
 import org.koin.dsl.module
+import org.luteh.ecommerce.data.config.FeatureConfig
+import org.luteh.ecommerce.data.config.FeatureConfigImpl
 import org.luteh.ecommerce.data.datasource.remote.AuthRemoteDataSource
 import org.luteh.ecommerce.data.repository.AuthRepositoryImpl
 import org.luteh.ecommerce.data.repository.ProductRepositoryImpl
@@ -15,12 +17,14 @@ fun appModule() = module {
     factory { LoginViewModel(get()) }
     factory { RegisterViewModel(get()) }
 
-    single<AuthRepository> { AuthRepositoryImpl(get()) }
+    single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
     single<ProductRepository> { ProductRepositoryImpl() }
 
     single { AuthRemoteDataSource(get()) }
 
     single { provideApolloClient() }
+
+    single<FeatureConfig> { FeatureConfigImpl() }
 }
 
 private fun provideApolloClient(): ApolloClient {
