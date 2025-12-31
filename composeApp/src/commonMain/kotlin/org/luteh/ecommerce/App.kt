@@ -16,6 +16,7 @@ import org.luteh.ecommerce.presentation.theme.LutehTheme
 import org.luteh.ecommerce.presentation.ui.home.HomeScreen
 import org.luteh.ecommerce.presentation.ui.login.LoginScreen
 import org.luteh.ecommerce.presentation.ui.register.RegisterScreen
+import org.luteh.ecommerce.presentation.ui.splash.SplashScreen
 
 @Composable
 @Preview
@@ -27,9 +28,22 @@ fun App() {
             Box(modifier = Modifier.fillMaxSize()) {
                 NavHost(
                     navController = navigator,
-                    startDestination = AppNavigation.Login.route,
+                    startDestination = AppNavigation.Splash.route,
                     modifier = Modifier.fillMaxSize(),
                 ) {
+                    composable(route = AppNavigation.Splash.route) {
+                        SplashScreen(
+                            onNavigateToHome = {
+                                navigator.navigate(
+                                    AppNavigation.Home.route,
+                                    navOptions {
+                                        popUpTo(AppNavigation.Splash.route) { inclusive = true }
+                                        launchSingleTop = true
+                                    },
+                                )
+                            }
+                        )
+                    }
                     composable(route = AppNavigation.Login.route) {
                         LoginScreen(
                             onNavigateToMainScreen = {
@@ -44,33 +58,19 @@ fun App() {
                             onNavigateToRegisterScreen = {
                                 navigator.navigate(AppNavigation.Register.route)
                             },
+                            onNavigateBack = { navigator.popBackStack() },
                         )
                     }
                     composable(route = AppNavigation.Register.route) {
                         RegisterScreen(onNavigateBack = { navigator.popBackStack() })
                     }
-                    composable(route = AppNavigation.Home.route) { HomeScreen() }
+                    composable(route = AppNavigation.Home.route) {
+                        HomeScreen(
+                            onNavigateToLogin = { navigator.navigate(AppNavigation.Login.route) }
+                        )
+                    }
                 }
             }
-
-            //            var showContent by remember { mutableStateOf(false) }
-            //            Column(Modifier.fillMaxWidth(), horizontalAlignment =
-            // Alignment.CenterHorizontally) {
-            //                Button(onClick = { showContent = !showContent }) {
-            //                    Text("Click me!")
-            //                }
-            //                AnimatedVisibility(showContent) {
-            //                    val greeting = remember { Greeting().greet() }
-            //                    Column(
-            //                        Modifier.fillMaxWidth(),
-            //                        horizontalAlignment = Alignment.CenterHorizontally
-            //                    ) {
-            //                        Image(painterResource(Res.drawable.compose_multiplatform),
-            // null)
-            //                        Text("Compose: $greeting")
-            //                    }
-            //                }
-            //            }
         }
     }
 }
