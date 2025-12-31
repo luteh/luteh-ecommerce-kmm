@@ -4,27 +4,33 @@ import com.apollographql.apollo.ApolloClient
 import org.koin.dsl.module
 import org.luteh.ecommerce.data.config.FeatureConfig
 import org.luteh.ecommerce.data.config.FeatureConfigImpl
-import org.luteh.ecommerce.data.datasource.remote.AuthRemoteDataSource
+import org.luteh.ecommerce.data.local.AppDatabase
 import org.luteh.ecommerce.data.repository.AuthRepositoryImpl
+import org.luteh.ecommerce.data.repository.CartRepositoryImpl
 import org.luteh.ecommerce.data.repository.ProductRepositoryImpl
 import org.luteh.ecommerce.domain.repository.AuthRepository
+import org.luteh.ecommerce.domain.repository.CartRepository
 import org.luteh.ecommerce.domain.repository.ProductRepository
 import org.luteh.ecommerce.getPlatform
 import org.luteh.ecommerce.presentation.ui.login.LoginViewModel
+import org.luteh.ecommerce.presentation.ui.product_detail.ProductDetailViewModel
 import org.luteh.ecommerce.presentation.ui.register.RegisterViewModel
 
 fun appModule() = module {
     factory { LoginViewModel(get()) }
     factory { RegisterViewModel(get()) }
+    factory { ProductDetailViewModel(get()) }
 
     single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
     single<ProductRepository> { ProductRepositoryImpl() }
 
-    single { AuthRemoteDataSource(get()) }
-
-    single { provideApolloClient() }
+    includes(platformModule())
+    single { get<AppDatabase>().cartDao() }
+    single<CartRepository> { CartRepositoryImpl(get()) }
 
     single<FeatureConfig> { FeatureConfigImpl() }
+
+    single { provideApolloClient() }
 }
 
 private fun provideApolloClient(): ApolloClient {

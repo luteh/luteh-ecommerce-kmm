@@ -1,5 +1,8 @@
 package org.luteh.ecommerce
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -8,27 +11,29 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import androidx.navigation.toRoute
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.KoinApplication
+import org.koin.dsl.KoinAppDeclaration
 import org.luteh.ecommerce.di.appModule
 import org.luteh.ecommerce.presentation.navigation.AppNavigation
 import org.luteh.ecommerce.presentation.theme.LutehTheme
 import org.luteh.ecommerce.presentation.ui.home.HomeScreen
 import org.luteh.ecommerce.presentation.ui.login.LoginScreen
+import org.luteh.ecommerce.presentation.ui.product_detail.ProductDetailScreen
 import org.luteh.ecommerce.presentation.ui.product_list.ProductListScreen
 import org.luteh.ecommerce.presentation.ui.register.RegisterScreen
 import org.luteh.ecommerce.presentation.ui.splash.SplashScreen
 
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
-import androidx.navigation.toRoute
-import org.luteh.ecommerce.presentation.ui.product_detail.ProductDetailScreen
-
 @Composable
 @Preview
-fun App() {
-    KoinApplication(application = { modules(appModule()) }) {
+fun App(
+    koinConfig: KoinAppDeclaration? = null
+) {
+    KoinApplication(application = {
+        modules(appModule())
+        koinConfig?.invoke(this)
+    }) {
         LutehTheme {
             val navigator = rememberNavController()
 
