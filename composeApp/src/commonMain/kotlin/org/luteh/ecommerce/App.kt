@@ -15,6 +15,7 @@ import org.luteh.ecommerce.presentation.navigation.AppNavigation
 import org.luteh.ecommerce.presentation.theme.LutehTheme
 import org.luteh.ecommerce.presentation.ui.home.HomeScreen
 import org.luteh.ecommerce.presentation.ui.login.LoginScreen
+import org.luteh.ecommerce.presentation.ui.product_list.ProductListScreen
 import org.luteh.ecommerce.presentation.ui.register.RegisterScreen
 import org.luteh.ecommerce.presentation.ui.splash.SplashScreen
 
@@ -66,8 +67,12 @@ fun App() {
                     }
                     composable(route = AppNavigation.Home.route) {
                         HomeScreen(
-                            onNavigateToLogin = { navigator.navigate(AppNavigation.Login.route) }
+                            onNavigateToLogin = { navigator.navigate(AppNavigation.Login.route) },
+                            onNavigateToProductList = { navigator.navigate(AppNavigation.ProductList.route) }
                         )
+                    }
+                    composable(route = AppNavigation.ProductList.route) {
+                        ProductListScreen(onNavigateBack = { navigator.popBackStack() })
                     }
                 }
             }

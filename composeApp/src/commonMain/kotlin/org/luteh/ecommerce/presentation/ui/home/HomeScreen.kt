@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -25,8 +24,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Login
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material.icons.rounded.Checkroom
@@ -56,18 +53,22 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import org.luteh.ecommerce.presentation.ui.common.ProductItem
+import org.luteh.ecommerce.presentation.ui.common.dummyProducts
 
 @Composable
-fun HomeScreen(onNavigateToLogin: () -> Unit) {
+fun HomeScreen(onNavigateToLogin: () -> Unit, onNavigateToProductList: () -> Unit) {
     Scaffold(topBar = { HomeTopBar(onLoginClick = onNavigateToLogin) }) { paddingValues ->
-        HomeContent(modifier = Modifier.padding(paddingValues))
+        HomeContent(
+            modifier = Modifier.padding(paddingValues),
+            onNavigateToProductList = onNavigateToProductList
+        )
     }
 }
 
 @Composable
-fun HomeContent(modifier: Modifier = Modifier) {
+fun HomeContent(modifier: Modifier = Modifier, onNavigateToProductList: () -> Unit) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = modifier.fillMaxSize(),
@@ -82,10 +83,10 @@ fun HomeContent(modifier: Modifier = Modifier) {
         item(span = { GridItemSpan(2) }) { CategoryList() }
 
         item(span = { GridItemSpan(2) }) {
-            SectionHeader(title = "Popular Products", onSeeAllClick = {})
+            SectionHeader(title = "Popular Products", onSeeAllClick = onNavigateToProductList)
         }
 
-        items(dummyProducts) { product -> ProductItem(product = product) }
+        items(dummyProducts.take(6)) { product -> ProductItem(product = product) }
     }
 }
 
@@ -249,82 +250,5 @@ fun CategoryItem(category: Category) {
     }
 }
 
-@Composable
-fun ProductItem(product: Product) {
-    Card(
-        modifier = Modifier.fillMaxWidth().clickable {},
-        shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-    ) {
-        Column {
-            Box(
-                modifier = Modifier.fillMaxWidth().height(120.dp).background(product.imageColor),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(
-                    imageVector = Icons.Rounded.Checkroom,
-                    contentDescription = null,
-                    tint = Color.White.copy(alpha = 0.5f),
-                    modifier = Modifier.size(48.dp),
-                )
-                IconButton(
-                    onClick = {},
-                    modifier = Modifier.align(Alignment.TopEnd).padding(4.dp),
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.FavoriteBorder,
-                        contentDescription = "Favorite",
-                        tint = Color.White,
-                    )
-                }
-            }
-
-            Column(modifier = Modifier.padding(12.dp)) {
-                Text(
-                    text = product.name,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Medium,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Default.Star,
-                        contentDescription = null,
-                        modifier = Modifier.size(14.dp),
-                        tint = Color(0xFFFFC107),
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = product.rating.toString(),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = product.price,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary,
-                )
-            }
-        }
-    }
-}
-
 data class Category(val name: String, val icon: ImageVector)
 
-data class Product(val name: String, val price: String, val rating: Double, val imageColor: Color)
-
-val dummyProducts =
-    listOf(
-        Product("Wireless Headphones", "$129.99", 4.5, Color(0xFFE57373)),
-        Product("Smart Watch Series 7", "$399.00", 4.8, Color(0xFF81C784)),
-        Product("Running Shoes", "$89.95", 4.3, Color(0xFF64B5F6)),
-        Product("Cotton T-Shirt", "$24.99", 4.1, Color(0xFFFFD54F)),
-        Product("Leather Backpack", "$149.50", 4.7, Color(0xFFBA68C8)),
-        Product("Sunglasses", "$59.00", 4.4, Color(0xFF4DB6AC)),
-    )
