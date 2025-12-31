@@ -43,7 +43,7 @@ import org.luteh.ecommerce.presentation.ui.common.dummyProducts
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductListScreen(onNavigateBack: () -> Unit) {
+fun ProductListScreen(onNavigateBack: () -> Unit, onNavigateToProductDetail: (String) -> Unit) {
     var searchQuery by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf<String?>(null) }
     var products by remember { mutableStateOf(dummyProducts) }
@@ -122,7 +122,10 @@ fun ProductListScreen(onNavigateBack: () -> Unit) {
                 modifier = Modifier.fillMaxSize()
             ) {
                 items(filteredProducts) { product ->
-                    ProductItem(product = product)
+                    ProductItem(
+                        product = product,
+                        onClick = { onNavigateToProductDetail(product.id) }
+                    )
                 }
 
                 if (isLoading) {

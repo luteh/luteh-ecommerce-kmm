@@ -1,16 +1,24 @@
 package org.luteh.ecommerce.presentation.navigation
 
-import androidx.navigation.NamedNavArgument
+import kotlinx.serialization.Serializable
 
-sealed class AppNavigation(val route: String, val arguments: List<NamedNavArgument>) {
+sealed interface AppNavigation {
 
-    data object Splash : AppNavigation(route = "Splash", arguments = emptyList())
+    @Serializable
+    data object Splash : AppNavigation
 
-    data object Login : AppNavigation(route = "Login", arguments = emptyList())
+    @Serializable
+    data object Login : AppNavigation
 
-    data object Register : AppNavigation(route = "Register", arguments = emptyList())
+    @Serializable
+    data object Register : AppNavigation
 
-    data object Home : AppNavigation(route = "Home", arguments = emptyList())
+    @Serializable
+    data object Home : AppNavigation
 
-    data object ProductList : AppNavigation(route = "ProductList", arguments = emptyList())
+    @Serializable
+    data object ProductList : AppNavigation
+
+    @Serializable
+    data class ProductDetail(val productId: String) : AppNavigation
 }

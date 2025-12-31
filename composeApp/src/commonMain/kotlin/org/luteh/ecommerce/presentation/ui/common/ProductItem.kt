@@ -31,9 +31,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ProductItem(product: ProductUiModel) {
+fun ProductItem(product: ProductUiModel, onClick: () -> Unit) {
     Card(
-        modifier = Modifier.fillMaxWidth().clickable {},
+        modifier = Modifier.fillMaxWidth().clickable(onClick = onClick),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),

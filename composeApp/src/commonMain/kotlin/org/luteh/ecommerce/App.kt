@@ -19,6 +19,12 @@ import org.luteh.ecommerce.presentation.ui.product_list.ProductListScreen
 import org.luteh.ecommerce.presentation.ui.register.RegisterScreen
 import org.luteh.ecommerce.presentation.ui.splash.SplashScreen
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.navigation.toRoute
+import org.luteh.ecommerce.presentation.ui.product_detail.ProductDetailScreen
+
 @Composable
 @Preview
 fun App() {
@@ -29,50 +35,69 @@ fun App() {
             Box(modifier = Modifier.fillMaxSize()) {
                 NavHost(
                     navController = navigator,
-                    startDestination = AppNavigation.Splash.route,
+                    startDestination = AppNavigation.Splash,
                     modifier = Modifier.fillMaxSize(),
+                    enterTransition = { slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(300)) },
+                    exitTransition = { slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(300)) },
+                    popEnterTransition = { slideInHorizontally(initialOffsetX = { -it }, animationSpec = tween(300)) },
+                    popExitTransition = { slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(300)) }
                 ) {
-                    composable(route = AppNavigation.Splash.route) {
+                    composable<AppNavigation.Splash> {
                         SplashScreen(
                             onNavigateToHome = {
                                 navigator.navigate(
-                                    AppNavigation.Home.route,
+                                    AppNavigation.Home,
                                     navOptions {
-                                        popUpTo(AppNavigation.Splash.route) { inclusive = true }
+                                        popUpTo(AppNavigation.Splash) { inclusive = true }
                                         launchSingleTop = true
                                     },
                                 )
                             }
                         )
                     }
-                    composable(route = AppNavigation.Login.route) {
+                    composable<AppNavigation.Login> {
                         LoginScreen(
                             onNavigateToMainScreen = {
                                 navigator.navigate(
-                                    AppNavigation.Home.route,
+                                    AppNavigation.Home,
                                     navOptions {
-                                        popUpTo(AppNavigation.Login.route) { inclusive = true }
+                                        popUpTo(AppNavigation.Login) { inclusive = true }
                                         launchSingleTop = true
                                     },
                                 )
                             },
                             onNavigateToRegisterScreen = {
-                                navigator.navigate(AppNavigation.Register.route)
+                                navigator.navigate(AppNavigation.Register)
                             },
                             onNavigateBack = { navigator.popBackStack() },
                         )
                     }
-                    composable(route = AppNavigation.Register.route) {
+                    composable<AppNavigation.Register> {
                         RegisterScreen(onNavigateBack = { navigator.popBackStack() })
                     }
-                    composable(route = AppNavigation.Home.route) {
+                    composable<AppNavigation.Home> {
                         HomeScreen(
-                            onNavigateToLogin = { navigator.navigate(AppNavigation.Login.route) },
-                            onNavigateToProductList = { navigator.navigate(AppNavigation.ProductList.route) }
+                            onNavigateToLogin = { navigator.navigate(AppNavigation.Login) },
+                            onNavigateToProductList = { navigator.navigate(AppNavigation.ProductList) },
+                            onNavigateToProductDetail = { productId ->
+                                navigator.navigate(AppNavigation.ProductDetail(productId))
+                            }
                         )
                     }
-                    composable(route = AppNavigation.ProductList.route) {
-                        ProductListScreen(onNavigateBack = { navigator.popBackStack() })
+                    composable<AppNavigation.ProductList> {
+                        ProductListScreen(
+                            onNavigateBack = { navigator.popBackStack() },
+                            onNavigateToProductDetail = { productId ->
+                                navigator.navigate(AppNavigation.ProductDetail(productId))
+                            }
+                        )
+                    }
+                    composable<AppNavigation.ProductDetail> { backStackEntry ->
+                        val args = backStackEntry.toRoute<AppNavigation.ProductDetail>()
+                        ProductDetailScreen(
+                            productId = args.productId,
+                            onNavigateBack = { navigator.popBackStack() }
+                        )
                     }
                 }
             }

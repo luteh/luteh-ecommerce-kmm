@@ -58,17 +58,26 @@ import org.luteh.ecommerce.presentation.ui.common.ProductItem
 import org.luteh.ecommerce.presentation.ui.common.dummyProducts
 
 @Composable
-fun HomeScreen(onNavigateToLogin: () -> Unit, onNavigateToProductList: () -> Unit) {
+fun HomeScreen(
+    onNavigateToLogin: () -> Unit,
+    onNavigateToProductList: () -> Unit,
+    onNavigateToProductDetail: (String) -> Unit
+) {
     Scaffold(topBar = { HomeTopBar(onLoginClick = onNavigateToLogin) }) { paddingValues ->
         HomeContent(
             modifier = Modifier.padding(paddingValues),
-            onNavigateToProductList = onNavigateToProductList
+            onNavigateToProductList = onNavigateToProductList,
+            onNavigateToProductDetail = onNavigateToProductDetail
         )
     }
 }
 
 @Composable
-fun HomeContent(modifier: Modifier = Modifier, onNavigateToProductList: () -> Unit) {
+fun HomeContent(
+    modifier: Modifier = Modifier,
+    onNavigateToProductList: () -> Unit,
+    onNavigateToProductDetail: (String) -> Unit
+) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = modifier.fillMaxSize(),
@@ -86,7 +95,12 @@ fun HomeContent(modifier: Modifier = Modifier, onNavigateToProductList: () -> Un
             SectionHeader(title = "Popular Products", onSeeAllClick = onNavigateToProductList)
         }
 
-        items(dummyProducts.take(6)) { product -> ProductItem(product = product) }
+        items(dummyProducts.take(6)) { product ->
+            ProductItem(
+                product = product,
+                onClick = { onNavigateToProductDetail(product.id) }
+            )
+        }
     }
 }
 
