@@ -77,4 +77,10 @@ class AuthRepositoryImpl(
                 Either.Left(e)
             }
         }
+
+    override suspend fun verifyPin(pin: String): Boolean {
+        // Mock PIN verification
+        delay(500)
+        return pin == "123456"
+    }
 }

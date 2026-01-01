@@ -30,7 +30,7 @@ fun appModule() = module {
     factory { RegisterViewModel(get()) }
     factory { ProductDetailViewModel(get()) }
     factory { CartViewModel(get(), get()) }
-    factory { CheckoutViewModel(get(), get(), get()) }
+    factory { CheckoutViewModel(get(), get(), get(), get()) }
     factory { TransactionDetailViewModel() }
 
     single<AuthRepository> { AuthRepositoryImpl(get(), get()) }

@@ -16,4 +16,6 @@ interface AuthRepository {
     suspend fun getUserRoles(): Either<Exception, List<UserRole>>
 
     suspend fun register(param: RegisterParam): Either<Exception, Unit>
+
+    suspend fun verifyPin(pin: String): Boolean
 }
