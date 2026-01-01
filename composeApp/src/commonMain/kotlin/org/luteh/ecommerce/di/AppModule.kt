@@ -5,6 +5,7 @@ import org.koin.dsl.module
 import org.luteh.ecommerce.data.config.FeatureConfig
 import org.luteh.ecommerce.data.config.FeatureConfigImpl
 import org.luteh.ecommerce.data.datasource.remote.AuthRemoteDataSource
+import org.luteh.ecommerce.data.datasource.remote.AuthRemoteDataSourceImpl
 import org.luteh.ecommerce.data.local.AppDatabase
 import org.luteh.ecommerce.data.repository.AddressRepositoryImpl
 import org.luteh.ecommerce.data.repository.AuthRepositoryImpl
@@ -47,7 +48,7 @@ fun appModule() = module {
     single { get<AppDatabase>().cartDao() }
     single { get<AppDatabase>().shippingAddressDao() }
     single { get<AppDatabase>().userSessionDao() }
-    single { AuthRemoteDataSource(get()) }
+    single<AuthRemoteDataSource> { AuthRemoteDataSourceImpl(get()) }
     single<CartRepository> { CartRepositoryImpl(get()) }
 
     // Cart UseCases

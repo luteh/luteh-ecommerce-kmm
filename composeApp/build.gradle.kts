@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.apollo)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
+    alias(libs.plugins.mokkery)
 }
 
 kotlin {
@@ -49,7 +50,6 @@ kotlin {
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.navigation.compose)
             implementation(libs.kotlinx.serialization.json)
-            implementation(libs.kotlinx.datetime)
             implementation(libs.apollo.runtime)
 
             implementation(libs.androidx.room.runtime)
@@ -58,7 +58,6 @@ kotlin {
         commonTest.dependencies {
             implementation(libs.kotlin.test)
             implementation(libs.kotlinx.coroutines.test)
-            implementation(libs.mockk)
         }
     }
 }
