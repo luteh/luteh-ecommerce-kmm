@@ -51,26 +51,38 @@ import org.koin.compose.viewmodel.koinViewModel
 import org.luteh.ecommerce.domain.model.CartItemModel
 import org.luteh.ecommerce.presentation.core.ResultState
 
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
+
 @Composable
 fun CartScreen(
     onNavigateBack: () -> Unit,
+    onNavigateToCheckout: () -> Unit,
     viewModel: CartViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
                 is CartViewModel.Effect.NavigateBack -> onNavigateBack()
+                is CartViewModel.Effect.NavigateToCheckout -> onNavigateToCheckout()
                 is CartViewModel.Effect.ShowToast -> {
-                    // Show toast (platform specific or snackbar)
-                    println(effect.message)
+                    scope.launch {
+                        snackbarHostState.showSnackbar(effect.message)
+                    }
                 }
             }
         }
     }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             CartTopBar(
                 onBackClick = { viewModel.processEvent(CartViewModel.Event.OnNavigateBack) },

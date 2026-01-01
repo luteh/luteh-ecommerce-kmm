@@ -83,8 +83,7 @@ class CartViewModel(
     }
 
     private fun checkout() {
-        // Implement checkout logic or navigation
-        sendEffect(Effect.ShowToast("Checkout functionality not implemented yet"))
+        sendEffect(Effect.NavigateToCheckout)
     }
 
     data class State(
@@ -103,6 +102,7 @@ class CartViewModel(
     sealed interface Effect {
         data class ShowToast(val message: String) : Effect
         data object NavigateBack : Effect
+        data object NavigateToCheckout : Effect
     }
 }
 

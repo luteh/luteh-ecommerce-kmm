@@ -24,4 +24,7 @@ sealed interface AppNavigation {
 
     @Serializable
     data class ProductDetail(val productId: String) : AppNavigation
+
+    @Serializable
+    data object Checkout : AppNavigation
 }

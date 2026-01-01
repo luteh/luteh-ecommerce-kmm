@@ -25,6 +25,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.navigation.toRoute
+import org.luteh.ecommerce.presentation.ui.checkout.CheckoutScreen
 import org.luteh.ecommerce.presentation.ui.product_detail.ProductDetailScreen
 
 @Composable
@@ -102,7 +103,8 @@ fun App(
                     }
                     composable<AppNavigation.Cart> {
                         CartScreen(
-                            onNavigateBack = { navigator.popBackStack() }
+                            onNavigateBack = { navigator.popBackStack() },
+                            onNavigateToCheckout = { navigator.navigate(AppNavigation.Checkout) }
                         )
                     }
                     composable<AppNavigation.ProductDetail> { backStackEntry ->
@@ -110,6 +112,16 @@ fun App(
                         ProductDetailScreen(
                             productId = args.productId,
                             onNavigateBack = { navigator.popBackStack() }
+                        )
+                    }
+                    composable<AppNavigation.Checkout> {
+                        CheckoutScreen(
+                            onNavigateBack = { navigator.popBackStack() },
+                            onOrderSuccess = {
+                                navigator.navigate(AppNavigation.Home) {
+                                    popUpTo(AppNavigation.Home) { inclusive = true }
+                                }
+                            }
                         )
                     }
                 }
