@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.luteh.ecommerce.domain.model.CartItemModel
 import org.luteh.ecommerce.domain.model.ShippingAddress
+import org.luteh.ecommerce.domain.repository.AddressRepository
 import org.luteh.ecommerce.domain.repository.CartRepository
 import org.luteh.ecommerce.domain.repository.OrderRepository
 import org.luteh.ecommerce.presentation.core.BaseViewModel
@@ -12,11 +13,31 @@ import org.luteh.ecommerce.presentation.core.ResultState
 
 class CheckoutViewModel(
     private val cartRepository: CartRepository,
-    private val orderRepository: OrderRepository
+    private val orderRepository: OrderRepository,
+    private val addressRepository: AddressRepository
 ) : BaseViewModel<CheckoutViewModel.State, CheckoutViewModel.Event, CheckoutViewModel.Effect>(State()) {
 
     init {
         loadCartItems()
+        loadLastUsedAddress()
+    }
+
+    private fun loadLastUsedAddress() {
+        viewModelScope.launch {
+            addressRepository.getLastUsedAddress().collectLatest { address ->
+                address?.let {
+                    updateState { state ->
+                        state.copy(
+                            fullName = it.fullName,
+                            address = it.addressLine,
+                            city = it.city,
+                            postalCode = it.postalCode,
+                            phoneNumber = it.phoneNumber
+                        )
+                    }
+                }
+            }
+        }
     }
 
     private fun loadCartItems() {
@@ -62,6 +83,7 @@ class CheckoutViewModel(
                         shippingAddress = shippingAddress,
                         totalAmount = currentState.totalAmount
                     )
+                    addressRepository.saveLastUsedAddress(shippingAddress)
                     updateState { it.copy(placeOrderState = ResultState.Success(Unit)) }
                     sendEffect(Effect.NavigateToTransactionDetail(true, "Order placed successfully!"))
                 } catch (e: Exception) {

@@ -6,10 +6,12 @@ import org.luteh.ecommerce.data.config.FeatureConfig
 import org.luteh.ecommerce.data.config.FeatureConfigImpl
 import org.luteh.ecommerce.data.datasource.remote.AuthRemoteDataSource
 import org.luteh.ecommerce.data.local.AppDatabase
+import org.luteh.ecommerce.data.repository.AddressRepositoryImpl
 import org.luteh.ecommerce.data.repository.AuthRepositoryImpl
 import org.luteh.ecommerce.data.repository.CartRepositoryImpl
 import org.luteh.ecommerce.data.repository.OrderRepositoryImpl
 import org.luteh.ecommerce.data.repository.ProductRepositoryImpl
+import org.luteh.ecommerce.domain.repository.AddressRepository
 import org.luteh.ecommerce.domain.repository.AuthRepository
 import org.luteh.ecommerce.domain.repository.CartRepository
 import org.luteh.ecommerce.domain.repository.OrderRepository
@@ -28,15 +30,17 @@ fun appModule() = module {
     factory { RegisterViewModel(get()) }
     factory { ProductDetailViewModel(get()) }
     factory { CartViewModel(get(), get()) }
-    factory { CheckoutViewModel(get(), get()) }
+    factory { CheckoutViewModel(get(), get(), get()) }
     factory { TransactionDetailViewModel() }
 
     single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
     single<ProductRepository> { ProductRepositoryImpl() }
     single<OrderRepository> { OrderRepositoryImpl(get()) }
+    single<AddressRepository> { AddressRepositoryImpl(get()) }
 
     includes(platformModule())
     single { get<AppDatabase>().cartDao() }
+    single { get<AppDatabase>().shippingAddressDao() }
     single { AuthRemoteDataSource(get()) }
     single<CartRepository> { CartRepositoryImpl(get()) }
 
