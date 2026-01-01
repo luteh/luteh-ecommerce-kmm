@@ -60,39 +60,57 @@ class CheckoutViewModel(
             is Event.OnCityChanged -> updateState { it.copy(city = event.value) }
             is Event.OnPostalCodeChanged -> updateState { it.copy(postalCode = event.value) }
             is Event.OnPhoneNumberChanged -> updateState { it.copy(phoneNumber = event.value) }
-            Event.OnPlaceOrder -> placeOrder()
+            Event.OnPlaceOrder -> onPlaceOrderClick()
             Event.OnNavigateBack -> sendEffect(Effect.NavigateBack)
+            Event.OnShowPinVerification -> updateState { it.copy(isPinVerificationVisible = true, pinError = null) }
+            Event.OnHidePinVerification -> updateState { it.copy(isPinVerificationVisible = false, pinError = null) }
+            is Event.OnPinEntered -> verifyPinAndPlaceOrder(event.pin)
+        }
+    }
+
+    private fun onPlaceOrderClick() {
+        val currentState = state.value
+        if (validateInput(currentState)) {
+            processEvent(Event.OnShowPinVerification)
+        } else {
+            sendEffect(Effect.ShowToast("Please fill all fields"))
+        }
+    }
+
+    private fun verifyPinAndPlaceOrder(pin: String) {
+        // Mock PIN verification
+        if (pin == "123456") {
+            updateState { it.copy(isPinVerificationVisible = false) }
+            placeOrder()
+        } else {
+            updateState { it.copy(pinError = "Invalid PIN") }
         }
     }
 
     private fun placeOrder() {
         val currentState = state.value
-        if (validateInput(currentState)) {
-            viewModelScope.launch {
-                updateState { it.copy(placeOrderState = ResultState.Loading) }
-                try {
-                    val shippingAddress = ShippingAddress(
-                        fullName = currentState.fullName,
-                        addressLine = currentState.address,
-                        city = currentState.city,
-                        postalCode = currentState.postalCode,
-                        phoneNumber = currentState.phoneNumber
-                    )
-                    orderRepository.placeOrder(
-                        items = currentState.cartItems,
-                        shippingAddress = shippingAddress,
-                        totalAmount = currentState.totalAmount
-                    )
-                    addressRepository.saveLastUsedAddress(shippingAddress)
-                    updateState { it.copy(placeOrderState = ResultState.Success(Unit)) }
-                    sendEffect(Effect.NavigateToTransactionDetail(true, "Order placed successfully!"))
-                } catch (e: Exception) {
-                    updateState { it.copy(placeOrderState = ResultState.Error(e)) }
-                    sendEffect(Effect.NavigateToTransactionDetail(false, "Failed to place order: ${e.message}"))
-                }
+        viewModelScope.launch {
+            updateState { it.copy(placeOrderState = ResultState.Loading) }
+            try {
+                val shippingAddress = ShippingAddress(
+                    fullName = currentState.fullName,
+                    addressLine = currentState.address,
+                    city = currentState.city,
+                    postalCode = currentState.postalCode,
+                    phoneNumber = currentState.phoneNumber
+                )
+                orderRepository.placeOrder(
+                    items = currentState.cartItems,
+                    shippingAddress = shippingAddress,
+                    totalAmount = currentState.totalAmount
+                )
+                addressRepository.saveLastUsedAddress(shippingAddress)
+                updateState { it.copy(placeOrderState = ResultState.Success(Unit)) }
+                sendEffect(Effect.NavigateToTransactionDetail(true, "Order placed successfully!"))
+            } catch (e: Exception) {
+                updateState { it.copy(placeOrderState = ResultState.Error(e)) }
+                sendEffect(Effect.NavigateToTransactionDetail(false, "Failed to place order: ${e.message}"))
             }
-        } else {
-            sendEffect(Effect.ShowToast("Please fill all fields"))
         }
     }
 
@@ -112,7 +130,9 @@ class CheckoutViewModel(
         val city: String = "",
         val postalCode: String = "",
         val phoneNumber: String = "",
-        val placeOrderState: ResultState<Unit> = ResultState.Idle
+        val placeOrderState: ResultState<Unit> = ResultState.Idle,
+        val isPinVerificationVisible: Boolean = false,
+        val pinError: String? = null
     )
 
     sealed interface Event {
@@ -123,6 +143,9 @@ class CheckoutViewModel(
         data class OnPhoneNumberChanged(val value: String) : Event
         data object OnPlaceOrder : Event
         data object OnNavigateBack : Event
+        data object OnShowPinVerification : Event
+        data object OnHidePinVerification : Event
+        data class OnPinEntered(val pin: String) : Event
     }
 
     sealed interface Effect {

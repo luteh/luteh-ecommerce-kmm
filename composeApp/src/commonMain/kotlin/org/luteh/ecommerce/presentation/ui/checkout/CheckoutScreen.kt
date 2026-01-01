@@ -121,6 +121,14 @@ fun CheckoutScreen(
             PaymentMethodSection()
         }
     }
+
+    if (state.isPinVerificationVisible) {
+        PinVerificationBottomSheet(
+            onDismissRequest = { viewModel.processEvent(CheckoutViewModel.Event.OnHidePinVerification) },
+            onConfirm = { pin -> viewModel.processEvent(CheckoutViewModel.Event.OnPinEntered(pin)) },
+            error = state.pinError
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
