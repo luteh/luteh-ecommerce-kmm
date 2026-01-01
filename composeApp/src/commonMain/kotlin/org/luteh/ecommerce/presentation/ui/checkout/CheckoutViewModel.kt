@@ -63,10 +63,10 @@ class CheckoutViewModel(
                         totalAmount = currentState.totalAmount
                     )
                     updateState { it.copy(placeOrderState = ResultState.Success(Unit)) }
-                    sendEffect(Effect.OrderPlacedSuccess)
+                    sendEffect(Effect.NavigateToTransactionDetail(true, "Order placed successfully!"))
                 } catch (e: Exception) {
                     updateState { it.copy(placeOrderState = ResultState.Error(e)) }
-                    sendEffect(Effect.ShowToast("Failed to place order: ${e.message}"))
+                    sendEffect(Effect.NavigateToTransactionDetail(false, "Failed to place order: ${e.message}"))
                 }
             }
         } else {
@@ -106,7 +106,7 @@ class CheckoutViewModel(
     sealed interface Effect {
         data class ShowToast(val message: String) : Effect
         data object NavigateBack : Effect
-        data object OrderPlacedSuccess : Effect
+        data class NavigateToTransactionDetail(val isSuccess: Boolean, val message: String) : Effect
     }
 }
 

@@ -27,4 +27,7 @@ sealed interface AppNavigation {
 
     @Serializable
     data object Checkout : AppNavigation
+
+    @Serializable
+    data class TransactionDetail(val isSuccess: Boolean, val message: String) : AppNavigation
 }

@@ -59,7 +59,7 @@ import org.luteh.ecommerce.presentation.core.ResultState
 @Composable
 fun CheckoutScreen(
     onNavigateBack: () -> Unit,
-    onOrderSuccess: () -> Unit,
+    onNavigateToTransactionDetail: (Boolean, String) -> Unit,
     viewModel: CheckoutViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsState()
@@ -70,7 +70,9 @@ fun CheckoutScreen(
         viewModel.effect.collect { effect ->
             when (effect) {
                 is CheckoutViewModel.Effect.NavigateBack -> onNavigateBack()
-                is CheckoutViewModel.Effect.OrderPlacedSuccess -> onOrderSuccess()
+                is CheckoutViewModel.Effect.NavigateToTransactionDetail -> {
+                    onNavigateToTransactionDetail(effect.isSuccess, effect.message)
+                }
                 is CheckoutViewModel.Effect.ShowToast -> {
                     scope.launch {
                         snackbarHostState.showSnackbar(effect.message)
