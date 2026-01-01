@@ -98,7 +98,8 @@ fun App(
                             onNavigateBack = { navigator.popBackStack() },
                             onNavigateToProductDetail = { productId ->
                                 navigator.navigate(AppNavigation.ProductDetail(productId))
-                            }
+                            },
+                            onNavigateToCart = { navigator.navigate(AppNavigation.Cart) }
                         )
                     }
                     composable<AppNavigation.Cart> {
@@ -111,7 +112,8 @@ fun App(
                         val args = backStackEntry.toRoute<AppNavigation.ProductDetail>()
                         ProductDetailScreen(
                             productId = args.productId,
-                            onNavigateBack = { navigator.popBackStack() }
+                            onNavigateBack = { navigator.popBackStack() },
+                            onNavigateToCart = { navigator.navigate(AppNavigation.Cart) }
                         )
                     }
                     composable<AppNavigation.Checkout> {

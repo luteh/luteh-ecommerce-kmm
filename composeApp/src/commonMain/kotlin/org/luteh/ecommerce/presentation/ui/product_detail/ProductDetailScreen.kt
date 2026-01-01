@@ -25,6 +25,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.ShoppingCart
@@ -64,6 +65,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun ProductDetailScreen(
     productId: String,
     onNavigateBack: () -> Unit,
+    onNavigateToCart: () -> Unit,
     viewModel: ProductDetailViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsState()
@@ -152,7 +154,8 @@ fun ProductDetailScreen(
                             .fillMaxWidth()
                             .statusBarsPadding()
                             .padding(16.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         IconButton(
                             onClick = onNavigateBack,
@@ -167,17 +170,32 @@ fun ProductDetailScreen(
                             )
                         }
 
-                        IconButton(
-                            onClick = {},
-                            modifier = Modifier
-                                .clip(CircleShape)
-                                .background(Color.Black.copy(alpha = 0.2f))
-                        ) {
-                            Icon(
-                                imageVector = Icons.Outlined.FavoriteBorder,
-                                contentDescription = "Favorite",
-                                tint = Color.White
-                            )
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            IconButton(
+                                onClick = { /* TODO: Add to favorite logic */ },
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .background(Color.Black.copy(alpha = 0.2f))
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Outlined.FavoriteBorder,
+                                    contentDescription = "Favorite",
+                                    tint = Color.White
+                                )
+                            }
+
+                            IconButton(
+                                onClick = onNavigateToCart,
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .background(Color.Black.copy(alpha = 0.2f))
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.ShoppingCart,
+                                    contentDescription = "Cart",
+                                    tint = Color.White
+                                )
+                            }
                         }
                     }
                 }
@@ -320,5 +338,3 @@ fun ProductDetailScreen(
         }
     }
 }
-
-

@@ -41,9 +41,15 @@ import kotlinx.coroutines.delay
 import org.luteh.ecommerce.presentation.ui.common.ProductItem
 import org.luteh.ecommerce.presentation.ui.common.dummyProducts
 
+import androidx.compose.material.icons.filled.ShoppingCart
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductListScreen(onNavigateBack: () -> Unit, onNavigateToProductDetail: (String) -> Unit) {
+fun ProductListScreen(
+    onNavigateBack: () -> Unit,
+    onNavigateToProductDetail: (String) -> Unit,
+    onNavigateToCart: () -> Unit
+) {
     var searchQuery by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf<String?>(null) }
     var products by remember { mutableStateOf(dummyProducts) }
@@ -79,6 +85,11 @@ fun ProductListScreen(onNavigateBack: () -> Unit, onNavigateToProductDetail: (St
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                },
+                actions = {
+                    IconButton(onClick = onNavigateToCart) {
+                        Icon(Icons.Default.ShoppingCart, contentDescription = "Cart")
                     }
                 }
             )
