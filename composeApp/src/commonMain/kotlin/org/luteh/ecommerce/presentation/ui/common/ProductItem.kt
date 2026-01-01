@@ -95,4 +95,3 @@ fun ProductItem(product: ProductUiModel, onClick: () -> Unit) {
         }
     }
 }
-

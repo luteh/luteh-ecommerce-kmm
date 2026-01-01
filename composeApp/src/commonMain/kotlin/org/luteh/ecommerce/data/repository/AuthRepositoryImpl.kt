@@ -18,7 +18,7 @@ import kotlin.time.Clock
 class AuthRepositoryImpl(
     private val authRemoteDataSource: AuthRemoteDataSource,
     private val featureConfig: FeatureConfig,
-    private val userSessionDao: UserSessionDao
+    private val userSessionDao: UserSessionDao,
 ) : AuthRepository {
     override suspend fun setLoginSession(isLoggedIn: Boolean) {}
 
@@ -42,28 +42,30 @@ class AuthRepositoryImpl(
             if (featureConfig.isServerEnabled.not()) {
                 delay(1000L)
                 // Mock session for local testing without server
-                val expirationTime = Clock.System.now().toEpochMilliseconds() + 24 * 60 * 60 * 1000 // 1 day
+                val expirationTime =
+                    Clock.System.now().toEpochMilliseconds() + 24 * 60 * 60 * 1000 // 1 day
                 userSessionDao.insertUserSession(
                     UserSessionEntity(
                         accessToken = "mock_token",
                         expirationTimestamp = expirationTime,
                         userId = "mock_user_id",
                         email = email,
-                        name = "Mock User"
+                        name = "Mock User",
                     )
                 )
                 return@withContext Either.Right(Unit)
             }
             return@withContext try {
                 val response = authRemoteDataSource.login(email = email, password = password)
-                val expirationTime = Clock.System.now().toEpochMilliseconds() + 24 * 60 * 60 * 1000 // 1 day
+                val expirationTime =
+                    Clock.System.now().toEpochMilliseconds() + 24 * 60 * 60 * 1000 // 1 day
                 userSessionDao.insertUserSession(
                     UserSessionEntity(
                         accessToken = response.login ?: "",
                         expirationTimestamp = expirationTime,
                         userId = "user_id_placeholder", // API might need to return this
                         email = email,
-                        name = "User Name" // API might need to return this
+                        name = "User Name", // API might need to return this
                     )
                 )
                 Either.Right(Unit)

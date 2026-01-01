@@ -30,13 +30,13 @@ import org.luteh.ecommerce.presentation.ui.transaction_detail.TransactionDetailS
 
 @Composable
 @Preview
-fun App(
-    koinConfig: KoinAppDeclaration? = null
-) {
-    KoinApplication(application = {
-        modules(appModule())
-        koinConfig?.invoke(this)
-    }) {
+fun App(koinConfig: KoinAppDeclaration? = null) {
+    KoinApplication(
+        application = {
+            modules(appModule())
+            koinConfig?.invoke(this)
+        }
+    ) {
         LutehTheme {
             val navigator = rememberNavController()
 
@@ -45,10 +45,18 @@ fun App(
                     navController = navigator,
                     startDestination = AppNavigation.Splash,
                     modifier = Modifier.fillMaxSize(),
-                    enterTransition = { slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(300)) },
-                    exitTransition = { slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(300)) },
-                    popEnterTransition = { slideInHorizontally(initialOffsetX = { -it }, animationSpec = tween(300)) },
-                    popExitTransition = { slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(300)) }
+                    enterTransition = {
+                        slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(300))
+                    },
+                    exitTransition = {
+                        slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(300))
+                    },
+                    popEnterTransition = {
+                        slideInHorizontally(initialOffsetX = { -it }, animationSpec = tween(300))
+                    },
+                    popExitTransition = {
+                        slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(300))
+                    },
                 ) {
                     composable<AppNavigation.Splash> {
                         SplashScreen(
@@ -86,11 +94,13 @@ fun App(
                     composable<AppNavigation.Home> {
                         HomeScreen(
                             onNavigateToLogin = { navigator.navigate(AppNavigation.Login) },
-                            onNavigateToProductList = { navigator.navigate(AppNavigation.ProductList) },
+                            onNavigateToProductList = {
+                                navigator.navigate(AppNavigation.ProductList)
+                            },
                             onNavigateToProductDetail = { productId ->
                                 navigator.navigate(AppNavigation.ProductDetail(productId))
                             },
-                            onNavigateToCart = { navigator.navigate(AppNavigation.Cart) }
+                            onNavigateToCart = { navigator.navigate(AppNavigation.Cart) },
                         )
                     }
                     composable<AppNavigation.ProductList> {
@@ -100,13 +110,13 @@ fun App(
                                 navigator.navigate(AppNavigation.ProductDetail(productId))
                             },
                             onNavigateToCart = { navigator.navigate(AppNavigation.Cart) },
-                            onNavigateToLogin = { navigator.navigate(AppNavigation.Login) }
+                            onNavigateToLogin = { navigator.navigate(AppNavigation.Login) },
                         )
                     }
                     composable<AppNavigation.Cart> {
                         CartScreen(
                             onNavigateBack = { navigator.popBackStack() },
-                            onNavigateToCheckout = { navigator.navigate(AppNavigation.Checkout) }
+                            onNavigateToCheckout = { navigator.navigate(AppNavigation.Checkout) },
                         )
                     }
                     composable<AppNavigation.ProductDetail> { backStackEntry ->
@@ -115,7 +125,7 @@ fun App(
                             productId = args.productId,
                             onNavigateBack = { navigator.popBackStack() },
                             onNavigateToCart = { navigator.navigate(AppNavigation.Cart) },
-                            onNavigateToLogin = { navigator.navigate(AppNavigation.Login) }
+                            onNavigateToLogin = { navigator.navigate(AppNavigation.Login) },
                         )
                     }
                     composable<AppNavigation.Checkout> {
@@ -124,11 +134,9 @@ fun App(
                             onNavigateToTransactionDetail = { isSuccess, message ->
                                 navigator.navigate(
                                     AppNavigation.TransactionDetail(isSuccess, message),
-                                    navOptions {
-                                        popUpTo(AppNavigation.Home) { inclusive = false }
-                                    }
+                                    navOptions { popUpTo(AppNavigation.Home) { inclusive = false } },
                                 )
-                            }
+                            },
                         )
                     }
                     composable<AppNavigation.TransactionDetail> { backStackEntry ->
@@ -140,7 +148,7 @@ fun App(
                                 navigator.navigate(AppNavigation.Home) {
                                     popUpTo(AppNavigation.Home) { inclusive = true }
                                 }
-                            }
+                            },
                         )
                     }
                 }

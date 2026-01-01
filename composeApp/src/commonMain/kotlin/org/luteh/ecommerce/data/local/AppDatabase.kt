@@ -11,11 +11,16 @@ import org.luteh.ecommerce.data.local.entity.CartEntity
 import org.luteh.ecommerce.data.local.entity.ShippingAddressEntity
 import org.luteh.ecommerce.data.local.entity.UserSessionEntity
 
-@Database(entities = [CartEntity::class, ShippingAddressEntity::class, UserSessionEntity::class], version = 3)
+@Database(
+    entities = [CartEntity::class, ShippingAddressEntity::class, UserSessionEntity::class],
+    version = 3,
+)
 @ConstructedBy(AppDatabaseConstructor::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun cartDao(): CartDao
+
     abstract fun shippingAddressDao(): ShippingAddressDao
+
     abstract fun userSessionDao(): UserSessionDao
 }
 
@@ -23,4 +28,3 @@ abstract class AppDatabase : RoomDatabase() {
 expect object AppDatabaseConstructor : RoomDatabaseConstructor<AppDatabase> {
     override fun initialize(): AppDatabase
 }
-

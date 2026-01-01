@@ -62,13 +62,15 @@ fun HomeScreen(
     onNavigateToLogin: () -> Unit,
     onNavigateToProductList: () -> Unit,
     onNavigateToProductDetail: (String) -> Unit,
-    onNavigateToCart: () -> Unit
+    onNavigateToCart: () -> Unit,
 ) {
-    Scaffold(topBar = { HomeTopBar(onLoginClick = onNavigateToLogin, onCartClick = onNavigateToCart) }) { paddingValues ->
+    Scaffold(
+        topBar = { HomeTopBar(onLoginClick = onNavigateToLogin, onCartClick = onNavigateToCart) }
+    ) { paddingValues ->
         HomeContent(
             modifier = Modifier.padding(paddingValues),
             onNavigateToProductList = onNavigateToProductList,
-            onNavigateToProductDetail = onNavigateToProductDetail
+            onNavigateToProductDetail = onNavigateToProductDetail,
         )
     }
 }
@@ -77,7 +79,7 @@ fun HomeScreen(
 fun HomeContent(
     modifier: Modifier = Modifier,
     onNavigateToProductList: () -> Unit,
-    onNavigateToProductDetail: (String) -> Unit
+    onNavigateToProductDetail: (String) -> Unit,
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -97,10 +99,7 @@ fun HomeContent(
         }
 
         items(dummyProducts.take(6)) { product ->
-            ProductItem(
-                product = product,
-                onClick = { onNavigateToProductDetail(product.id) }
-            )
+            ProductItem(product = product, onClick = { onNavigateToProductDetail(product.id) })
         }
     }
 }

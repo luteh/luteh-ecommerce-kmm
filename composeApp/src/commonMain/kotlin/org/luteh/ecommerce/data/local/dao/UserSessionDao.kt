@@ -14,7 +14,5 @@ interface UserSessionDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertUserSession(session: UserSessionEntity)
 
-    @Query("DELETE FROM user_session WHERE id = 1")
-    suspend fun clearUserSession()
+    @Query("DELETE FROM user_session WHERE id = 1") suspend fun clearUserSession()
 }
-

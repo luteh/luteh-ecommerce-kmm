@@ -35,4 +35,3 @@ class AuthRemoteDataSourceImpl(private val apolloClient: ApolloClient) : AuthRem
         return data
     }
 }
-

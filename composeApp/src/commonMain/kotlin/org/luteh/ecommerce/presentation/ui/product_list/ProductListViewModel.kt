@@ -5,13 +5,14 @@ import kotlinx.coroutines.launch
 import org.luteh.ecommerce.domain.usecase.auth.CheckSessionUseCase
 import org.luteh.ecommerce.presentation.core.BaseViewModel
 
-class ProductListViewModel(
-    private val checkSessionUseCase: CheckSessionUseCase
-) : BaseViewModel<ProductListViewModel.State, ProductListViewModel.Event, ProductListViewModel.Effect>(State()) {
+class ProductListViewModel(private val checkSessionUseCase: CheckSessionUseCase) :
+    BaseViewModel<
+        ProductListViewModel.State,
+        ProductListViewModel.Event,
+        ProductListViewModel.Effect,
+    >(State()) {
 
-    data class State(
-        val isLoading: Boolean = false
-    )
+    data class State(val isLoading: Boolean = false)
 
     sealed interface Event {
         data object OnCartClicked : Event
@@ -19,6 +20,7 @@ class ProductListViewModel(
 
     sealed interface Effect {
         data object NavigateToCart : Effect
+
         data object NavigateToLogin : Effect
     }
 
@@ -39,4 +41,3 @@ class ProductListViewModel(
         }
     }
 }
-

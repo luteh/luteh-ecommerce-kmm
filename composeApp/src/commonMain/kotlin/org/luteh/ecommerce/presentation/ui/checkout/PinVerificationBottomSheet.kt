@@ -30,26 +30,20 @@ import androidx.compose.ui.unit.dp
 fun PinVerificationBottomSheet(
     onDismissRequest: () -> Unit,
     onConfirm: (String) -> Unit,
-    error: String? = null
+    error: String? = null,
 ) {
     val sheetState = rememberModalBottomSheetState()
     var pin by remember { mutableStateOf("") }
 
-    ModalBottomSheet(
-        onDismissRequest = onDismissRequest,
-        sheetState = sheetState
-    ) {
+    ModalBottomSheet(onDismissRequest = onDismissRequest, sheetState = sheetState) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 32.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).padding(bottom = 32.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Text(
                 text = "Enter PIN",
                 style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Text("Please enter your 6-digit PIN to confirm the order.")
 
@@ -64,24 +58,19 @@ fun PinVerificationBottomSheet(
                 isError = error != null,
                 supportingText = {
                     if (error != null) {
-                        Text(
-                            text = error,
-                            color = MaterialTheme.colorScheme.error
-                        )
+                        Text(text = error, color = MaterialTheme.colorScheme.error)
                     }
-                }
+                },
             )
 
             Button(
                 onClick = { onConfirm(pin) },
                 enabled = pin.length == 6,
                 modifier = Modifier.fillMaxWidth().height(50.dp),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
             ) {
                 Text("Confirm")
             }
         }
     }
 }
-
-

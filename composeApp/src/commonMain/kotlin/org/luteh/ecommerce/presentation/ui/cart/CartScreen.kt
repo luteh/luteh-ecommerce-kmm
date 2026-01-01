@@ -33,6 +33,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -40,6 +42,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -47,21 +51,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 import org.luteh.ecommerce.domain.model.CartItemModel
 import org.luteh.ecommerce.presentation.core.ResultState
-
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import kotlinx.coroutines.launch
 
 @Composable
 fun CartScreen(
     onNavigateBack: () -> Unit,
     onNavigateToCheckout: () -> Unit,
-    viewModel: CartViewModel = koinViewModel()
+    viewModel: CartViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -73,9 +72,7 @@ fun CartScreen(
                 is CartViewModel.Effect.NavigateBack -> onNavigateBack()
                 is CartViewModel.Effect.NavigateToCheckout -> onNavigateToCheckout()
                 is CartViewModel.Effect.ShowToast -> {
-                    scope.launch {
-                        snackbarHostState.showSnackbar(effect.message)
-                    }
+                    scope.launch { snackbarHostState.showSnackbar(effect.message) }
                 }
             }
         }
@@ -86,17 +83,20 @@ fun CartScreen(
         topBar = {
             CartTopBar(
                 onBackClick = { viewModel.processEvent(CartViewModel.Event.OnNavigateBack) },
-                onClearCartClick = { viewModel.processEvent(CartViewModel.Event.OnClearCart) }
+                onClearCartClick = { viewModel.processEvent(CartViewModel.Event.OnClearCart) },
             )
         },
         bottomBar = {
-            if (state.cartItemsState is ResultState.Success && (state.cartItemsState as ResultState.Success).data.isNotEmpty()) {
+            if (
+                state.cartItemsState is ResultState.Success &&
+                    (state.cartItemsState as ResultState.Success).data.isNotEmpty()
+            ) {
                 CartBottomBar(
                     totalPrice = state.totalPrice,
-                    onCheckoutClick = { viewModel.processEvent(CartViewModel.Event.OnCheckout) }
+                    onCheckoutClick = { viewModel.processEvent(CartViewModel.Event.OnCheckout) },
                 )
             }
-        }
+        },
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues).fillMaxSize()) {
             when (val result = state.cartItemsState) {
@@ -107,7 +107,7 @@ fun CartScreen(
                     Text(
                         text = result.exception.message ?: "Unknown error",
                         color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.align(Alignment.Center)
+                        modifier = Modifier.align(Alignment.Center),
                     )
                 }
                 is ResultState.Success -> {
@@ -117,11 +117,13 @@ fun CartScreen(
                         CartList(
                             cartItems = result.data,
                             onUpdateQuantity = { id, qty ->
-                                viewModel.processEvent(CartViewModel.Event.OnUpdateQuantity(id, qty))
+                                viewModel.processEvent(
+                                    CartViewModel.Event.OnUpdateQuantity(id, qty)
+                                )
                             },
                             onRemoveItem = { id ->
                                 viewModel.processEvent(CartViewModel.Event.OnRemoveItem(id))
-                            }
+                            },
                         )
                     }
                 }
@@ -146,7 +148,8 @@ fun CartTopBar(onBackClick: () -> Unit, onClearCartClick: () -> Unit) {
                 Icon(Icons.Default.Delete, contentDescription = "Clear Cart")
             }
         },
-        colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface)
+        colors =
+            TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface),
     )
 }
 
@@ -155,19 +158,19 @@ fun CartTopBar(onBackClick: () -> Unit, onClearCartClick: () -> Unit) {
 fun CartList(
     cartItems: List<CartItemModel>,
     onUpdateQuantity: (String, Int) -> Unit,
-    onRemoveItem: (String) -> Unit
+    onRemoveItem: (String) -> Unit,
 ) {
     LazyColumn(
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
     ) {
         items(items = cartItems, key = { it.product.id }) { item ->
             CartItemCard(
                 modifier = Modifier,
                 item = item,
                 onUpdateQuantity = onUpdateQuantity,
-                onRemoveItem = onRemoveItem
+                onRemoveItem = onRemoveItem,
             )
         }
     }
@@ -178,26 +181,32 @@ fun CartItemCard(
     modifier: Modifier = Modifier,
     item: CartItemModel,
     onUpdateQuantity: (String, Int) -> Unit,
-    onRemoveItem: (String) -> Unit
+    onRemoveItem: (String) -> Unit,
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+            ),
     ) {
         Row(
             modifier = Modifier.padding(12.dp).fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Box(
-                modifier = Modifier.size(80.dp).clip(RoundedCornerShape(12.dp)).background(MaterialTheme.colorScheme.secondaryContainer),
-                contentAlignment = Alignment.Center
+                modifier =
+                    Modifier.size(80.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(MaterialTheme.colorScheme.secondaryContainer),
+                contentAlignment = Alignment.Center,
             ) {
                 Icon(
                     imageVector = Icons.Rounded.Checkroom,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onSecondaryContainer,
-                    modifier = Modifier.size(40.dp)
+                    modifier = Modifier.size(40.dp),
                 )
             }
             Spacer(modifier = Modifier.width(16.dp))
@@ -207,38 +216,50 @@ fun CartItemCard(
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = "$${item.product.price}",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.SemiBold,
                 )
             }
             Spacer(modifier = Modifier.width(8.dp))
             Column(horizontalAlignment = Alignment.End) {
                 IconButton(onClick = { onRemoveItem(item.product.id) }) {
-                    Icon(Icons.Default.Delete, contentDescription = "Remove", tint = MaterialTheme.colorScheme.error)
+                    Icon(
+                        Icons.Default.Delete,
+                        contentDescription = "Remove",
+                        tint = MaterialTheme.colorScheme.error,
+                    )
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     IconButton(
                         onClick = { onUpdateQuantity(item.product.id, item.quantity - 1) },
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(32.dp),
                     ) {
-                        Icon(Icons.Default.Remove, contentDescription = "Decrease", modifier = Modifier.size(16.dp))
+                        Icon(
+                            Icons.Default.Remove,
+                            contentDescription = "Decrease",
+                            modifier = Modifier.size(16.dp),
+                        )
                     }
                     Text(
                         text = "${item.quantity}",
                         style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.padding(horizontal = 8.dp)
+                        modifier = Modifier.padding(horizontal = 8.dp),
                     )
                     IconButton(
                         onClick = { onUpdateQuantity(item.product.id, item.quantity + 1) },
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(32.dp),
                     ) {
-                        Icon(Icons.Default.Add, contentDescription = "Increase", modifier = Modifier.size(16.dp))
+                        Icon(
+                            Icons.Default.Add,
+                            contentDescription = "Increase",
+                            modifier = Modifier.size(16.dp),
+                        )
                     }
                 }
             }
@@ -249,26 +270,24 @@ fun CartItemCard(
 @Composable
 fun CartBottomBar(totalPrice: Double, onCheckoutClick: () -> Unit) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surface)
-            .padding(16.dp)
+        modifier =
+            Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface).padding(16.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = "Total:",
                 style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Text(
                 text = "$${totalPrice}",
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
@@ -276,9 +295,13 @@ fun CartBottomBar(totalPrice: Double, onCheckoutClick: () -> Unit) {
             onClick = onCheckoutClick,
             modifier = Modifier.fillMaxWidth().height(50.dp),
             shape = RoundedCornerShape(12.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
         ) {
-            Text("Checkout", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            Text(
+                "Checkout",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+            )
         }
     }
 }
@@ -288,20 +311,19 @@ fun EmptyCartView(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         Icon(
             imageVector = Icons.Default.Delete, // Or a cart icon
             contentDescription = null,
             modifier = Modifier.size(100.dp).alpha(0.3f),
-            tint = MaterialTheme.colorScheme.onSurface
+            tint = MaterialTheme.colorScheme.onSurface,
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = "Your cart is empty",
             style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }
-

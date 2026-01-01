@@ -13,16 +13,17 @@ class CartRepositoryImpl(private val cartDao: CartDao) : CartRepository {
         return cartDao.getAllCartItems().map { entities ->
             entities.map { entity ->
                 CartItemModel(
-                    product = ProductModel(
-                        id = entity.productId,
-                        name = entity.name,
-                        price = entity.price,
-                        thumbnailImageUrl = entity.imageUrl ?: "",
-                        shopName = "", // Not stored in cart entity
-                        rating = 0.0, // Not stored
-                        ratingCount = 0 // Not stored
-                    ),
-                    quantity = entity.quantity
+                    product =
+                        ProductModel(
+                            id = entity.productId,
+                            name = entity.name,
+                            price = entity.price,
+                            thumbnailImageUrl = entity.imageUrl ?: "",
+                            shopName = "", // Not stored in cart entity
+                            rating = 0.0, // Not stored
+                            ratingCount = 0, // Not stored
+                        ),
+                    quantity = entity.quantity,
                 )
             }
         }
@@ -38,7 +39,7 @@ class CartRepositoryImpl(private val cartDao: CartDao) : CartRepository {
                 price = product.price,
                 quantity = quantity,
                 imageUrl = product.thumbnailImageUrl,
-                category = "" // Add category to ProductModel if needed or pass it
+                category = "", // Add category to ProductModel if needed or pass it
             )
         )
     }

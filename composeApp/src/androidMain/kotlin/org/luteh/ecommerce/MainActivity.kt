@@ -11,13 +11,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContent {
-            App(
-                koinConfig = {
-                    androidContext(this@MainActivity)
-                }
-            )
-        }
+        setContent { App(koinConfig = { androidContext(this@MainActivity) }) }
     }
 }
 

@@ -5,6 +5,6 @@ import org.luteh.ecommerce.domain.model.ShippingAddress
 
 interface AddressRepository {
     fun getLastUsedAddress(): Flow<ShippingAddress?>
+
     suspend fun saveLastUsedAddress(address: ShippingAddress)
 }
-

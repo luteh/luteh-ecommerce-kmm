@@ -7,8 +7,8 @@ import platform.Foundation.NSHomeDirectory
 fun getDatabaseBuilder(): RoomDatabase.Builder<AppDatabase> {
     val dbFilePath = NSHomeDirectory() + "/luteh_ecommerce.db"
     return Room.databaseBuilder<AppDatabase>(
-        name = dbFilePath,
-        factory = { AppDatabase::class.instantiateImpl() }
-    ).addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+            name = dbFilePath,
+            factory = { AppDatabase::class.instantiateImpl() },
+        )
+        .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
 }
-

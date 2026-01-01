@@ -39,4 +39,3 @@ class LoginUseCaseTest {
         assertEquals(exception, result.leftOrNull())
     }
 }
-

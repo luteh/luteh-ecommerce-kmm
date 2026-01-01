@@ -11,7 +11,7 @@ import org.luteh.ecommerce.presentation.core.ResultState
 
 class CartViewModel(
     private val cartRepository: CartRepository,
-    private val updateCartItemQuantityUseCase: UpdateCartItemQuantityUseCase
+    private val updateCartItemQuantityUseCase: UpdateCartItemQuantityUseCase,
 ) : BaseViewModel<CartViewModel.State, CartViewModel.Event, CartViewModel.Effect>(State()) {
 
     init {
@@ -26,7 +26,7 @@ class CartViewModel(
                     updateState {
                         it.copy(
                             cartItemsState = ResultState.Success(items),
-                            totalPrice = items.sumOf { item -> item.product.price * item.quantity }
+                            totalPrice = items.sumOf { item -> item.product.price * item.quantity },
                         )
                     }
                 }
@@ -84,21 +84,26 @@ class CartViewModel(
 
     data class State(
         val cartItemsState: ResultState<List<CartItemModel>> = ResultState.Idle,
-        val totalPrice: Double = 0.0
+        val totalPrice: Double = 0.0,
     )
 
     sealed interface Event {
         data class OnUpdateQuantity(val productId: String, val quantity: Int) : Event
+
         data class OnRemoveItem(val productId: String) : Event
+
         data object OnClearCart : Event
+
         data object OnCheckout : Event
+
         data object OnNavigateBack : Event
     }
 
     sealed interface Effect {
         data class ShowToast(val message: String) : Effect
+
         data object NavigateBack : Effect
+
         data object NavigateToCheckout : Effect
     }
 }
-

@@ -41,7 +41,7 @@ fun TransactionDetailScreen(
     isSuccess: Boolean,
     message: String,
     onNavigateToHome: () -> Unit,
-    viewModel: TransactionDetailViewModel = koinViewModel()
+    viewModel: TransactionDetailViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsState()
 
@@ -61,29 +61,31 @@ fun TransactionDetailScreen(
         bottomBar = {
             Box(modifier = Modifier.padding(16.dp)) {
                 Button(
-                    onClick = { viewModel.processEvent(TransactionDetailViewModel.Event.OnBackToHome) },
+                    onClick = {
+                        viewModel.processEvent(TransactionDetailViewModel.Event.OnBackToHome)
+                    },
                     modifier = Modifier.fillMaxWidth().height(50.dp),
                     shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = if (state.isSuccess) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
-                    )
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor =
+                                if (state.isSuccess) MaterialTheme.colorScheme.primary
+                                else MaterialTheme.colorScheme.error
+                        ),
                 ) {
                     Text(
                         text = if (state.isSuccess) "Back to Home" else "Try Again",
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                 }
             }
         }
     ) { paddingValues ->
         Column(
-            modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize()
-                .padding(24.dp),
+            modifier = Modifier.padding(paddingValues).fillMaxSize().padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
         ) {
             if (state.isSuccess) {
                 SuccessAnimation()
@@ -97,8 +99,10 @@ fun TransactionDetailScreen(
                 text = if (state.isSuccess) "Order Placed Successfully!" else "Transaction Failed",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
-                color = if (state.isSuccess) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
-                textAlign = TextAlign.Center
+                color =
+                    if (state.isSuccess) MaterialTheme.colorScheme.primary
+                    else MaterialTheme.colorScheme.error,
+                textAlign = TextAlign.Center,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -107,7 +111,7 @@ fun TransactionDetailScreen(
                 text = state.message,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
         }
     }
@@ -121,11 +125,11 @@ fun SuccessAnimation() {
     LaunchedEffect(Unit) {
         circleProgress.animateTo(
             targetValue = 1f,
-            animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing)
+            animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing),
         )
         checkProgress.animateTo(
             targetValue = 1f,
-            animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing)
+            animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing),
         )
     }
 
@@ -141,16 +145,17 @@ fun SuccessAnimation() {
             color = primaryColor,
             radius = radius,
             style = Stroke(width = strokeWidth),
-            alpha = circleProgress.value
+            alpha = circleProgress.value,
         )
 
         // Draw Checkmark
         if (circleProgress.value >= 0.8f) {
-            val path = Path().apply {
-                moveTo(center.x - radius * 0.4f, center.y)
-                lineTo(center.x - radius * 0.1f, center.y + radius * 0.3f)
-                lineTo(center.x + radius * 0.5f, center.y - radius * 0.4f)
-            }
+            val path =
+                Path().apply {
+                    moveTo(center.x - radius * 0.4f, center.y)
+                    lineTo(center.x - radius * 0.1f, center.y + radius * 0.3f)
+                    lineTo(center.x + radius * 0.5f, center.y - radius * 0.4f)
+                }
 
             // Animate path drawing
             val pathMeasure = PathMeasure()
@@ -162,7 +167,7 @@ fun SuccessAnimation() {
             drawPath(
                 path = partialPath,
                 color = primaryColor,
-                style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
+                style = Stroke(width = strokeWidth, cap = StrokeCap.Round),
             )
         }
     }
@@ -176,11 +181,11 @@ fun FailureAnimation() {
     LaunchedEffect(Unit) {
         circleProgress.animateTo(
             targetValue = 1f,
-            animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing)
+            animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing),
         )
         crossProgress.animateTo(
             targetValue = 1f,
-            animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing)
+            animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing),
         )
     }
 
@@ -196,19 +201,21 @@ fun FailureAnimation() {
             color = errorColor,
             radius = radius,
             style = Stroke(width = strokeWidth),
-            alpha = circleProgress.value
+            alpha = circleProgress.value,
         )
 
         // Draw Cross
         if (circleProgress.value >= 0.8f) {
-            val path1 = Path().apply {
-                moveTo(center.x - radius * 0.3f, center.y - radius * 0.3f)
-                lineTo(center.x + radius * 0.3f, center.y + radius * 0.3f)
-            }
-            val path2 = Path().apply {
-                moveTo(center.x + radius * 0.3f, center.y - radius * 0.3f)
-                lineTo(center.x - radius * 0.3f, center.y + radius * 0.3f)
-            }
+            val path1 =
+                Path().apply {
+                    moveTo(center.x - radius * 0.3f, center.y - radius * 0.3f)
+                    lineTo(center.x + radius * 0.3f, center.y + radius * 0.3f)
+                }
+            val path2 =
+                Path().apply {
+                    moveTo(center.x + radius * 0.3f, center.y - radius * 0.3f)
+                    lineTo(center.x - radius * 0.3f, center.y + radius * 0.3f)
+                }
 
             val pathMeasure1 = PathMeasure()
             pathMeasure1.setPath(path1, false)
@@ -219,7 +226,7 @@ fun FailureAnimation() {
             drawPath(
                 path = partialPath1,
                 color = errorColor,
-                style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
+                style = Stroke(width = strokeWidth, cap = StrokeCap.Round),
             )
 
             val pathMeasure2 = PathMeasure()
@@ -231,9 +238,8 @@ fun FailureAnimation() {
             drawPath(
                 path = partialPath2,
                 color = errorColor,
-                style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
+                style = Stroke(width = strokeWidth, cap = StrokeCap.Round),
             )
         }
     }
 }
-

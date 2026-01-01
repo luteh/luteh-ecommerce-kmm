@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
@@ -38,12 +39,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
+import org.koin.compose.viewmodel.koinViewModel
 import org.luteh.ecommerce.presentation.ui.common.ProductItem
 import org.luteh.ecommerce.presentation.ui.common.dummyProducts
-
-import androidx.compose.material.icons.filled.ShoppingCart
-
-import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,7 +50,7 @@ fun ProductListScreen(
     onNavigateToProductDetail: (String) -> Unit,
     onNavigateToCart: () -> Unit,
     onNavigateToLogin: () -> Unit,
-    viewModel: ProductListViewModel = koinViewModel()
+    viewModel: ProductListViewModel = koinViewModel(),
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf<String?>(null) }
@@ -84,12 +82,13 @@ fun ProductListScreen(
     }
 
     // Filter logic
-    val filteredProducts = remember(searchQuery, selectedCategory, products) {
-        products.filter { product ->
-            (searchQuery.isEmpty() || product.name.contains(searchQuery, ignoreCase = true)) &&
-            (selectedCategory == null || product.category == selectedCategory)
+    val filteredProducts =
+        remember(searchQuery, selectedCategory, products) {
+            products.filter { product ->
+                (searchQuery.isEmpty() || product.name.contains(searchQuery, ignoreCase = true)) &&
+                    (selectedCategory == null || product.category == selectedCategory)
+            }
         }
-    }
 
     Scaffold(
         topBar = {
@@ -101,10 +100,14 @@ fun ProductListScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { viewModel.processEvent(ProductListViewModel.Event.OnCartClicked) }) {
+                    IconButton(
+                        onClick = {
+                            viewModel.processEvent(ProductListViewModel.Event.OnCartClicked)
+                        }
+                    ) {
                         Icon(Icons.Default.ShoppingCart, contentDescription = "Cart")
                     }
-                }
+                },
             )
         }
     ) { paddingValues ->
@@ -116,20 +119,22 @@ fun ProductListScreen(
                 modifier = Modifier.fillMaxWidth().padding(16.dp),
                 placeholder = { Text("Search products...") },
                 leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-                singleLine = true
+                singleLine = true,
             )
 
             // Filter Chips
             Row(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 val categories = listOf("All", "Electronics", "Fashion", "Home")
                 categories.forEach { category ->
                     FilterChip(
-                        selected = (category == "All" && selectedCategory == null) || category == selectedCategory,
+                        selected =
+                            (category == "All" && selectedCategory == null) ||
+                                category == selectedCategory,
                         onClick = { selectedCategory = if (category == "All") null else category },
-                        label = { Text(category) }
+                        label = { Text(category) },
                     )
                 }
             }
@@ -143,18 +148,21 @@ fun ProductListScreen(
                 contentPadding = PaddingValues(16.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             ) {
                 items(filteredProducts) { product ->
                     ProductItem(
                         product = product,
-                        onClick = { onNavigateToProductDetail(product.id) }
+                        onClick = { onNavigateToProductDetail(product.id) },
                     )
                 }
 
                 if (isLoading) {
                     item(span = { GridItemSpan(2) }) {
-                        Box(modifier = Modifier.fillMaxWidth().padding(16.dp), contentAlignment = Alignment.Center) {
+                        Box(
+                            modifier = Modifier.fillMaxWidth().padding(16.dp),
+                            contentAlignment = Alignment.Center,
+                        ) {
                             CircularProgressIndicator()
                         }
                     }
@@ -163,4 +171,3 @@ fun ProductListScreen(
         }
     }
 }
-

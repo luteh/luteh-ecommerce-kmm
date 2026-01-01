@@ -7,4 +7,3 @@ class LogoutUseCase(private val authRepository: AuthRepository) {
         authRepository.logout()
     }
 }
-

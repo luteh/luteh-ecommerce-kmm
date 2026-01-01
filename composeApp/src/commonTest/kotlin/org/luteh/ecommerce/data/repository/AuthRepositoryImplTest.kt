@@ -22,18 +22,20 @@ class AuthRepositoryImplTest {
     private val authRemoteDataSource: AuthRemoteDataSource = mock()
     private val featureConfig: FeatureConfig = mock()
     private val userSessionDao: UserSessionDao = mock(MockMode.autoUnit)
-    private val authRepository = AuthRepositoryImpl(authRemoteDataSource, featureConfig, userSessionDao)
+    private val authRepository =
+        AuthRepositoryImpl(authRemoteDataSource, featureConfig, userSessionDao)
 
     @Test
     fun `getLoginSession returns true when session is valid`() = runTest {
         val validExpiration = Clock.System.now().toEpochMilliseconds() + 10000
-        val session = UserSessionEntity(
-            accessToken = "token",
-            expirationTimestamp = validExpiration,
-            userId = "user1",
-            email = "test@example.com",
-            name = "Test User"
-        )
+        val session =
+            UserSessionEntity(
+                accessToken = "token",
+                expirationTimestamp = validExpiration,
+                userId = "user1",
+                email = "test@example.com",
+                name = "Test User",
+            )
         everySuspend { userSessionDao.getUserSession() } returns session
 
         val result = authRepository.getLoginSession()
@@ -44,13 +46,14 @@ class AuthRepositoryImplTest {
     @Test
     fun `getLoginSession returns false when session is expired`() = runTest {
         val expiredExpiration = Clock.System.now().toEpochMilliseconds() - 10000
-        val session = UserSessionEntity(
-            accessToken = "token",
-            expirationTimestamp = expiredExpiration,
-            userId = "user1",
-            email = "test@example.com",
-            name = "Test User"
-        )
+        val session =
+            UserSessionEntity(
+                accessToken = "token",
+                expirationTimestamp = expiredExpiration,
+                userId = "user1",
+                email = "test@example.com",
+                name = "Test User",
+            )
         everySuspend { userSessionDao.getUserSession() } returns session
 
         val result = authRepository.getLoginSession()
@@ -90,4 +93,3 @@ class AuthRepositoryImplTest {
         verifySuspend { userSessionDao.clearUserSession() }
     }
 }
-

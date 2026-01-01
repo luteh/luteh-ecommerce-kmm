@@ -15,7 +15,7 @@ import org.luteh.ecommerce.presentation.ui.common.dummyProducts
 
 class ProductDetailViewModel(
     private val cartRepository: CartRepository,
-    private val checkSessionUseCase: CheckSessionUseCase
+    private val checkSessionUseCase: CheckSessionUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ProductDetailState())
@@ -58,17 +58,20 @@ class ProductDetailViewModel(
         // In a real app, this would come from a repository
         val product = dummyProducts.find { it.id == productId }
         if (product != null) {
-            _state.update { it.copy(
-                product = org.luteh.ecommerce.domain.model.ProductModel(
-                    id = product.id,
-                    name = product.name,
-                    price = product.price.replace("$", "").toDoubleOrNull() ?: 0.0,
-                    thumbnailImageUrl = "", // Dummy doesn't have URL
-                    shopName = "Luteh Shop",
-                    rating = product.rating,
-                    ratingCount = 120
+            _state.update {
+                it.copy(
+                    product =
+                        org.luteh.ecommerce.domain.model.ProductModel(
+                            id = product.id,
+                            name = product.name,
+                            price = product.price.replace("$", "").toDoubleOrNull() ?: 0.0,
+                            thumbnailImageUrl = "", // Dummy doesn't have URL
+                            shopName = "Luteh Shop",
+                            rating = product.rating,
+                            ratingCount = 120,
+                        )
                 )
-            ) }
+            }
         }
     }
 
@@ -81,4 +84,3 @@ class ProductDetailViewModel(
         }
     }
 }
-

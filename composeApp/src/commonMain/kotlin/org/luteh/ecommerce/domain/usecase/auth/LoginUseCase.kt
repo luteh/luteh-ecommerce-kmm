@@ -8,4 +8,3 @@ class LoginUseCase(private val authRepository: AuthRepository) {
         return authRepository.login(email, password)
     }
 }
-

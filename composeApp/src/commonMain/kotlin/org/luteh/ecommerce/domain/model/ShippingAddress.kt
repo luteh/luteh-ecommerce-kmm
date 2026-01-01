@@ -5,6 +5,5 @@ data class ShippingAddress(
     val addressLine: String,
     val city: String,
     val postalCode: String,
-    val phoneNumber: String
+    val phoneNumber: String,
 )
-

@@ -15,4 +15,3 @@ interface ShippingAddressDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertShippingAddress(address: ShippingAddressEntity)
 }
-

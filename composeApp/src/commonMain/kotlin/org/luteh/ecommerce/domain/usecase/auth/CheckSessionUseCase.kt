@@ -7,4 +7,3 @@ class CheckSessionUseCase(private val authRepository: AuthRepository) {
         return authRepository.getLoginSession()
     }
 }
-

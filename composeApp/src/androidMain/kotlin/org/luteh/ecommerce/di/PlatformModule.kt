@@ -8,4 +8,3 @@ import org.luteh.ecommerce.data.local.getDatabaseBuilder
 actual fun platformModule() = module {
     single<AppDatabase> { getDatabaseBuilder(androidContext()).build() }
 }
-

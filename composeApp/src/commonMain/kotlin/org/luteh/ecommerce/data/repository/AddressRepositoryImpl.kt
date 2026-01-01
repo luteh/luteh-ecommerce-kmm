@@ -7,9 +7,8 @@ import org.luteh.ecommerce.data.local.entity.ShippingAddressEntity
 import org.luteh.ecommerce.domain.model.ShippingAddress
 import org.luteh.ecommerce.domain.repository.AddressRepository
 
-class AddressRepositoryImpl(
-    private val shippingAddressDao: ShippingAddressDao
-) : AddressRepository {
+class AddressRepositoryImpl(private val shippingAddressDao: ShippingAddressDao) :
+    AddressRepository {
     override fun getLastUsedAddress(): Flow<ShippingAddress?> {
         return shippingAddressDao.getShippingAddress().map { entity ->
             entity?.let {
@@ -18,7 +17,7 @@ class AddressRepositoryImpl(
                     addressLine = it.addressLine,
                     city = it.city,
                     postalCode = it.postalCode,
-                    phoneNumber = it.phoneNumber
+                    phoneNumber = it.phoneNumber,
                 )
             }
         }
@@ -31,9 +30,8 @@ class AddressRepositoryImpl(
                 addressLine = address.addressLine,
                 city = address.city,
                 postalCode = address.postalCode,
-                phoneNumber = address.phoneNumber
+                phoneNumber = address.phoneNumber,
             )
         )
     }
 }
-

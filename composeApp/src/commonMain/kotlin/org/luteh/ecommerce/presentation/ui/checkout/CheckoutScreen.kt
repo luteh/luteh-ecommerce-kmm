@@ -60,7 +60,7 @@ import org.luteh.ecommerce.presentation.core.ResultState
 fun CheckoutScreen(
     onNavigateBack: () -> Unit,
     onNavigateToTransactionDetail: (Boolean, String) -> Unit,
-    viewModel: CheckoutViewModel = koinViewModel()
+    viewModel: CheckoutViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -74,9 +74,7 @@ fun CheckoutScreen(
                     onNavigateToTransactionDetail(effect.isSuccess, effect.message)
                 }
                 is CheckoutViewModel.Effect.ShowToast -> {
-                    scope.launch {
-                        snackbarHostState.showSnackbar(effect.message)
-                    }
+                    scope.launch { snackbarHostState.showSnackbar(effect.message) }
                 }
             }
         }
@@ -85,23 +83,25 @@ fun CheckoutScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
-            CheckoutTopBar(onBackClick = { viewModel.processEvent(CheckoutViewModel.Event.OnNavigateBack) })
+            CheckoutTopBar(
+                onBackClick = { viewModel.processEvent(CheckoutViewModel.Event.OnNavigateBack) }
+            )
         },
         bottomBar = {
             CheckoutBottomBar(
                 totalAmount = state.totalAmount,
                 isLoading = state.placeOrderState is ResultState.Loading,
-                onPlaceOrderClick = { viewModel.processEvent(CheckoutViewModel.Event.OnPlaceOrder) }
+                onPlaceOrderClick = { viewModel.processEvent(CheckoutViewModel.Event.OnPlaceOrder) },
             )
-        }
+        },
     ) { paddingValues ->
         Column(
-            modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(24.dp)
+            modifier =
+                Modifier.padding(paddingValues)
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(24.dp),
         ) {
             ShippingAddressSection(
                 fullName = state.fullName,
@@ -109,11 +109,21 @@ fun CheckoutScreen(
                 city = state.city,
                 postalCode = state.postalCode,
                 phoneNumber = state.phoneNumber,
-                onFullNameChange = { viewModel.processEvent(CheckoutViewModel.Event.OnFullNameChanged(it)) },
-                onAddressChange = { viewModel.processEvent(CheckoutViewModel.Event.OnAddressChanged(it)) },
-                onCityChange = { viewModel.processEvent(CheckoutViewModel.Event.OnCityChanged(it)) },
-                onPostalCodeChange = { viewModel.processEvent(CheckoutViewModel.Event.OnPostalCodeChanged(it)) },
-                onPhoneNumberChange = { viewModel.processEvent(CheckoutViewModel.Event.OnPhoneNumberChanged(it)) }
+                onFullNameChange = {
+                    viewModel.processEvent(CheckoutViewModel.Event.OnFullNameChanged(it))
+                },
+                onAddressChange = {
+                    viewModel.processEvent(CheckoutViewModel.Event.OnAddressChanged(it))
+                },
+                onCityChange = {
+                    viewModel.processEvent(CheckoutViewModel.Event.OnCityChanged(it))
+                },
+                onPostalCodeChange = {
+                    viewModel.processEvent(CheckoutViewModel.Event.OnPostalCodeChanged(it))
+                },
+                onPhoneNumberChange = {
+                    viewModel.processEvent(CheckoutViewModel.Event.OnPhoneNumberChanged(it))
+                },
             )
 
             OrderSummarySection(cartItems = state.cartItems)
@@ -124,9 +134,13 @@ fun CheckoutScreen(
 
     if (state.isPinVerificationVisible) {
         PinVerificationBottomSheet(
-            onDismissRequest = { viewModel.processEvent(CheckoutViewModel.Event.OnHidePinVerification) },
-            onConfirm = { pin -> viewModel.processEvent(CheckoutViewModel.Event.OnPinEntered(pin)) },
-            error = state.pinError
+            onDismissRequest = {
+                viewModel.processEvent(CheckoutViewModel.Event.OnHidePinVerification)
+            },
+            onConfirm = { pin ->
+                viewModel.processEvent(CheckoutViewModel.Event.OnPinEntered(pin))
+            },
+            error = state.pinError,
         )
     }
 }
@@ -141,25 +155,29 @@ fun CheckoutTopBar(onBackClick: () -> Unit) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
             }
         },
-        colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface)
+        colors =
+            TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface),
     )
 }
 
 @Composable
 fun SectionHeader(title: String, icon: ImageVector) {
-    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(bottom = 8.dp)) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(bottom = 8.dp),
+    ) {
         Icon(
             imageVector = icon,
             contentDescription = null,
             tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(24.dp)
+            modifier = Modifier.size(24.dp),
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = title,
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface
+            color = MaterialTheme.colorScheme.onSurface,
         )
     }
 }
@@ -175,27 +193,33 @@ fun ShippingAddressSection(
     onAddressChange: (String) -> Unit,
     onCityChange: (String) -> Unit,
     onPostalCodeChange: (String) -> Unit,
-    onPhoneNumberChange: (String) -> Unit
+    onPhoneNumberChange: (String) -> Unit,
 ) {
     Column {
         SectionHeader(title = "Shipping Address", icon = Icons.Default.LocationOn)
         Card(
             shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+                ),
         ) {
-            Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
                 OutlinedTextField(
                     value = fullName,
                     onValueChange = onFullNameChange,
                     label = { Text("Full Name") },
                     modifier = Modifier.fillMaxWidth(),
-                    singleLine = true
+                    singleLine = true,
                 )
                 OutlinedTextField(
                     value = address,
                     onValueChange = onAddressChange,
                     label = { Text("Address Line") },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     OutlinedTextField(
@@ -203,7 +227,7 @@ fun ShippingAddressSection(
                         onValueChange = onCityChange,
                         label = { Text("City") },
                         modifier = Modifier.weight(1f),
-                        singleLine = true
+                        singleLine = true,
                     )
                     OutlinedTextField(
                         value = postalCode,
@@ -211,7 +235,7 @@ fun ShippingAddressSection(
                         label = { Text("Postal Code") },
                         modifier = Modifier.weight(1f),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        singleLine = true
+                        singleLine = true,
                     )
                 }
                 OutlinedTextField(
@@ -219,8 +243,12 @@ fun ShippingAddressSection(
                     onValueChange = onPhoneNumberChange,
                     label = { Text("Phone Number") },
                     modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone, imeAction = ImeAction.Done),
-                    singleLine = true
+                    keyboardOptions =
+                        KeyboardOptions(
+                            keyboardType = KeyboardType.Phone,
+                            imeAction = ImeAction.Done,
+                        ),
+                    singleLine = true,
                 )
             }
         }
@@ -233,34 +261,39 @@ fun OrderSummarySection(cartItems: List<CartItemModel>) {
         SectionHeader(title = "Order Summary", icon = Icons.Default.ShoppingBag)
         Card(
             shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+                ),
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 cartItems.forEach { item ->
                     Row(
                         modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
                                 text = item.product.name,
                                 style = MaterialTheme.typography.bodyLarge,
-                                fontWeight = FontWeight.Medium
+                                fontWeight = FontWeight.Medium,
                             )
                             Text(
                                 text = "Qty: ${item.quantity}",
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                         }
                         Text(
                             text = "$${item.product.price * item.quantity}",
                             style = MaterialTheme.typography.bodyLarge,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                     }
                     if (item != cartItems.last()) {
-                        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+                        HorizontalDivider(
+                            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+                        )
                     }
                 }
             }
@@ -274,29 +307,33 @@ fun PaymentMethodSection() {
         SectionHeader(title = "Payment Method", icon = Icons.Default.CreditCard)
         Card(
             shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+                ),
         ) {
             Row(
                 modifier = Modifier.padding(16.dp).fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
-                    imageVector = Icons.Default.LocalShipping, // Placeholder for COD or other method
+                    imageVector =
+                        Icons.Default.LocalShipping, // Placeholder for COD or other method
                     contentDescription = null,
                     modifier = Modifier.size(32.dp),
-                    tint = MaterialTheme.colorScheme.primary
+                    tint = MaterialTheme.colorScheme.primary,
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Column {
                     Text(
                         text = "Cash on Delivery",
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                     Text(
                         text = "Pay when you receive",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
@@ -305,32 +342,26 @@ fun PaymentMethodSection() {
 }
 
 @Composable
-fun CheckoutBottomBar(
-    totalAmount: Double,
-    isLoading: Boolean,
-    onPlaceOrderClick: () -> Unit
-) {
+fun CheckoutBottomBar(totalAmount: Double, isLoading: Boolean, onPlaceOrderClick: () -> Unit) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surface)
-            .padding(16.dp)
+        modifier =
+            Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface).padding(16.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = "Total Amount:",
                 style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Text(
                 text = "$${totalAmount}",
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
@@ -338,20 +369,23 @@ fun CheckoutBottomBar(
             onClick = onPlaceOrderClick,
             modifier = Modifier.fillMaxWidth().height(50.dp),
             shape = RoundedCornerShape(12.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-            enabled = !isLoading
+            colors =
+                ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+            enabled = !isLoading,
         ) {
             if (isLoading) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(24.dp),
                     color = MaterialTheme.colorScheme.onPrimary,
-                    strokeWidth = 2.dp
+                    strokeWidth = 2.dp,
                 )
             } else {
-                Text("Place Order", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                Text(
+                    "Place Order",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                )
             }
         }
     }
 }
-
-

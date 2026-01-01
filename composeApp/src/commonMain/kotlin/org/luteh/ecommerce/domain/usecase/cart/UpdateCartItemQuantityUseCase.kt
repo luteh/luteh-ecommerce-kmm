@@ -11,4 +11,3 @@ class UpdateCartItemQuantityUseCase(private val cartRepository: CartRepository) 
         }
     }
 }
-

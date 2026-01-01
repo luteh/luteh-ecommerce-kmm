@@ -79,6 +79,7 @@ class LoginViewModel(private val loginUseCase: LoginUseCase) :
         data class ShowToast(val message: String) : Effect
 
         data object NavigateToMainScreen : Effect
+
         data object NavigateBack : Effect
 
         data object NavigateToRegisterScreen : Effect
