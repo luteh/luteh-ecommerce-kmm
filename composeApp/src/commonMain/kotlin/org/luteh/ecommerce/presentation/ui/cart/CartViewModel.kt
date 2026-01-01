@@ -4,18 +4,14 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.luteh.ecommerce.domain.model.CartItemModel
-import org.luteh.ecommerce.domain.usecase.cart.ClearCartUseCase
-import org.luteh.ecommerce.domain.usecase.cart.GetCartItemsUseCase
-import org.luteh.ecommerce.domain.usecase.cart.RemoveFromCartUseCase
+import org.luteh.ecommerce.domain.repository.CartRepository
 import org.luteh.ecommerce.domain.usecase.cart.UpdateCartItemQuantityUseCase
 import org.luteh.ecommerce.presentation.core.BaseViewModel
 import org.luteh.ecommerce.presentation.core.ResultState
 
 class CartViewModel(
-    private val getCartItemsUseCase: GetCartItemsUseCase,
-    private val updateCartItemQuantityUseCase: UpdateCartItemQuantityUseCase,
-    private val removeFromCartUseCase: RemoveFromCartUseCase,
-    private val clearCartUseCase: ClearCartUseCase
+    private val cartRepository: CartRepository,
+    private val updateCartItemQuantityUseCase: UpdateCartItemQuantityUseCase
 ) : BaseViewModel<CartViewModel.State, CartViewModel.Event, CartViewModel.Effect>(State()) {
 
     init {
@@ -26,7 +22,7 @@ class CartViewModel(
         viewModelScope.launch {
             updateState { it.copy(cartItemsState = ResultState.Loading) }
             try {
-                getCartItemsUseCase().collectLatest { items ->
+                cartRepository.getCartItems().collectLatest { items ->
                     updateState {
                         it.copy(
                             cartItemsState = ResultState.Success(items),
@@ -63,7 +59,7 @@ class CartViewModel(
     private fun removeItem(productId: String) {
         viewModelScope.launch {
             try {
-                removeFromCartUseCase(productId)
+                cartRepository.removeFromCart(productId)
                 sendEffect(Effect.ShowToast("Item removed"))
             } catch (e: Exception) {
                 sendEffect(Effect.ShowToast("Failed to remove item: ${e.message}"))
@@ -74,7 +70,7 @@ class CartViewModel(
     private fun clearCart() {
         viewModelScope.launch {
             try {
-                clearCartUseCase()
+                cartRepository.clearCart()
                 sendEffect(Effect.ShowToast("Cart cleared"))
             } catch (e: Exception) {
                 sendEffect(Effect.ShowToast("Failed to clear cart: ${e.message}"))

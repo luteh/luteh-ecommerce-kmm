@@ -14,13 +14,7 @@ import org.luteh.ecommerce.domain.repository.AuthRepository
 import org.luteh.ecommerce.domain.repository.CartRepository
 import org.luteh.ecommerce.domain.repository.OrderRepository
 import org.luteh.ecommerce.domain.repository.ProductRepository
-import org.luteh.ecommerce.domain.usecase.cart.AddToCartUseCase
-import org.luteh.ecommerce.domain.usecase.cart.ClearCartUseCase
-import org.luteh.ecommerce.domain.usecase.cart.GetCartItemCountUseCase
-import org.luteh.ecommerce.domain.usecase.cart.GetCartItemsUseCase
-import org.luteh.ecommerce.domain.usecase.cart.RemoveFromCartUseCase
 import org.luteh.ecommerce.domain.usecase.cart.UpdateCartItemQuantityUseCase
-import org.luteh.ecommerce.domain.usecase.order.PlaceOrderUseCase
 import org.luteh.ecommerce.getPlatform
 import org.luteh.ecommerce.presentation.ui.cart.CartViewModel
 import org.luteh.ecommerce.presentation.ui.checkout.CheckoutViewModel
@@ -32,7 +26,7 @@ fun appModule() = module {
     factory { LoginViewModel(get()) }
     factory { RegisterViewModel(get()) }
     factory { ProductDetailViewModel(get()) }
-    factory { CartViewModel(get(), get(), get(), get()) }
+    factory { CartViewModel(get(), get()) }
     factory { CheckoutViewModel(get(), get()) }
 
     single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
@@ -45,13 +39,7 @@ fun appModule() = module {
     single<CartRepository> { CartRepositoryImpl(get()) }
 
     // Cart UseCases
-    factory { GetCartItemsUseCase(get()) }
-    factory { AddToCartUseCase(get()) }
-    factory { UpdateCartItemQuantityUseCase(get()) }
-    factory { RemoveFromCartUseCase(get()) }
-    factory { ClearCartUseCase(get()) }
-    factory { GetCartItemCountUseCase(get()) }
-    factory { PlaceOrderUseCase(get()) }
+    single { UpdateCartItemQuantityUseCase(get()) }
 
     single<FeatureConfig> { FeatureConfigImpl() }
 

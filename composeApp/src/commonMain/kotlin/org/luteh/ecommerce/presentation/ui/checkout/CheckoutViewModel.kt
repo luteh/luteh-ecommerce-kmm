@@ -5,14 +5,14 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.luteh.ecommerce.domain.model.CartItemModel
 import org.luteh.ecommerce.domain.model.ShippingAddress
-import org.luteh.ecommerce.domain.usecase.cart.GetCartItemsUseCase
-import org.luteh.ecommerce.domain.usecase.order.PlaceOrderUseCase
+import org.luteh.ecommerce.domain.repository.CartRepository
+import org.luteh.ecommerce.domain.repository.OrderRepository
 import org.luteh.ecommerce.presentation.core.BaseViewModel
 import org.luteh.ecommerce.presentation.core.ResultState
 
 class CheckoutViewModel(
-    private val getCartItemsUseCase: GetCartItemsUseCase,
-    private val placeOrderUseCase: PlaceOrderUseCase
+    private val cartRepository: CartRepository,
+    private val orderRepository: OrderRepository
 ) : BaseViewModel<CheckoutViewModel.State, CheckoutViewModel.Event, CheckoutViewModel.Effect>(State()) {
 
     init {
@@ -21,7 +21,7 @@ class CheckoutViewModel(
 
     private fun loadCartItems() {
         viewModelScope.launch {
-            getCartItemsUseCase().collectLatest { items ->
+            cartRepository.getCartItems().collectLatest { items ->
                 updateState {
                     it.copy(
                         cartItems = items,
@@ -57,7 +57,7 @@ class CheckoutViewModel(
                         postalCode = currentState.postalCode,
                         phoneNumber = currentState.phoneNumber
                     )
-                    placeOrderUseCase(
+                    orderRepository.placeOrder(
                         items = currentState.cartItems,
                         shippingAddress = shippingAddress,
                         totalAmount = currentState.totalAmount
