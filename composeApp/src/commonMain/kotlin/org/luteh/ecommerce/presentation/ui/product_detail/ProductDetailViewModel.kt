@@ -10,10 +10,12 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.luteh.ecommerce.domain.repository.CartRepository
+import org.luteh.ecommerce.domain.usecase.auth.CheckSessionUseCase
 import org.luteh.ecommerce.presentation.ui.common.dummyProducts
 
 class ProductDetailViewModel(
-    private val cartRepository: CartRepository
+    private val cartRepository: CartRepository,
+    private val checkSessionUseCase: CheckSessionUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ProductDetailState())
@@ -25,7 +27,30 @@ class ProductDetailViewModel(
     fun onEvent(event: ProductDetailEvent) {
         when (event) {
             is ProductDetailEvent.LoadProduct -> loadProduct(event.productId)
-            ProductDetailEvent.AddToCart -> addToCart()
+            ProductDetailEvent.AddToCart -> checkAuthAndAddToCart()
+            ProductDetailEvent.OnCartClicked -> checkAuthAndNavigateToCart()
+        }
+    }
+
+    private fun checkAuthAndNavigateToCart() {
+        viewModelScope.launch {
+            val isLoggedIn = checkSessionUseCase()
+            if (isLoggedIn) {
+                _effect.send(ProductDetailEffect.NavigateToCart)
+            } else {
+                _effect.send(ProductDetailEffect.NavigateToLogin)
+            }
+        }
+    }
+
+    private fun checkAuthAndAddToCart() {
+        viewModelScope.launch {
+            val isLoggedIn = checkSessionUseCase()
+            if (isLoggedIn) {
+                addToCart()
+            } else {
+                _effect.send(ProductDetailEffect.NavigateToLogin)
+            }
         }
     }
 

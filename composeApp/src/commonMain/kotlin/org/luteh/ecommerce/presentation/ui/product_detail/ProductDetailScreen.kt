@@ -66,6 +66,7 @@ fun ProductDetailScreen(
     productId: String,
     onNavigateBack: () -> Unit,
     onNavigateToCart: () -> Unit,
+    onNavigateToLogin: () -> Unit,
     viewModel: ProductDetailViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsState()
@@ -81,6 +82,8 @@ fun ProductDetailScreen(
                 is ProductDetailEffect.ShowSnackbar -> {
                     snackbarHostState.showSnackbar(effect.message)
                 }
+                ProductDetailEffect.NavigateToCart -> onNavigateToCart()
+                ProductDetailEffect.NavigateToLogin -> onNavigateToLogin()
             }
         }
     }
@@ -185,7 +188,7 @@ fun ProductDetailScreen(
                             }
 
                             IconButton(
-                                onClick = onNavigateToCart,
+                                onClick = { viewModel.onEvent(ProductDetailEvent.OnCartClicked) },
                                 modifier = Modifier
                                     .clip(CircleShape)
                                     .background(Color.Black.copy(alpha = 0.2f))

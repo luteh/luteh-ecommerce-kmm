@@ -65,6 +65,7 @@ fun LoginScreen(
                 is LoginViewModel.Effect.ShowToast -> snackbarHostState.showSnackbar(effect.message)
 
                 LoginViewModel.Effect.NavigateToMainScreen -> onNavigateToMainScreen()
+                LoginViewModel.Effect.NavigateBack -> onNavigateBack()
                 LoginViewModel.Effect.NavigateToRegisterScreen -> onNavigateToRegisterScreen()
             }
         }

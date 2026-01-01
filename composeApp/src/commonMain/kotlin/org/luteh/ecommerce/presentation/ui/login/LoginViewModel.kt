@@ -2,26 +2,15 @@ package org.luteh.ecommerce.presentation.ui.login
 
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import org.luteh.ecommerce.domain.repository.AuthRepository
+import org.luteh.ecommerce.domain.usecase.auth.LoginUseCase
 import org.luteh.ecommerce.presentation.core.BaseViewModel
 import org.luteh.ecommerce.presentation.core.ResultState
 
-class LoginViewModel(private val authRepository: AuthRepository) :
+class LoginViewModel(private val loginUseCase: LoginUseCase) :
     BaseViewModel<LoginViewModel.State, LoginViewModel.Event, LoginViewModel.Effect>(State()) {
 
     init {
         //        checkLoginSession()
-    }
-
-    private fun checkLoginSession() {
-        viewModelScope.launch {
-            updateState { it.copy(loginState = ResultState.Loading) }
-            val isLoggedIn = authRepository.getLoginSession()
-            if (isLoggedIn) {
-                sendEffect(Effect.NavigateToMainScreen)
-            }
-            updateState { it.copy(loginState = ResultState.Idle) }
-        }
     }
 
     override fun processEvent(event: Event) {
@@ -46,8 +35,7 @@ class LoginViewModel(private val authRepository: AuthRepository) :
         viewModelScope.launch {
             updateState { it.copy(loginState = ResultState.Loading) }
 
-            authRepository
-                .login(email = state.value.email, password = state.value.password)
+            loginUseCase(email = state.value.email, password = state.value.password)
                 .fold(
                     { exception ->
                         updateState { it.copy(loginState = ResultState.Error(exception)) }
@@ -55,7 +43,7 @@ class LoginViewModel(private val authRepository: AuthRepository) :
                     },
                     {
                         updateState { it.copy(loginState = ResultState.Success(Unit)) }
-                        sendEffect(Effect.NavigateToMainScreen)
+                        sendEffect(Effect.NavigateBack)
                     },
                 )
         }
@@ -91,6 +79,7 @@ class LoginViewModel(private val authRepository: AuthRepository) :
         data class ShowToast(val message: String) : Effect
 
         data object NavigateToMainScreen : Effect
+        data object NavigateBack : Effect
 
         data object NavigateToRegisterScreen : Effect
     }

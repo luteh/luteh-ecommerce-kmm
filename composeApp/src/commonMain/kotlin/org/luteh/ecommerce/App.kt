@@ -99,7 +99,8 @@ fun App(
                             onNavigateToProductDetail = { productId ->
                                 navigator.navigate(AppNavigation.ProductDetail(productId))
                             },
-                            onNavigateToCart = { navigator.navigate(AppNavigation.Cart) }
+                            onNavigateToCart = { navigator.navigate(AppNavigation.Cart) },
+                            onNavigateToLogin = { navigator.navigate(AppNavigation.Login) }
                         )
                     }
                     composable<AppNavigation.Cart> {
@@ -113,7 +114,8 @@ fun App(
                         ProductDetailScreen(
                             productId = args.productId,
                             onNavigateBack = { navigator.popBackStack() },
-                            onNavigateToCart = { navigator.navigate(AppNavigation.Cart) }
+                            onNavigateToCart = { navigator.navigate(AppNavigation.Cart) },
+                            onNavigateToLogin = { navigator.navigate(AppNavigation.Login) }
                         )
                     }
                     composable<AppNavigation.Checkout> {

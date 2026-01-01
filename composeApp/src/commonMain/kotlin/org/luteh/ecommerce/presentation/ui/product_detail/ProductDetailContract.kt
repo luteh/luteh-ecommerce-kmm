@@ -12,9 +12,12 @@ data class ProductDetailState(
 sealed interface ProductDetailEvent {
     data class LoadProduct(val productId: String) : ProductDetailEvent
     data object AddToCart : ProductDetailEvent
+    data object OnCartClicked : ProductDetailEvent
 }
 
 sealed interface ProductDetailEffect {
     data class ShowSnackbar(val message: String) : ProductDetailEffect
+    data object NavigateToCart : ProductDetailEffect
+    data object NavigateToLogin : ProductDetailEffect
 }
 

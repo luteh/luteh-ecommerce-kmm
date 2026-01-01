@@ -18,4 +18,6 @@ interface AuthRepository {
     suspend fun register(param: RegisterParam): Either<Exception, Unit>
 
     suspend fun verifyPin(pin: String): Boolean
+
+    suspend fun logout()
 }

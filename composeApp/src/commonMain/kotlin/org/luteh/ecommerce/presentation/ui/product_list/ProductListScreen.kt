@@ -43,17 +43,30 @@ import org.luteh.ecommerce.presentation.ui.common.dummyProducts
 
 import androidx.compose.material.icons.filled.ShoppingCart
 
+import org.koin.compose.viewmodel.koinViewModel
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductListScreen(
     onNavigateBack: () -> Unit,
     onNavigateToProductDetail: (String) -> Unit,
-    onNavigateToCart: () -> Unit
+    onNavigateToCart: () -> Unit,
+    onNavigateToLogin: () -> Unit,
+    viewModel: ProductListViewModel = koinViewModel()
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf<String?>(null) }
     var products by remember { mutableStateOf(dummyProducts) }
     var isLoading by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                ProductListViewModel.Effect.NavigateToCart -> onNavigateToCart()
+                ProductListViewModel.Effect.NavigateToLogin -> onNavigateToLogin()
+            }
+        }
+    }
 
     // Simulate infinite scroll
     val listState = rememberLazyGridState()
@@ -88,7 +101,7 @@ fun ProductListScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = onNavigateToCart) {
+                    IconButton(onClick = { viewModel.processEvent(ProductListViewModel.Event.OnCartClicked) }) {
                         Icon(Icons.Default.ShoppingCart, contentDescription = "Cart")
                     }
                 }

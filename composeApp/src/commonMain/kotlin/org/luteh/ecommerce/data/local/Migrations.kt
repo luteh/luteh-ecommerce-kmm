@@ -10,3 +10,9 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
     }
 }
 
+val MIGRATION_2_3 = object : Migration(2, 3) {
+    override fun migrate(connection: SQLiteConnection) {
+        connection.execSQL("CREATE TABLE IF NOT EXISTS `user_session` (`id` INTEGER NOT NULL, `accessToken` TEXT NOT NULL, `expirationTimestamp` INTEGER NOT NULL, `userId` TEXT NOT NULL, `email` TEXT NOT NULL, `name` TEXT NOT NULL, PRIMARY KEY(`id`))")
+    }
+}
+
