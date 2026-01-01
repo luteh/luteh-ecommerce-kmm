@@ -43,6 +43,13 @@ class CartRepositoryImpl(private val cartDao: CartDao) : CartRepository {
         )
     }
 
+    override suspend fun updateQuantity(productId: String, quantity: Int) {
+        val existingItem = cartDao.getCartItemById(productId)
+        if (existingItem != null) {
+            cartDao.insertOrUpdate(existingItem.copy(quantity = quantity))
+        }
+    }
+
     override suspend fun removeFromCart(productId: String) {
         val existingItem = cartDao.getCartItemById(productId)
         if (existingItem != null) {
@@ -58,4 +65,3 @@ class CartRepositoryImpl(private val cartDao: CartDao) : CartRepository {
         return cartDao.getCartItemCount()
     }
 }
-

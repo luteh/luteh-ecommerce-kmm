@@ -4,6 +4,7 @@ import com.apollographql.apollo.ApolloClient
 import org.koin.dsl.module
 import org.luteh.ecommerce.data.config.FeatureConfig
 import org.luteh.ecommerce.data.config.FeatureConfigImpl
+import org.luteh.ecommerce.data.datasource.remote.AuthRemoteDataSource
 import org.luteh.ecommerce.data.local.AppDatabase
 import org.luteh.ecommerce.data.repository.AuthRepositoryImpl
 import org.luteh.ecommerce.data.repository.CartRepositoryImpl
@@ -11,7 +12,14 @@ import org.luteh.ecommerce.data.repository.ProductRepositoryImpl
 import org.luteh.ecommerce.domain.repository.AuthRepository
 import org.luteh.ecommerce.domain.repository.CartRepository
 import org.luteh.ecommerce.domain.repository.ProductRepository
+import org.luteh.ecommerce.domain.usecase.cart.AddToCartUseCase
+import org.luteh.ecommerce.domain.usecase.cart.ClearCartUseCase
+import org.luteh.ecommerce.domain.usecase.cart.GetCartItemCountUseCase
+import org.luteh.ecommerce.domain.usecase.cart.GetCartItemsUseCase
+import org.luteh.ecommerce.domain.usecase.cart.RemoveFromCartUseCase
+import org.luteh.ecommerce.domain.usecase.cart.UpdateCartItemQuantityUseCase
 import org.luteh.ecommerce.getPlatform
+import org.luteh.ecommerce.presentation.ui.cart.CartViewModel
 import org.luteh.ecommerce.presentation.ui.login.LoginViewModel
 import org.luteh.ecommerce.presentation.ui.product_detail.ProductDetailViewModel
 import org.luteh.ecommerce.presentation.ui.register.RegisterViewModel
@@ -20,13 +28,23 @@ fun appModule() = module {
     factory { LoginViewModel(get()) }
     factory { RegisterViewModel(get()) }
     factory { ProductDetailViewModel(get()) }
+    factory { CartViewModel(get(), get(), get(), get()) }
 
     single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
     single<ProductRepository> { ProductRepositoryImpl() }
 
     includes(platformModule())
     single { get<AppDatabase>().cartDao() }
+    single { AuthRemoteDataSource(get()) }
     single<CartRepository> { CartRepositoryImpl(get()) }
+
+    // Cart UseCases
+    factory { GetCartItemsUseCase(get()) }
+    factory { AddToCartUseCase(get()) }
+    factory { UpdateCartItemQuantityUseCase(get()) }
+    factory { RemoveFromCartUseCase(get()) }
+    factory { ClearCartUseCase(get()) }
+    factory { GetCartItemCountUseCase(get()) }
 
     single<FeatureConfig> { FeatureConfigImpl() }
 

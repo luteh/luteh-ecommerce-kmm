@@ -61,9 +61,10 @@ import org.luteh.ecommerce.presentation.ui.common.dummyProducts
 fun HomeScreen(
     onNavigateToLogin: () -> Unit,
     onNavigateToProductList: () -> Unit,
-    onNavigateToProductDetail: (String) -> Unit
+    onNavigateToProductDetail: (String) -> Unit,
+    onNavigateToCart: () -> Unit
 ) {
-    Scaffold(topBar = { HomeTopBar(onLoginClick = onNavigateToLogin) }) { paddingValues ->
+    Scaffold(topBar = { HomeTopBar(onLoginClick = onNavigateToLogin, onCartClick = onNavigateToCart) }) { paddingValues ->
         HomeContent(
             modifier = Modifier.padding(paddingValues),
             onNavigateToProductList = onNavigateToProductList,
@@ -106,7 +107,7 @@ fun HomeContent(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeTopBar(onLoginClick: () -> Unit) {
+fun HomeTopBar(onLoginClick: () -> Unit, onCartClick: () -> Unit) {
     Column(modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface)) {
         TopAppBar(
             title = {
@@ -127,7 +128,7 @@ fun HomeTopBar(onLoginClick: () -> Unit) {
                 IconButton(onClick = {}) {
                     Icon(Icons.Outlined.Notifications, contentDescription = "Notifications")
                 }
-                IconButton(onClick = {}) {
+                IconButton(onClick = onCartClick) {
                     Icon(Icons.Outlined.ShoppingCart, contentDescription = "Cart")
                 }
                 IconButton(onClick = onLoginClick) {
@@ -265,4 +266,3 @@ fun CategoryItem(category: Category) {
 }
 
 data class Category(val name: String, val icon: ImageVector)
-
