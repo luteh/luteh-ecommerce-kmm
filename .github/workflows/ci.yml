@@ -72,7 +72,7 @@ jobs:
       - name: Run Unit Tests
         run: gradle testDebugUnitTest
 
-  build-android:
+  build-android-debug:
     name: Build Android App
     needs: [setup, analyze-codebase, unit-tests]
     runs-on: ubuntu-latest
@@ -97,7 +97,13 @@ jobs:
       - name: Build Android App
         run: gradle assembleDebug
 
-  build-ios:
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-debug-apk
+          path: '**/build/outputs/apk/debug/*.apk'
+
+  build-ios-debug:
     name: Build iOS App
     needs: [setup, analyze-codebase, unit-tests]
     runs-on: macos-latest
