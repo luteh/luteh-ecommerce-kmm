@@ -76,6 +76,7 @@ jobs:
     name: Build Android App
     needs: [setup, analyze-codebase, unit-tests]
     runs-on: ubuntu-latest
+    environment: production
 
     steps:
       - name: Checkout code
@@ -100,6 +101,7 @@ jobs:
     name: Build iOS App
     needs: [setup, analyze-codebase, unit-tests]
     runs-on: macos-latest
+    environment: production
 
     steps:
       - name: Checkout code
