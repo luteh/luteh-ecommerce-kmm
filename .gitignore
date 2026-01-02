@@ -32,6 +32,7 @@ Thumbs.db
 ### Kotlin ###
 *.class
 *.jar
+!gradle/wrapper/gradle-wrapper.jar
 *.war
 *.ear
 *.apk
@@ -80,4 +81,3 @@ local.properties
 *.tag
 ireport/
 nb-inf/
-
