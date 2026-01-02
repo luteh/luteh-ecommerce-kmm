@@ -26,14 +26,29 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.13'
+
   analyze-codebase:
     runs-on: ubuntu-latest
     needs: setup
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.13'
+
       - name: Analyze (Lint)
-        run: ./gradlew lintDebug
+        run: gradle lintDebug
 
   unit-tests:
     needs: setup
@@ -42,8 +57,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.13'
+
       - name: Run Unit Tests
-        run: ./gradlew testDebugUnitTest
+        run: gradle testDebugUnitTest
 
   build-android:
     name: Build Android App
@@ -64,9 +91,11 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.13'
 
       - name: Build Android App
-        run: ./gradlew assembleDebug
+        run: gradle assembleDebug
 
   build-ios:
     name: Build iOS App
@@ -86,9 +115,11 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.13'
 
       - name: Build Kotlin Framework for iOS
-        run: ./gradlew :composeApp:linkDebugFrameworkIosSimulatorArm64
+        run: gradle :composeApp:linkDebugFrameworkIosSimulatorArm64
 
       - name: Build iOS App
         run: |
