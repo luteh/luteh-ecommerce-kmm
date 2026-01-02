@@ -75,7 +75,6 @@ jobs:
   build-android:
     name: Build Android App
     needs: [setup, analyze-codebase, unit-tests]
-    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
 
     steps:
@@ -100,7 +99,6 @@ jobs:
   build-ios:
     name: Build iOS App
     needs: [setup, analyze-codebase, unit-tests]
-    if: github.event_name == 'workflow_dispatch'
     runs-on: macos-latest
 
     steps:
