@@ -1,0 +1,108 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "master"]
+  pull_request:
+    branches: [ "develop" ]
+  workflow_dispatch:
+
+jobs:
+  check:
+    name: Check (Lint & Test)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Setup Environment
+        uses: ./.github/actions/setup-env
+
+      - name: Run Checks
+        run: gradle lintDebug testDebugUnitTest --parallel --build-cache
+
+  build-android-debug:
+    name: Build Android App
+    needs: [check]
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 30
+
+    steps:
+      - name: Setup Environment
+        uses: ./.github/actions/setup-env
+
+      - name: Build Android App
+        run: gradle assembleDebug --parallel --build-cache
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-debug-apk
+          path: '**/build/outputs/apk/debug/*.apk'
+
+  build-ios-debug:
+    name: Build iOS App
+    needs: [check]
+    runs-on: macos-latest
+    environment: production
+    timeout-minutes: 45
+
+    steps:
+      - name: Setup Environment
+        uses: ./.github/actions/setup-env
+
+      - name: Build Kotlin Framework for iOS
+        run: gradle :composeApp:linkDebugFrameworkIosSimulatorArm64 --parallel --build-cache
+
+      - name: Build iOS App
+        run: |
+          cd iosApp
+          xcodebuild -project iosApp.xcodeproj \
+            -scheme iosApp \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
+            clean build \
+            CODE_SIGNING_ALLOWED=NO
+
+  build-android-release:
+    name: Build Android App (Release)
+    needs: [check]
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 30
+
+    steps:
+      - name: Setup Environment
+        uses: ./.github/actions/setup-env
+
+      - name: Build Android App
+        run: gradle assembleRelease --parallel --build-cache
+
+      - name: Upload Release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-release-apk
+          path: '**/build/outputs/apk/release/*.apk'
+
+  build-ios-release:
+    name: Build iOS App (Release)
+    needs: [check]
+    runs-on: macos-latest
+    environment: production
+    timeout-minutes: 45
+
+    steps:
+      - name: Setup Environment
+        uses: ./.github/actions/setup-env
+
+      - name: Build Kotlin Framework for iOS
+        run: gradle :composeApp:linkReleaseFrameworkIosSimulatorArm64 --parallel --build-cache
+
+      - name: Build iOS App
+        run: |
+          cd iosApp
+          xcodebuild -project iosApp.xcodeproj \
+            -scheme iosApp \
+            -configuration Release \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
+            clean build \
+            CODE_SIGNING_ALLOWED=NO
+
