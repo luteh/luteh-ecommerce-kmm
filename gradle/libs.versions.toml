@@ -21,6 +21,7 @@ kotlinx-serialization = "1.9.0"
 ksp = "2.3.4"
 kotlinx-coroutines = "1.10.2"
 mokkery = "3.1.1"
+turbine = "1.2.1"
 
 # Third Party
 arrow = "2.2.1.1"
@@ -47,6 +48,7 @@ koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", ver
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "compose-navigation" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 apollo-runtime = { module = "com.apollographql.apollo:apollo-runtime", version.ref = "apollo" }
+apollo-testing-support = { module = "com.apollographql.apollo:apollo-testing-support", version.ref = "apollo" }
 
 # Room
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
@@ -55,6 +57,7 @@ androidx-sqlite-bundled = { group = "androidx.sqlite", name = "sqlite-bundled", 
 
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
+turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

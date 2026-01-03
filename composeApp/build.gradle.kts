@@ -58,13 +58,13 @@ kotlin {
         commonTest.dependencies {
             implementation(libs.kotlin.test)
             implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.turbine)
+            implementation(libs.apollo.testing.support)
         }
     }
 }
 
-room {
-    schemaDirectory("$projectDir/schemas")
-}
+room { schemaDirectory("$projectDir/schemas") }
 
 dependencies {
     add("kspCommonMainMetadata", libs.androidx.room.compiler)
