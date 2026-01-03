@@ -150,7 +150,7 @@ fun ProductListScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier.fillMaxSize(),
             ) {
-                items(filteredProducts) { product ->
+                items(items = filteredProducts, key = { product -> product.id }) { product ->
                     ProductItem(
                         product = product,
                         onClick = { onNavigateToProductDetail(product.id) },
