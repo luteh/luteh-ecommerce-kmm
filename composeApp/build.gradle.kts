@@ -67,6 +67,7 @@ kotlin {
             implementation(libs.robolectric)
             @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
             implementation(compose.uiTest)
+            implementation(libs.androidx.core.ktx)
         }
     }
 }

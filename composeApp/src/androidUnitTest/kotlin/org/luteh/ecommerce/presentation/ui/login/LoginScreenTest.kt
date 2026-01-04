@@ -1,6 +1,9 @@
 package org.luteh.ecommerce.presentation.ui.login
 
+import android.app.Application
+import android.content.ComponentName
 import android.content.ContentProvider
+import androidx.activity.ComponentActivity
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
@@ -9,11 +12,16 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.runComposeUiTest
+import androidx.test.core.app.ApplicationProvider
 import org.junit.Before
+import org.junit.Rule
+import org.junit.rules.TestWatcher
+import org.junit.runner.Description
 import org.junit.runner.RunWith
 import org.luteh.ecommerce.presentation.core.ResultState
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.Shadows
 import org.robolectric.util.Logger
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -22,6 +30,22 @@ import kotlin.test.assertTrue
 @OptIn(ExperimentalTestApi::class)
 @RunWith(RobolectricTestRunner::class)
 class LoginScreenTest {
+
+    // To resolve RuntimeException: Unable to resolve activity for Intent when running
+    // testReleaseUnitTest
+    // See this https://github.com/robolectric/robolectric/pull/4736#issuecomment-1831034882
+    @get:Rule(order = 1)
+    val addActivityToRobolectricRule =
+        object : TestWatcher() {
+            override fun starting(description: Description?) {
+                super.starting(description)
+                val appContext: Application = ApplicationProvider.getApplicationContext()
+                Shadows.shadowOf(appContext.packageManager)
+                    .addActivityIfNotPresent(
+                        ComponentName(appContext.packageName, ComponentActivity::class.java.name)
+                    )
+            }
+        }
 
     @Before
     fun setup() {

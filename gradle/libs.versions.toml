@@ -30,6 +30,7 @@ arrow = "2.2.1.1"
 koin = "4.1.1"
 koin-compose = "4.1.1"
 apollo = "4.3.3"
+coreKtx = "1.7.0"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
@@ -61,6 +62,7 @@ kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotl
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
+androidx-core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "coreKtx" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
