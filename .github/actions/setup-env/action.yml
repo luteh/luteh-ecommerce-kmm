@@ -1,11 +1,8 @@
 name: 'Setup Environment'
-description: 'Checkout code, setup Java and Gradle'
+description: 'Setup Java and Gradle'
 runs:
   using: "composite"
   steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
     - name: Set up Java
       uses: actions/setup-java@v4
       with:
@@ -16,4 +13,3 @@ runs:
       uses: gradle/actions/setup-gradle@v3
       with:
         gradle-version: '8.13'
-
