@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import org.luteh.ecommerce.domain.model.ProductUiModel
 
 @Composable
 fun ProductItem(product: ProductUiModel, onClick: () -> Unit) {

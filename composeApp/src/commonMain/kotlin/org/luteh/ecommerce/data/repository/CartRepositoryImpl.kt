@@ -2,7 +2,7 @@ package org.luteh.ecommerce.data.repository
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import org.luteh.ecommerce.data.local.dao.CartDao
+import org.luteh.ecommerce.data.local.database.dao.CartDao
 import org.luteh.ecommerce.data.local.entity.CartEntity
 import org.luteh.ecommerce.domain.model.CartItemModel
 import org.luteh.ecommerce.domain.model.ProductModel

@@ -8,7 +8,7 @@ import kotlinx.coroutines.withContext
 import org.luteh.ecommerce.CreateUserMutation
 import org.luteh.ecommerce.data.config.FeatureConfig
 import org.luteh.ecommerce.data.datasource.remote.AuthRemoteDataSource
-import org.luteh.ecommerce.data.local.dao.UserSessionDao
+import org.luteh.ecommerce.data.local.database.dao.UserSessionDao
 import org.luteh.ecommerce.data.local.entity.UserSessionEntity
 import org.luteh.ecommerce.domain.model.RegisterParam
 import org.luteh.ecommerce.domain.model.UserRole

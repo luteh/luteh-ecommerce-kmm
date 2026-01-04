@@ -10,7 +10,7 @@ import dev.mokkery.mock
 import dev.mokkery.verifySuspend
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
-import org.luteh.ecommerce.data.local.dao.CartDao
+import org.luteh.ecommerce.data.local.database.dao.CartDao
 import org.luteh.ecommerce.data.local.entity.CartEntity
 import org.luteh.ecommerce.domain.model.ProductModel
 import kotlin.test.BeforeTest

@@ -1,5 +1,8 @@
 package org.luteh.ecommerce.core
 
+import org.luteh.ecommerce.domain.annotation.ExcludeFromCoverage
+
+@ExcludeFromCoverage
 class CustomException : Exception {
     // Default constructor
     constructor() : super()

@@ -6,7 +6,7 @@ import org.luteh.ecommerce.data.config.FeatureConfig
 import org.luteh.ecommerce.data.config.FeatureConfigImpl
 import org.luteh.ecommerce.data.datasource.remote.AuthRemoteDataSource
 import org.luteh.ecommerce.data.datasource.remote.AuthRemoteDataSourceImpl
-import org.luteh.ecommerce.data.local.AppDatabase
+import org.luteh.ecommerce.data.local.database.AppDatabase
 import org.luteh.ecommerce.data.repository.AddressRepositoryImpl
 import org.luteh.ecommerce.data.repository.AuthRepositoryImpl
 import org.luteh.ecommerce.data.repository.CartRepositoryImpl

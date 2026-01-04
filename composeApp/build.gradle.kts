@@ -11,6 +11,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
     alias(libs.plugins.mokkery)
+    alias(libs.plugins.kover)
 }
 
 kotlin {
@@ -60,6 +61,64 @@ kotlin {
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.turbine)
             implementation(libs.apollo.testing.support)
+        }
+    }
+}
+
+kover {
+    reports {
+        filters {
+            excludes {
+                // Android generated
+                classes("*.BuildConfig")
+                classes("*.R")
+                classes("*.R$*")
+                classes("*Manifest*")
+
+                // Room generated
+                classes("*_Impl")
+                classes("*_Impl$*")
+                classes("*Dao_Impl*")
+
+                // Apollo generated
+                classes("*.type.*")
+                classes("*.fragment.*")
+                classes("*.selections.*")
+                classes("*Query*")
+                classes("*Mutation*")
+                classes("*Subscription*")
+
+                // generated
+                classes("*ComposableSingletons$*")
+                classes("*.generated.*")
+
+                // Serialization generated
+                classes("*\$serializer")
+
+                // Previews
+                annotatedBy("*Preview*")
+
+                // UI
+                annotatedBy("androidx.compose.runtime.Composable")
+                classes("*.presentation.component.*")
+                classes("*.presentation.core.*")
+                classes("*.presentation.navigation.*")
+                classes("*.theme.*")
+
+                // Android Components
+                classes("*Activity")
+                classes("*Application")
+
+                // DI Modules
+                classes("*.di.*")
+
+                // Data Models & Entities
+                classes("*.domain.model.*")
+                classes("*.data.local.entity.*")
+
+                classes("*.data.local.database.*")
+                annotatedBy("*ExcludeFromCoverage")
+            }
         }
     }
 }

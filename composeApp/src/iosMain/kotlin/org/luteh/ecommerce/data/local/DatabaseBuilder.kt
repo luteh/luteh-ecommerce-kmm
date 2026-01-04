@@ -3,6 +3,10 @@ package org.luteh.ecommerce.data.local
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import org.luteh.ecommerce.data.local.database.AppDatabase
+import org.luteh.ecommerce.data.local.database.AppDatabaseConstructor
+import org.luteh.ecommerce.data.local.database.MIGRATION_1_2
+import org.luteh.ecommerce.data.local.database.MIGRATION_2_3
 import platform.Foundation.NSHomeDirectory
 
 fun getDatabaseBuilder(): RoomDatabase.Builder<AppDatabase> {

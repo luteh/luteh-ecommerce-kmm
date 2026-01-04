@@ -42,8 +42,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import org.koin.compose.viewmodel.koinViewModel
+import org.luteh.ecommerce.domain.model.dummyProducts
 import org.luteh.ecommerce.presentation.ui.common.ProductItem
-import org.luteh.ecommerce.presentation.ui.common.dummyProducts
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

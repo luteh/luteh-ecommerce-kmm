@@ -1,4 +1,4 @@
-package org.luteh.ecommerce.presentation.ui.common
+package org.luteh.ecommerce.domain.model
 
 import androidx.compose.ui.graphics.Color
 

@@ -2,7 +2,7 @@ package org.luteh.ecommerce.data.repository
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import org.luteh.ecommerce.data.local.dao.ShippingAddressDao
+import org.luteh.ecommerce.data.local.database.dao.ShippingAddressDao
 import org.luteh.ecommerce.data.local.entity.ShippingAddressEntity
 import org.luteh.ecommerce.domain.model.ShippingAddress
 import org.luteh.ecommerce.domain.repository.AddressRepository

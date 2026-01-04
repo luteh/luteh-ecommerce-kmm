@@ -1,4 +1,4 @@
-package org.luteh.ecommerce.data.local
+package org.luteh.ecommerce.data.local.database
 
 import androidx.room.migration.Migration
 import androidx.sqlite.SQLiteConnection

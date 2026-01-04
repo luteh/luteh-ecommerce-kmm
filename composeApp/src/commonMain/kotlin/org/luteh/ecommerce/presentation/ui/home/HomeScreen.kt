@@ -51,11 +51,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import org.luteh.ecommerce.domain.model.Category
+import org.luteh.ecommerce.domain.model.dummyProducts
 import org.luteh.ecommerce.presentation.ui.common.ProductItem
-import org.luteh.ecommerce.presentation.ui.common.dummyProducts
 
 @Composable
 fun HomeScreen(
@@ -263,5 +263,3 @@ fun CategoryItem(category: Category) {
         )
     }
 }
-
-data class Category(val name: String, val icon: ImageVector)

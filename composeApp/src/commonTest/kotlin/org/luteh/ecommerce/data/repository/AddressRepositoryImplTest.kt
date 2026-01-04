@@ -8,15 +8,15 @@ import dev.mokkery.everySuspend
 import dev.mokkery.matcher.any
 import dev.mokkery.mock
 import dev.mokkery.verifySuspend
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.runTest
+import org.luteh.ecommerce.data.local.database.dao.ShippingAddressDao
+import org.luteh.ecommerce.data.local.entity.ShippingAddressEntity
+import org.luteh.ecommerce.domain.model.ShippingAddress
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.runTest
-import org.luteh.ecommerce.data.local.dao.ShippingAddressDao
-import org.luteh.ecommerce.data.local.entity.ShippingAddressEntity
-import org.luteh.ecommerce.domain.model.ShippingAddress
 
 class AddressRepositoryImplTest {
 

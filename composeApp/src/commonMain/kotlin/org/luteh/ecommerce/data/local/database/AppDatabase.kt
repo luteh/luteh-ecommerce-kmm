@@ -1,12 +1,12 @@
-package org.luteh.ecommerce.data.local
+package org.luteh.ecommerce.data.local.database
 
 import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
-import org.luteh.ecommerce.data.local.dao.CartDao
-import org.luteh.ecommerce.data.local.dao.ShippingAddressDao
-import org.luteh.ecommerce.data.local.dao.UserSessionDao
+import org.luteh.ecommerce.data.local.database.dao.CartDao
+import org.luteh.ecommerce.data.local.database.dao.ShippingAddressDao
+import org.luteh.ecommerce.data.local.database.dao.UserSessionDao
 import org.luteh.ecommerce.data.local.entity.CartEntity
 import org.luteh.ecommerce.data.local.entity.ShippingAddressEntity
 import org.luteh.ecommerce.data.local.entity.UserSessionEntity

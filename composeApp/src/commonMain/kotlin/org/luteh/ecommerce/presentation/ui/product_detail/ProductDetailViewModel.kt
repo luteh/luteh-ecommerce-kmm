@@ -10,9 +10,9 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.luteh.ecommerce.domain.model.SessionResult
+import org.luteh.ecommerce.domain.model.dummyProducts
 import org.luteh.ecommerce.domain.repository.CartRepository
 import org.luteh.ecommerce.domain.usecase.auth.CheckSessionUseCase
-import org.luteh.ecommerce.presentation.ui.common.dummyProducts
 
 class ProductDetailViewModel(
     private val cartRepository: CartRepository,

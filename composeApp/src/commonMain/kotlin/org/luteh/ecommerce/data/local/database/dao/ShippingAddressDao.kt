@@ -1,4 +1,4 @@
-package org.luteh.ecommerce.data.local.dao
+package org.luteh.ecommerce.data.local.database.dao
 
 import androidx.room.Dao
 import androidx.room.Insert

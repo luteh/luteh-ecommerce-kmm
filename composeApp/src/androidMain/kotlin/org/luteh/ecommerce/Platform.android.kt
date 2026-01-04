@@ -1,11 +1,13 @@
 package org.luteh.ecommerce
 
 import android.os.Build
+import org.luteh.ecommerce.domain.annotation.ExcludeFromCoverage
 
+@ExcludeFromCoverage
 class AndroidPlatform : Platform {
     override val name: String = "Android ${Build.VERSION.SDK_INT}"
     override val isIos: Boolean
         get() = false
 }
 
-actual fun getPlatform(): Platform = AndroidPlatform()
+@ExcludeFromCoverage actual fun getPlatform(): Platform = AndroidPlatform()

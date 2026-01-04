@@ -14,7 +14,7 @@ import org.luteh.ecommerce.GetRolesQuery
 import org.luteh.ecommerce.LoginMutation
 import org.luteh.ecommerce.data.config.FeatureConfig
 import org.luteh.ecommerce.data.datasource.remote.AuthRemoteDataSource
-import org.luteh.ecommerce.data.local.dao.UserSessionDao
+import org.luteh.ecommerce.data.local.database.dao.UserSessionDao
 import org.luteh.ecommerce.data.local.entity.UserSessionEntity
 import org.luteh.ecommerce.domain.model.RegisterParam
 import org.luteh.ecommerce.domain.model.UserRole
