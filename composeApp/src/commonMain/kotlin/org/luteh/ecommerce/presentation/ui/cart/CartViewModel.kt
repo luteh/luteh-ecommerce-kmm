@@ -48,9 +48,7 @@ class CartViewModel(
 
     private fun updateQuantity(productId: String, quantity: Int) {
         viewModelScope.launch {
-            try {
-                updateCartItemQuantityUseCase(productId, quantity)
-            } catch (e: Exception) {
+            updateCartItemQuantityUseCase(productId, quantity).onFailure { e ->
                 sendEffect(Effect.ShowToast("Failed to update quantity: ${e.message}"))
             }
         }

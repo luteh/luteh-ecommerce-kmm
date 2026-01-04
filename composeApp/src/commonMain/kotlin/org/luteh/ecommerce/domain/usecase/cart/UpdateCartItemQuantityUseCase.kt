@@ -2,8 +2,13 @@ package org.luteh.ecommerce.domain.usecase.cart
 
 import org.luteh.ecommerce.domain.repository.CartRepository
 
-class UpdateCartItemQuantityUseCase(private val cartRepository: CartRepository) {
-    suspend operator fun invoke(productId: String, quantity: Int) {
+interface UpdateCartItemQuantityUseCase {
+    suspend operator fun invoke(productId: String, quantity: Int): Result<Unit>
+}
+
+class UpdateCartItemQuantityUseCaseImpl(private val cartRepository: CartRepository) :
+    UpdateCartItemQuantityUseCase {
+    override suspend operator fun invoke(productId: String, quantity: Int) = runCatching {
         if (quantity > 0) {
             cartRepository.updateQuantity(productId, quantity)
         } else {
