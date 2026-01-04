@@ -13,7 +13,7 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import org.luteh.ecommerce.domain.repository.AuthRepository
+import org.luteh.ecommerce.domain.model.SessionResult
 import org.luteh.ecommerce.domain.repository.CartRepository
 import org.luteh.ecommerce.domain.usecase.auth.CheckSessionUseCase
 import kotlin.test.AfterTest
@@ -29,7 +29,6 @@ class ProductDetailViewModelTest {
 
     private lateinit var viewModel: ProductDetailViewModel
     private lateinit var cartRepository: CartRepository
-    private lateinit var authRepository: AuthRepository
     private lateinit var checkSessionUseCase: CheckSessionUseCase
 
     private val testDispatcher = StandardTestDispatcher()
@@ -38,8 +37,7 @@ class ProductDetailViewModelTest {
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         cartRepository = mock(MockMode.autoUnit)
-        authRepository = mock(MockMode.autoUnit)
-        checkSessionUseCase = CheckSessionUseCase(authRepository)
+        checkSessionUseCase = mock(MockMode.autoUnit)
         viewModel = ProductDetailViewModel(cartRepository, checkSessionUseCase)
     }
 
@@ -69,7 +67,7 @@ class ProductDetailViewModelTest {
     @Test
     fun `AddToCart when logged in should add to cart and show snackbar`() = runTest {
         // Arrange
-        everySuspend { authRepository.getLoginSession() } returns true
+        everySuspend { checkSessionUseCase() } returns Result.success(SessionResult.LoggedIn)
         everySuspend { cartRepository.addToCart(any()) } returns Unit
 
         // Load product first so we have something to add
@@ -94,7 +92,7 @@ class ProductDetailViewModelTest {
     @Test
     fun `AddToCart when not logged in should navigate to login`() = runTest {
         // Arrange
-        everySuspend { authRepository.getLoginSession() } returns false
+        everySuspend { checkSessionUseCase() } returns Result.success(SessionResult.NotLoggedIn)
 
         viewModel.effect.test {
             // Act
@@ -110,7 +108,7 @@ class ProductDetailViewModelTest {
     @Test
     fun `OnCartClicked when logged in should navigate to cart`() = runTest {
         // Arrange
-        everySuspend { authRepository.getLoginSession() } returns true
+        everySuspend { checkSessionUseCase() } returns Result.success(SessionResult.LoggedIn)
 
         viewModel.effect.test {
             // Act
@@ -126,7 +124,7 @@ class ProductDetailViewModelTest {
     @Test
     fun `OnCartClicked when not logged in should navigate to login`() = runTest {
         // Arrange
-        everySuspend { authRepository.getLoginSession() } returns false
+        everySuspend { checkSessionUseCase() } returns Result.success(SessionResult.NotLoggedIn)
 
         viewModel.effect.test {
             // Act
@@ -136,6 +134,59 @@ class ProductDetailViewModelTest {
             // Assert
             val effect = awaitItem()
             assertEquals(ProductDetailEffect.NavigateToLogin, effect)
+        }
+    }
+
+    @Test
+    fun `AddToCart when session check fails should show snackbar`() = runTest {
+        // Arrange
+        val errorMessage = "Network error"
+        everySuspend { checkSessionUseCase() } returns
+            Result.failure(RuntimeException(errorMessage))
+
+        viewModel.effect.test {
+            // Act
+            viewModel.onEvent(ProductDetailEvent.AddToCart)
+            testDispatcher.scheduler.advanceUntilIdle()
+
+            // Assert
+            val effect = awaitItem()
+            assertTrue(effect is ProductDetailEffect.ShowSnackbar)
+            assertEquals(errorMessage, effect.message)
+        }
+    }
+
+    @Test
+    fun `OnCartClicked when session check fails should show snackbar`() = runTest {
+        // Arrange
+        val errorMessage = "Network error"
+        everySuspend { checkSessionUseCase() } returns
+            Result.failure(RuntimeException(errorMessage))
+
+        viewModel.effect.test {
+            // Act
+            viewModel.onEvent(ProductDetailEvent.OnCartClicked)
+            testDispatcher.scheduler.advanceUntilIdle()
+
+            // Assert
+            val effect = awaitItem()
+            assertTrue(effect is ProductDetailEffect.ShowSnackbar)
+            assertEquals(errorMessage, effect.message)
+        }
+    }
+
+    @Test
+    fun `AddToCart when product is not loaded should do nothing`() = runTest {
+        // Arrange
+        everySuspend { checkSessionUseCase() } returns Result.success(SessionResult.LoggedIn)
+
+        viewModel.effect.test {
+            // Act
+            viewModel.onEvent(ProductDetailEvent.AddToCart)
+            testDispatcher.scheduler.advanceUntilIdle()
+
+            // Assert
+            expectNoEvents()
         }
     }
 }

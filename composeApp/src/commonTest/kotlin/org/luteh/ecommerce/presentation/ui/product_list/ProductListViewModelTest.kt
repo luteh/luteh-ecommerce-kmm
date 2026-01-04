@@ -11,7 +11,7 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import org.luteh.ecommerce.domain.repository.AuthRepository
+import org.luteh.ecommerce.domain.model.SessionResult
 import org.luteh.ecommerce.domain.usecase.auth.CheckSessionUseCase
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -22,7 +22,6 @@ import kotlin.test.assertEquals
 class ProductListViewModelTest {
 
     private lateinit var viewModel: ProductListViewModel
-    private lateinit var authRepository: AuthRepository
     private lateinit var checkSessionUseCase: CheckSessionUseCase
 
     private val testDispatcher = StandardTestDispatcher()
@@ -30,8 +29,7 @@ class ProductListViewModelTest {
     @BeforeTest
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-        authRepository = mock(MockMode.autoUnit)
-        checkSessionUseCase = CheckSessionUseCase(authRepository)
+        checkSessionUseCase = mock(MockMode.autoUnit)
         viewModel = ProductListViewModel(checkSessionUseCase)
     }
 
@@ -43,7 +41,7 @@ class ProductListViewModelTest {
     @Test
     fun `OnCartClicked when logged in should navigate to cart`() = runTest {
         // Arrange
-        everySuspend { authRepository.getLoginSession() } returns true
+        everySuspend { checkSessionUseCase() } returns Result.success(SessionResult.LoggedIn)
 
         viewModel.effect.test {
             // Act
@@ -58,7 +56,7 @@ class ProductListViewModelTest {
     @Test
     fun `OnCartClicked when not logged in should navigate to login`() = runTest {
         // Arrange
-        everySuspend { authRepository.getLoginSession() } returns false
+        everySuspend { checkSessionUseCase() } returns Result.success(SessionResult.NotLoggedIn)
 
         viewModel.effect.test {
             // Act

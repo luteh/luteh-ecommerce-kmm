@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.luteh.ecommerce.domain.model.SessionResult
 import org.luteh.ecommerce.domain.repository.CartRepository
 import org.luteh.ecommerce.domain.usecase.auth.CheckSessionUseCase
 import org.luteh.ecommerce.presentation.ui.common.dummyProducts
@@ -34,23 +35,42 @@ class ProductDetailViewModel(
 
     private fun checkAuthAndNavigateToCart() {
         viewModelScope.launch {
-            val isLoggedIn = checkSessionUseCase()
-            if (isLoggedIn) {
-                _effect.send(ProductDetailEffect.NavigateToCart)
-            } else {
-                _effect.send(ProductDetailEffect.NavigateToLogin)
-            }
+            checkSessionUseCase()
+                .fold(
+                    onSuccess = { isLoggedIn ->
+                        when (isLoggedIn) {
+                            SessionResult.LoggedIn ->
+                                _effect.send(ProductDetailEffect.NavigateToCart)
+                            SessionResult.NotLoggedIn ->
+                                _effect.send(ProductDetailEffect.NavigateToLogin)
+                        }
+                    },
+                    onFailure = {
+                        _effect.send(
+                            ProductDetailEffect.ShowSnackbar(it.message ?: "Something went wrong")
+                        )
+                    },
+                )
         }
     }
 
     private fun checkAuthAndAddToCart() {
         viewModelScope.launch {
-            val isLoggedIn = checkSessionUseCase()
-            if (isLoggedIn) {
-                addToCart()
-            } else {
-                _effect.send(ProductDetailEffect.NavigateToLogin)
-            }
+            checkSessionUseCase()
+                .fold(
+                    onSuccess = { isLoggedIn ->
+                        when (isLoggedIn) {
+                            SessionResult.LoggedIn -> addToCart()
+                            SessionResult.NotLoggedIn ->
+                                _effect.send(ProductDetailEffect.NavigateToLogin)
+                        }
+                    },
+                    onFailure = {
+                        _effect.send(
+                            ProductDetailEffect.ShowSnackbar(it.message ?: "Something went wrong")
+                        )
+                    },
+                )
         }
     }
 

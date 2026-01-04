@@ -26,6 +26,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -56,12 +58,16 @@ fun ProductListScreen(
     var selectedCategory by remember { mutableStateOf<String?>(null) }
     var products by remember { mutableStateOf(dummyProducts) }
     var isLoading by remember { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
                 ProductListViewModel.Effect.NavigateToCart -> onNavigateToCart()
                 ProductListViewModel.Effect.NavigateToLogin -> onNavigateToLogin()
+                is ProductListViewModel.Effect.ShowSnackbar -> {
+                    snackbarHostState.showSnackbar(effect.message)
+                }
             }
         }
     }
@@ -91,6 +97,7 @@ fun ProductListScreen(
         }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = { Text("Products") },
@@ -109,7 +116,7 @@ fun ProductListScreen(
                     }
                 },
             )
-        }
+        },
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             // Search Bar

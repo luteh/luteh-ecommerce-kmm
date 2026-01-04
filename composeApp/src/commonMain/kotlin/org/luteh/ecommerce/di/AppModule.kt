@@ -18,6 +18,7 @@ import org.luteh.ecommerce.domain.repository.CartRepository
 import org.luteh.ecommerce.domain.repository.OrderRepository
 import org.luteh.ecommerce.domain.repository.ProductRepository
 import org.luteh.ecommerce.domain.usecase.auth.CheckSessionUseCase
+import org.luteh.ecommerce.domain.usecase.auth.CheckSessionUseCaseImpl
 import org.luteh.ecommerce.domain.usecase.auth.LoginUseCase
 import org.luteh.ecommerce.domain.usecase.auth.LogoutUseCase
 import org.luteh.ecommerce.domain.usecase.cart.UpdateCartItemQuantityUseCase
@@ -54,7 +55,7 @@ fun appModule() = module {
     // Cart UseCases
     single { UpdateCartItemQuantityUseCase(get()) }
     factory { LoginUseCase(get()) }
-    factory { CheckSessionUseCase(get()) }
+    factory<CheckSessionUseCase> { CheckSessionUseCaseImpl(get()) }
     factory { LogoutUseCase(get()) }
 
     single<FeatureConfig> { FeatureConfigImpl() }
