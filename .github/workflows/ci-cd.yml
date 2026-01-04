@@ -12,6 +12,8 @@ jobs:
     name: Check Code Quality
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: write
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -27,7 +29,21 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: kover-report
-          path: '**/build/reports/kover/html'
+          path: composeApp/build/reports/kover/html/
+
+      - name: Deploy Kover Report to GitHub Pages
+        if: github.ref == 'refs/heads/master'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: composeApp/build/reports/kover/html
+          destination_dir: coverage
+
+      - name: Print Hosted Report URL
+        if: github.ref == 'refs/heads/master'
+        run: |
+          REPO_NAME=$(echo "${{ github.repository }}" | cut -d'/' -f2)
+          echo "Hosted Kover Report: https://${{ github.repository_owner }}.github.io/$REPO_NAME/coverage/"
 
   build-android-debug:
     name: Build Android App
