@@ -1,0 +1,355 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>composeApp Coverage Report > ProductDetailViewModel</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope: composeApp<span class="separator">|</span>    <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.luteh.ecommerce.presentation.ui.product_detail</a>
+</div>
+
+<h1>Coverage Summary for Class: ProductDetailViewModel (org.luteh.ecommerce.presentation.ui.product_detail)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+<th class="coverageStat 
+">
+  Instruction, %
+</th>
+</tr>
+<tr>
+  <td class="name">ProductDetailViewModel</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    92.9%
+  </span>
+  <span class="absValue">
+    (13/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (28/28)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    99%
+  </span>
+  <span class="absValue">
+    (197/199)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">ProductDetailViewModel$addToCart$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+    <td class="coverageStat"/>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (46/46)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">ProductDetailViewModel$checkAuthAndAddToCart$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    87.5%
+  </span>
+  <span class="absValue">
+    (7/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (10/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    98%
+  </span>
+  <span class="absValue">
+    (97/99)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">ProductDetailViewModel$checkAuthAndNavigateToCart$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    87.5%
+  </span>
+  <span class="absValue">
+    (7/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (11/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    98.3%
+  </span>
+  <span class="absValue">
+    (114/116)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (9/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    90%
+  </span>
+  <span class="absValue">
+    (27/30)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (52/52)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    98.7%
+  </span>
+  <span class="absValue">
+    (454/460)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.luteh.ecommerce.presentation.ui.product_detail
+&nbsp;
+&nbsp;import androidx.lifecycle.ViewModel
+&nbsp;import androidx.lifecycle.viewModelScope
+&nbsp;import kotlinx.coroutines.channels.Channel
+&nbsp;import kotlinx.coroutines.flow.MutableStateFlow
+&nbsp;import kotlinx.coroutines.flow.StateFlow
+&nbsp;import kotlinx.coroutines.flow.asStateFlow
+&nbsp;import kotlinx.coroutines.flow.receiveAsFlow
+&nbsp;import kotlinx.coroutines.flow.update
+&nbsp;import kotlinx.coroutines.launch
+&nbsp;import org.luteh.ecommerce.domain.model.SessionResult
+&nbsp;import org.luteh.ecommerce.domain.model.dummyProducts
+&nbsp;import org.luteh.ecommerce.domain.repository.CartRepository
+&nbsp;import org.luteh.ecommerce.domain.usecase.auth.CheckSessionUseCase
+&nbsp;
+<b class="fc">&nbsp;class ProductDetailViewModel(</b>
+<b class="fc">&nbsp;    private val cartRepository: CartRepository,</b>
+<b class="fc">&nbsp;    private val checkSessionUseCase: CheckSessionUseCase,</b>
+&nbsp;) : ViewModel() {
+&nbsp;
+<b class="fc">&nbsp;    private val _state = MutableStateFlow(ProductDetailState())</b>
+<b class="fc">&nbsp;    val state: StateFlow&lt;ProductDetailState&gt; = _state.asStateFlow()</b>
+&nbsp;
+<b class="fc">&nbsp;    private val _effect = Channel&lt;ProductDetailEffect&gt;()</b>
+<b class="fc">&nbsp;    val effect = _effect.receiveAsFlow()</b>
+&nbsp;
+&nbsp;    fun onEvent(event: ProductDetailEvent) {
+<b class="fc">&nbsp;        when (event) {</b>
+<b class="fc">&nbsp;            is ProductDetailEvent.LoadProduct -&gt; loadProduct(event.productId)</b>
+<b class="fc">&nbsp;            ProductDetailEvent.AddToCart -&gt; checkAuthAndAddToCart()</b>
+<b class="fc">&nbsp;            ProductDetailEvent.OnCartClicked -&gt; checkAuthAndNavigateToCart()</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private fun checkAuthAndNavigateToCart() {
+<b class="fc">&nbsp;        viewModelScope.launch {</b>
+<b class="fc">&nbsp;            checkSessionUseCase()</b>
+<b class="fc">&nbsp;                .fold(</b>
+&nbsp;                    onSuccess = { isLoggedIn -&gt;
+<b class="fc">&nbsp;                        when (isLoggedIn) {</b>
+<b class="fc">&nbsp;                            SessionResult.LoggedIn -&gt;</b>
+<b class="fc">&nbsp;                                _effect.send(ProductDetailEffect.NavigateToCart)</b>
+<b class="fc">&nbsp;                            SessionResult.NotLoggedIn -&gt;</b>
+<b class="fc">&nbsp;                                _effect.send(ProductDetailEffect.NavigateToLogin)</b>
+&nbsp;                        }
+<b class="fc">&nbsp;                    },</b>
+&nbsp;                    onFailure = {
+<b class="fc">&nbsp;                        _effect.send(</b>
+<b class="pc">&nbsp;                            ProductDetailEffect.ShowSnackbar(it.message ?: &quot;Something went wrong&quot;)</b>
+&nbsp;                        )
+<b class="fc">&nbsp;                    },</b>
+&nbsp;                )
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private fun checkAuthAndAddToCart() {
+<b class="fc">&nbsp;        viewModelScope.launch {</b>
+<b class="fc">&nbsp;            checkSessionUseCase()</b>
+<b class="fc">&nbsp;                .fold(</b>
+&nbsp;                    onSuccess = { isLoggedIn -&gt;
+<b class="fc">&nbsp;                        when (isLoggedIn) {</b>
+<b class="fc">&nbsp;                            SessionResult.LoggedIn -&gt; addToCart()</b>
+<b class="fc">&nbsp;                            SessionResult.NotLoggedIn -&gt;</b>
+<b class="fc">&nbsp;                                _effect.send(ProductDetailEffect.NavigateToLogin)</b>
+&nbsp;                        }
+<b class="fc">&nbsp;                    },</b>
+&nbsp;                    onFailure = {
+<b class="fc">&nbsp;                        _effect.send(</b>
+<b class="pc">&nbsp;                            ProductDetailEffect.ShowSnackbar(it.message ?: &quot;Something went wrong&quot;)</b>
+&nbsp;                        )
+<b class="fc">&nbsp;                    },</b>
+&nbsp;                )
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private fun loadProduct(productId: String) {
+&nbsp;        // In a real app, this would come from a repository
+<b class="fc">&nbsp;        val product = dummyProducts.find { it.id == productId }</b>
+<b class="fc">&nbsp;        if (product != null) {</b>
+<b class="fc">&nbsp;            _state.update {</b>
+<b class="fc">&nbsp;                it.copy(</b>
+&nbsp;                    product =
+<b class="fc">&nbsp;                        org.luteh.ecommerce.domain.model.ProductModel(</b>
+<b class="fc">&nbsp;                            id = product.id,</b>
+<b class="fc">&nbsp;                            name = product.name,</b>
+<b class="pc">&nbsp;                            price = product.price.replace(&quot;$&quot;, &quot;&quot;).toDoubleOrNull() ?: 0.0,</b>
+<b class="fc">&nbsp;                            thumbnailImageUrl = &quot;&quot;, // Dummy doesn&#39;t have URL</b>
+<b class="fc">&nbsp;                            shopName = &quot;Luteh Shop&quot;,</b>
+<b class="fc">&nbsp;                            rating = product.rating,</b>
+<b class="fc">&nbsp;                            ratingCount = 120,</b>
+&nbsp;                        )
+<b class="fc">&nbsp;                )</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private fun addToCart() {
+<b class="fc">&nbsp;        val product = _state.value.product ?: return</b>
+<b class="fc">&nbsp;        viewModelScope.launch {</b>
+<b class="fc">&nbsp;            cartRepository.addToCart(product)</b>
+<b class="fc">&nbsp;            _effect.send(ProductDetailEffect.ShowSnackbar(&quot;Added to cart&quot;))</b>
+<b class="fc">&nbsp;            _state.update { it.copy(isAddedToCart = true) }</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-01-04 02:26</div>
+</div>
+</body>
+</html>

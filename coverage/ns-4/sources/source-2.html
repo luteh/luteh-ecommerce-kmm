@@ -1,0 +1,391 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>composeApp Coverage Report > AuthRepositoryImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope: composeApp<span class="separator">|</span>    <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.luteh.ecommerce.data.repository</a>
+</div>
+
+<h1>Coverage Summary for Class: AuthRepositoryImpl (org.luteh.ecommerce.data.repository)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+<th class="coverageStat 
+">
+  Instruction, %
+</th>
+</tr>
+<tr>
+  <td class="name">AuthRepositoryImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    88.9%
+  </span>
+  <span class="absValue">
+    (8/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    94.4%
+  </span>
+  <span class="absValue">
+    (17/18)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    99.3%
+  </span>
+  <span class="absValue">
+    (139/140)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">AuthRepositoryImpl$getAccount$1</td>
+    <td class="coverageStat"/>
+  </tr>
+  <tr>
+    <td class="name">AuthRepositoryImpl$getLoginSession$1</td>
+    <td class="coverageStat"/>
+  </tr>
+  <tr>
+    <td class="name">AuthRepositoryImpl$getUserRoles$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (67/67)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">AuthRepositoryImpl$login$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (3/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (24/24)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    98.4%
+  </span>
+  <span class="absValue">
+    (127/129)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">AuthRepositoryImpl$register$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (12/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (66/66)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">AuthRepositoryImpl$verifyPin$1</td>
+    <td class="coverageStat"/>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    91.7%
+  </span>
+  <span class="absValue">
+    (11/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    93.8%
+  </span>
+  <span class="absValue">
+    (15/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    98.4%
+  </span>
+  <span class="absValue">
+    (60/61)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    99.3%
+  </span>
+  <span class="absValue">
+    (399/402)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.luteh.ecommerce.data.repository
+&nbsp;
+&nbsp;import arrow.core.Either
+&nbsp;import kotlinx.coroutines.Dispatchers
+&nbsp;import kotlinx.coroutines.IO
+&nbsp;import kotlinx.coroutines.delay
+&nbsp;import kotlinx.coroutines.withContext
+&nbsp;import org.luteh.ecommerce.CreateUserMutation
+&nbsp;import org.luteh.ecommerce.data.config.FeatureConfig
+&nbsp;import org.luteh.ecommerce.data.datasource.remote.AuthRemoteDataSource
+&nbsp;import org.luteh.ecommerce.data.local.database.dao.UserSessionDao
+&nbsp;import org.luteh.ecommerce.data.local.entity.UserSessionEntity
+&nbsp;import org.luteh.ecommerce.domain.model.RegisterParam
+&nbsp;import org.luteh.ecommerce.domain.model.UserRole
+&nbsp;import org.luteh.ecommerce.domain.repository.AuthRepository
+&nbsp;import kotlin.time.Clock
+&nbsp;
+<b class="fc">&nbsp;class AuthRepositoryImpl(</b>
+<b class="fc">&nbsp;    private val authRemoteDataSource: AuthRemoteDataSource,</b>
+<b class="fc">&nbsp;    private val featureConfig: FeatureConfig,</b>
+<b class="fc">&nbsp;    private val userSessionDao: UserSessionDao,</b>
+&nbsp;) : AuthRepository {
+<b class="nc">&nbsp;    override suspend fun setLoginSession(isLoggedIn: Boolean) {}</b>
+&nbsp;
+&nbsp;    override suspend fun getLoginSession(): Boolean {
+<b class="fc">&nbsp;        val session = userSessionDao.getUserSession() ?: return false</b>
+<b class="fc">&nbsp;        val currentTime = Clock.System.now().toEpochMilliseconds()</b>
+<b class="fc">&nbsp;        return if (session.expirationTimestamp &gt; currentTime) {</b>
+<b class="fc">&nbsp;            true</b>
+&nbsp;        } else {
+<b class="fc">&nbsp;            userSessionDao.clearUserSession()</b>
+<b class="fc">&nbsp;            false</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    override suspend fun getAccount(): String {
+<b class="fc">&nbsp;        return userSessionDao.getUserSession()?.email.orEmpty()</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    override suspend fun login(email: String, password: String): Either&lt;Exception, Unit&gt; =
+<b class="fc">&nbsp;        withContext(Dispatchers.IO) {</b>
+<b class="fc">&nbsp;            if (featureConfig.isServerEnabled.not()) {</b>
+<b class="fc">&nbsp;                delay(1000L)</b>
+&nbsp;                // Mock session for local testing without server
+<b class="fc">&nbsp;                val expirationTime =</b>
+<b class="fc">&nbsp;                    Clock.System.now().toEpochMilliseconds() + 24 * 60 * 60 * 1000 // 1 day</b>
+<b class="fc">&nbsp;                userSessionDao.insertUserSession(</b>
+<b class="fc">&nbsp;                    UserSessionEntity(</b>
+<b class="fc">&nbsp;                        accessToken = &quot;mock_token&quot;,</b>
+<b class="fc">&nbsp;                        expirationTimestamp = expirationTime,</b>
+<b class="fc">&nbsp;                        userId = &quot;mock_user_id&quot;,</b>
+<b class="fc">&nbsp;                        email = email,</b>
+<b class="fc">&nbsp;                        name = &quot;Mock User&quot;,</b>
+&nbsp;                    )
+&nbsp;                )
+<b class="fc">&nbsp;                return@withContext Either.Right(Unit)</b>
+&nbsp;            }
+&nbsp;            return@withContext try {
+<b class="fc">&nbsp;                val response = authRemoteDataSource.login(email = email, password = password)</b>
+<b class="fc">&nbsp;                val expirationTime =</b>
+<b class="fc">&nbsp;                    Clock.System.now().toEpochMilliseconds() + 24 * 60 * 60 * 1000 // 1 day</b>
+<b class="fc">&nbsp;                userSessionDao.insertUserSession(</b>
+<b class="fc">&nbsp;                    UserSessionEntity(</b>
+<b class="pc">&nbsp;                        accessToken = response.login ?: &quot;&quot;,</b>
+<b class="fc">&nbsp;                        expirationTimestamp = expirationTime,</b>
+<b class="fc">&nbsp;                        userId = &quot;user_id_placeholder&quot;, // API might need to return this</b>
+<b class="fc">&nbsp;                        email = email,</b>
+<b class="fc">&nbsp;                        name = &quot;User Name&quot;, // API might need to return this</b>
+&nbsp;                    )
+&nbsp;                )
+<b class="fc">&nbsp;                Either.Right(Unit)</b>
+&nbsp;            } catch (e: Exception) {
+<b class="fc">&nbsp;                Either.Left(e)</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+&nbsp;    override suspend fun getUserRoles(): Either&lt;Exception, List&lt;UserRole&gt;&gt; =
+<b class="fc">&nbsp;        withContext(Dispatchers.IO) {</b>
+<b class="fc">&nbsp;            if (featureConfig.isServerEnabled.not()) {</b>
+<b class="fc">&nbsp;                delay(1000L)</b>
+<b class="fc">&nbsp;                return@withContext Either.Right(UserRole.dummies)</b>
+&nbsp;            }
+&nbsp;            return@withContext try {
+<b class="fc">&nbsp;                val data =</b>
+<b class="fc">&nbsp;                    authRemoteDataSource.getRoles().getRoles!!.map { UserRole(it!!.id, it.name) }</b>
+<b class="fc">&nbsp;                Either.Right(data)</b>
+&nbsp;            } catch (e: Exception) {
+<b class="fc">&nbsp;                Either.Left(e)</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+&nbsp;    override suspend fun register(param: RegisterParam): Either&lt;Exception, Unit&gt; =
+<b class="fc">&nbsp;        withContext(Dispatchers.IO) {</b>
+<b class="fc">&nbsp;            if (featureConfig.isServerEnabled.not()) {</b>
+<b class="fc">&nbsp;                delay(1000L)</b>
+<b class="fc">&nbsp;                return@withContext Either.Right(Unit)</b>
+&nbsp;            }
+&nbsp;            return@withContext try {
+<b class="fc">&nbsp;                authRemoteDataSource.createUser(</b>
+<b class="fc">&nbsp;                    CreateUserMutation(</b>
+<b class="fc">&nbsp;                        email = param.email,</b>
+<b class="fc">&nbsp;                        password = param.password,</b>
+<b class="fc">&nbsp;                        name = param.name,</b>
+<b class="fc">&nbsp;                        phone = param.phone,</b>
+<b class="fc">&nbsp;                        role_id = param.roleId.toInt(),</b>
+&nbsp;                    )
+&nbsp;                )
+<b class="fc">&nbsp;                Either.Right(Unit)</b>
+&nbsp;            } catch (e: Exception) {
+<b class="fc">&nbsp;                Either.Left(e)</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+&nbsp;    override suspend fun verifyPin(pin: String): Boolean {
+&nbsp;        // Mock PIN verification
+<b class="fc">&nbsp;        delay(500)</b>
+<b class="fc">&nbsp;        return pin == &quot;123456&quot;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    override suspend fun logout() {
+<b class="fc">&nbsp;        userSessionDao.clearUserSession()</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-01-04 02:26</div>
+</div>
+</body>
+</html>

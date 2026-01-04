@@ -1,0 +1,92 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>composeApp Coverage Report > CartRepository</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope: composeApp<span class="separator">|</span>    <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.luteh.ecommerce.domain.repository</a>
+</div>
+
+<h1>Coverage Summary for Class: CartRepository (org.luteh.ecommerce.domain.repository)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+</tr>
+<tr>
+  <td class="name">CartRepository</td>
+    <td class="coverageStat"/>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.luteh.ecommerce.domain.repository
+&nbsp;
+&nbsp;import kotlinx.coroutines.flow.Flow
+&nbsp;import org.luteh.ecommerce.domain.model.CartItemModel
+&nbsp;import org.luteh.ecommerce.domain.model.ProductModel
+&nbsp;
+&nbsp;interface CartRepository {
+&nbsp;    fun getCartItems(): Flow&lt;List&lt;CartItemModel&gt;&gt;
+&nbsp;
+&nbsp;    suspend fun addToCart(product: ProductModel)
+&nbsp;
+&nbsp;    suspend fun updateQuantity(productId: String, quantity: Int)
+&nbsp;
+&nbsp;    suspend fun removeFromCart(productId: String)
+&nbsp;
+&nbsp;    suspend fun clearCart()
+&nbsp;
+&nbsp;    fun getCartItemCount(): Flow&lt;Int&gt;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-01-04 02:26</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,476 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>composeApp Coverage Report > CheckoutScreenKt</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope: composeApp<span class="separator">|</span>    <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.luteh.ecommerce.presentation.ui.checkout</a>
+</div>
+
+<h1>Coverage Summary for Class: CheckoutScreenKt (org.luteh.ecommerce.presentation.ui.checkout)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+</tr>
+<tr>
+  <td class="name">CheckoutScreenKt</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/7)
+  </span>
+</td>
+    <td class="coverageStat"/>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.luteh.ecommerce.presentation.ui.checkout
+&nbsp;
+&nbsp;import androidx.compose.foundation.background
+&nbsp;import androidx.compose.foundation.layout.Arrangement
+&nbsp;import androidx.compose.foundation.layout.Column
+&nbsp;import androidx.compose.foundation.layout.Row
+&nbsp;import androidx.compose.foundation.layout.Spacer
+&nbsp;import androidx.compose.foundation.layout.fillMaxSize
+&nbsp;import androidx.compose.foundation.layout.fillMaxWidth
+&nbsp;import androidx.compose.foundation.layout.height
+&nbsp;import androidx.compose.foundation.layout.padding
+&nbsp;import androidx.compose.foundation.layout.size
+&nbsp;import androidx.compose.foundation.layout.width
+&nbsp;import androidx.compose.foundation.rememberScrollState
+&nbsp;import androidx.compose.foundation.shape.RoundedCornerShape
+&nbsp;import androidx.compose.foundation.text.KeyboardOptions
+&nbsp;import androidx.compose.foundation.verticalScroll
+&nbsp;import androidx.compose.material.icons.Icons
+&nbsp;import androidx.compose.material.icons.automirrored.filled.ArrowBack
+&nbsp;import androidx.compose.material.icons.filled.CreditCard
+&nbsp;import androidx.compose.material.icons.filled.LocalShipping
+&nbsp;import androidx.compose.material.icons.filled.LocationOn
+&nbsp;import androidx.compose.material.icons.filled.ShoppingBag
+&nbsp;import androidx.compose.material3.Button
+&nbsp;import androidx.compose.material3.ButtonDefaults
+&nbsp;import androidx.compose.material3.Card
+&nbsp;import androidx.compose.material3.CardDefaults
+&nbsp;import androidx.compose.material3.CircularProgressIndicator
+&nbsp;import androidx.compose.material3.ExperimentalMaterial3Api
+&nbsp;import androidx.compose.material3.HorizontalDivider
+&nbsp;import androidx.compose.material3.Icon
+&nbsp;import androidx.compose.material3.IconButton
+&nbsp;import androidx.compose.material3.MaterialTheme
+&nbsp;import androidx.compose.material3.OutlinedTextField
+&nbsp;import androidx.compose.material3.Scaffold
+&nbsp;import androidx.compose.material3.SnackbarHost
+&nbsp;import androidx.compose.material3.SnackbarHostState
+&nbsp;import androidx.compose.material3.Text
+&nbsp;import androidx.compose.material3.TopAppBar
+&nbsp;import androidx.compose.material3.TopAppBarDefaults
+&nbsp;import androidx.compose.runtime.Composable
+&nbsp;import androidx.compose.runtime.LaunchedEffect
+&nbsp;import androidx.compose.runtime.collectAsState
+&nbsp;import androidx.compose.runtime.getValue
+&nbsp;import androidx.compose.runtime.remember
+&nbsp;import androidx.compose.runtime.rememberCoroutineScope
+&nbsp;import androidx.compose.ui.Alignment
+&nbsp;import androidx.compose.ui.Modifier
+&nbsp;import androidx.compose.ui.graphics.vector.ImageVector
+&nbsp;import androidx.compose.ui.text.font.FontWeight
+&nbsp;import androidx.compose.ui.text.input.ImeAction
+&nbsp;import androidx.compose.ui.text.input.KeyboardType
+&nbsp;import androidx.compose.ui.unit.dp
+&nbsp;import kotlinx.coroutines.launch
+&nbsp;import org.koin.compose.viewmodel.koinViewModel
+&nbsp;import org.luteh.ecommerce.domain.model.CartItemModel
+&nbsp;import org.luteh.ecommerce.presentation.core.ResultState
+&nbsp;
+&nbsp;@Composable
+&nbsp;fun CheckoutScreen(
+&nbsp;    onNavigateBack: () -&gt; Unit,
+&nbsp;    onNavigateToTransactionDetail: (Boolean, String) -&gt; Unit,
+&nbsp;    viewModel: CheckoutViewModel = koinViewModel(),
+&nbsp;) {
+&nbsp;    val state by viewModel.state.collectAsState()
+&nbsp;    val snackbarHostState = remember { SnackbarHostState() }
+&nbsp;    val scope = rememberCoroutineScope()
+&nbsp;
+&nbsp;    LaunchedEffect(Unit) {
+&nbsp;        viewModel.effect.collect { effect -&gt;
+&nbsp;            when (effect) {
+&nbsp;                is CheckoutViewModel.Effect.NavigateBack -&gt; onNavigateBack()
+&nbsp;                is CheckoutViewModel.Effect.NavigateToTransactionDetail -&gt; {
+&nbsp;                    onNavigateToTransactionDetail(effect.isSuccess, effect.message)
+&nbsp;                }
+&nbsp;                is CheckoutViewModel.Effect.ShowToast -&gt; {
+&nbsp;                    scope.launch { snackbarHostState.showSnackbar(effect.message) }
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    Scaffold(
+&nbsp;        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+&nbsp;        topBar = {
+&nbsp;            CheckoutTopBar(
+&nbsp;                onBackClick = { viewModel.processEvent(CheckoutViewModel.Event.OnNavigateBack) }
+&nbsp;            )
+&nbsp;        },
+&nbsp;        bottomBar = {
+&nbsp;            CheckoutBottomBar(
+&nbsp;                totalAmount = state.totalAmount,
+&nbsp;                isLoading = state.placeOrderState is ResultState.Loading,
+&nbsp;                onPlaceOrderClick = { viewModel.processEvent(CheckoutViewModel.Event.OnPlaceOrder) },
+&nbsp;            )
+&nbsp;        },
+&nbsp;    ) { paddingValues -&gt;
+&nbsp;        Column(
+&nbsp;            modifier =
+&nbsp;                Modifier.padding(paddingValues)
+&nbsp;                    .fillMaxSize()
+&nbsp;                    .verticalScroll(rememberScrollState())
+&nbsp;                    .padding(16.dp),
+&nbsp;            verticalArrangement = Arrangement.spacedBy(24.dp),
+&nbsp;        ) {
+&nbsp;            ShippingAddressSection(
+&nbsp;                fullName = state.fullName,
+&nbsp;                address = state.address,
+&nbsp;                city = state.city,
+&nbsp;                postalCode = state.postalCode,
+&nbsp;                phoneNumber = state.phoneNumber,
+&nbsp;                onFullNameChange = {
+&nbsp;                    viewModel.processEvent(CheckoutViewModel.Event.OnFullNameChanged(it))
+&nbsp;                },
+&nbsp;                onAddressChange = {
+&nbsp;                    viewModel.processEvent(CheckoutViewModel.Event.OnAddressChanged(it))
+&nbsp;                },
+&nbsp;                onCityChange = {
+&nbsp;                    viewModel.processEvent(CheckoutViewModel.Event.OnCityChanged(it))
+&nbsp;                },
+&nbsp;                onPostalCodeChange = {
+&nbsp;                    viewModel.processEvent(CheckoutViewModel.Event.OnPostalCodeChanged(it))
+&nbsp;                },
+&nbsp;                onPhoneNumberChange = {
+&nbsp;                    viewModel.processEvent(CheckoutViewModel.Event.OnPhoneNumberChanged(it))
+&nbsp;                },
+&nbsp;            )
+&nbsp;
+&nbsp;            OrderSummarySection(cartItems = state.cartItems)
+&nbsp;
+&nbsp;            PaymentMethodSection()
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    if (state.isPinVerificationVisible) {
+&nbsp;        PinVerificationBottomSheet(
+&nbsp;            onDismissRequest = {
+&nbsp;                viewModel.processEvent(CheckoutViewModel.Event.OnHidePinVerification)
+&nbsp;            },
+&nbsp;            onConfirm = { pin -&gt;
+&nbsp;                viewModel.processEvent(CheckoutViewModel.Event.OnPinEntered(pin))
+&nbsp;            },
+&nbsp;            error = state.pinError,
+&nbsp;        )
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;@OptIn(ExperimentalMaterial3Api::class)
+&nbsp;@Composable
+&nbsp;fun CheckoutTopBar(onBackClick: () -&gt; Unit) {
+&nbsp;    TopAppBar(
+&nbsp;        title = { Text(&quot;Checkout&quot;) },
+&nbsp;        navigationIcon = {
+&nbsp;            IconButton(onClick = onBackClick) {
+&nbsp;                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = &quot;Back&quot;)
+&nbsp;            }
+&nbsp;        },
+&nbsp;        colors =
+&nbsp;            TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface),
+&nbsp;    )
+&nbsp;}
+&nbsp;
+&nbsp;@Composable
+&nbsp;fun SectionHeader(title: String, icon: ImageVector) {
+&nbsp;    Row(
+&nbsp;        verticalAlignment = Alignment.CenterVertically,
+&nbsp;        modifier = Modifier.padding(bottom = 8.dp),
+&nbsp;    ) {
+&nbsp;        Icon(
+&nbsp;            imageVector = icon,
+&nbsp;            contentDescription = null,
+&nbsp;            tint = MaterialTheme.colorScheme.primary,
+&nbsp;            modifier = Modifier.size(24.dp),
+&nbsp;        )
+&nbsp;        Spacer(modifier = Modifier.width(8.dp))
+&nbsp;        Text(
+&nbsp;            text = title,
+&nbsp;            style = MaterialTheme.typography.titleLarge,
+&nbsp;            fontWeight = FontWeight.Bold,
+&nbsp;            color = MaterialTheme.colorScheme.onSurface,
+&nbsp;        )
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;@Composable
+&nbsp;fun ShippingAddressSection(
+&nbsp;    fullName: String,
+&nbsp;    address: String,
+&nbsp;    city: String,
+&nbsp;    postalCode: String,
+&nbsp;    phoneNumber: String,
+&nbsp;    onFullNameChange: (String) -&gt; Unit,
+&nbsp;    onAddressChange: (String) -&gt; Unit,
+&nbsp;    onCityChange: (String) -&gt; Unit,
+&nbsp;    onPostalCodeChange: (String) -&gt; Unit,
+&nbsp;    onPhoneNumberChange: (String) -&gt; Unit,
+&nbsp;) {
+&nbsp;    Column {
+&nbsp;        SectionHeader(title = &quot;Shipping Address&quot;, icon = Icons.Default.LocationOn)
+&nbsp;        Card(
+&nbsp;            shape = RoundedCornerShape(16.dp),
+&nbsp;            colors =
+&nbsp;                CardDefaults.cardColors(
+&nbsp;                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+&nbsp;                ),
+&nbsp;        ) {
+&nbsp;            Column(
+&nbsp;                modifier = Modifier.padding(16.dp),
+&nbsp;                verticalArrangement = Arrangement.spacedBy(12.dp),
+&nbsp;            ) {
+&nbsp;                OutlinedTextField(
+&nbsp;                    value = fullName,
+&nbsp;                    onValueChange = onFullNameChange,
+&nbsp;                    label = { Text(&quot;Full Name&quot;) },
+&nbsp;                    modifier = Modifier.fillMaxWidth(),
+&nbsp;                    singleLine = true,
+&nbsp;                )
+&nbsp;                OutlinedTextField(
+&nbsp;                    value = address,
+&nbsp;                    onValueChange = onAddressChange,
+&nbsp;                    label = { Text(&quot;Address Line&quot;) },
+&nbsp;                    modifier = Modifier.fillMaxWidth(),
+&nbsp;                )
+&nbsp;                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+&nbsp;                    OutlinedTextField(
+&nbsp;                        value = city,
+&nbsp;                        onValueChange = onCityChange,
+&nbsp;                        label = { Text(&quot;City&quot;) },
+&nbsp;                        modifier = Modifier.weight(1f),
+&nbsp;                        singleLine = true,
+&nbsp;                    )
+&nbsp;                    OutlinedTextField(
+&nbsp;                        value = postalCode,
+&nbsp;                        onValueChange = onPostalCodeChange,
+&nbsp;                        label = { Text(&quot;Postal Code&quot;) },
+&nbsp;                        modifier = Modifier.weight(1f),
+&nbsp;                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+&nbsp;                        singleLine = true,
+&nbsp;                    )
+&nbsp;                }
+&nbsp;                OutlinedTextField(
+&nbsp;                    value = phoneNumber,
+&nbsp;                    onValueChange = onPhoneNumberChange,
+&nbsp;                    label = { Text(&quot;Phone Number&quot;) },
+&nbsp;                    modifier = Modifier.fillMaxWidth(),
+&nbsp;                    keyboardOptions =
+&nbsp;                        KeyboardOptions(
+&nbsp;                            keyboardType = KeyboardType.Phone,
+&nbsp;                            imeAction = ImeAction.Done,
+&nbsp;                        ),
+&nbsp;                    singleLine = true,
+&nbsp;                )
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;@Composable
+&nbsp;fun OrderSummarySection(cartItems: List&lt;CartItemModel&gt;) {
+&nbsp;    Column {
+&nbsp;        SectionHeader(title = &quot;Order Summary&quot;, icon = Icons.Default.ShoppingBag)
+&nbsp;        Card(
+&nbsp;            shape = RoundedCornerShape(16.dp),
+&nbsp;            colors =
+&nbsp;                CardDefaults.cardColors(
+&nbsp;                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+&nbsp;                ),
+&nbsp;        ) {
+&nbsp;            Column(modifier = Modifier.padding(16.dp)) {
+&nbsp;                cartItems.forEach { item -&gt;
+&nbsp;                    Row(
+&nbsp;                        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+&nbsp;                        horizontalArrangement = Arrangement.SpaceBetween,
+&nbsp;                    ) {
+&nbsp;                        Column(modifier = Modifier.weight(1f)) {
+&nbsp;                            Text(
+&nbsp;                                text = item.product.name,
+&nbsp;                                style = MaterialTheme.typography.bodyLarge,
+&nbsp;                                fontWeight = FontWeight.Medium,
+&nbsp;                            )
+&nbsp;                            Text(
+&nbsp;                                text = &quot;Qty: ${item.quantity}&quot;,
+&nbsp;                                style = MaterialTheme.typography.bodyMedium,
+&nbsp;                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+&nbsp;                            )
+&nbsp;                        }
+&nbsp;                        Text(
+&nbsp;                            text = &quot;$${item.product.price * item.quantity}&quot;,
+&nbsp;                            style = MaterialTheme.typography.bodyLarge,
+&nbsp;                            fontWeight = FontWeight.Bold,
+&nbsp;                        )
+&nbsp;                    }
+&nbsp;                    if (item != cartItems.last()) {
+&nbsp;                        HorizontalDivider(
+&nbsp;                            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+&nbsp;                        )
+&nbsp;                    }
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;@Composable
+&nbsp;fun PaymentMethodSection() {
+&nbsp;    Column {
+&nbsp;        SectionHeader(title = &quot;Payment Method&quot;, icon = Icons.Default.CreditCard)
+&nbsp;        Card(
+&nbsp;            shape = RoundedCornerShape(16.dp),
+&nbsp;            colors =
+&nbsp;                CardDefaults.cardColors(
+&nbsp;                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+&nbsp;                ),
+&nbsp;        ) {
+&nbsp;            Row(
+&nbsp;                modifier = Modifier.padding(16.dp).fillMaxWidth(),
+&nbsp;                verticalAlignment = Alignment.CenterVertically,
+&nbsp;            ) {
+&nbsp;                Icon(
+&nbsp;                    imageVector =
+&nbsp;                        Icons.Default.LocalShipping, // Placeholder for COD or other method
+&nbsp;                    contentDescription = null,
+&nbsp;                    modifier = Modifier.size(32.dp),
+&nbsp;                    tint = MaterialTheme.colorScheme.primary,
+&nbsp;                )
+&nbsp;                Spacer(modifier = Modifier.width(16.dp))
+&nbsp;                Column {
+&nbsp;                    Text(
+&nbsp;                        text = &quot;Cash on Delivery&quot;,
+&nbsp;                        style = MaterialTheme.typography.titleMedium,
+&nbsp;                        fontWeight = FontWeight.Bold,
+&nbsp;                    )
+&nbsp;                    Text(
+&nbsp;                        text = &quot;Pay when you receive&quot;,
+&nbsp;                        style = MaterialTheme.typography.bodyMedium,
+&nbsp;                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+&nbsp;                    )
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;@Composable
+&nbsp;fun CheckoutBottomBar(totalAmount: Double, isLoading: Boolean, onPlaceOrderClick: () -&gt; Unit) {
+&nbsp;    Column(
+&nbsp;        modifier =
+&nbsp;            Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface).padding(16.dp)
+&nbsp;    ) {
+&nbsp;        Row(
+&nbsp;            modifier = Modifier.fillMaxWidth(),
+&nbsp;            horizontalArrangement = Arrangement.SpaceBetween,
+&nbsp;            verticalAlignment = Alignment.CenterVertically,
+&nbsp;        ) {
+&nbsp;            Text(
+&nbsp;                text = &quot;Total Amount:&quot;,
+&nbsp;                style = MaterialTheme.typography.titleMedium,
+&nbsp;                color = MaterialTheme.colorScheme.onSurfaceVariant,
+&nbsp;            )
+&nbsp;            Text(
+&nbsp;                text = &quot;$${totalAmount}&quot;,
+&nbsp;                style = MaterialTheme.typography.headlineSmall,
+&nbsp;                fontWeight = FontWeight.Bold,
+&nbsp;                color = MaterialTheme.colorScheme.primary,
+&nbsp;            )
+&nbsp;        }
+&nbsp;        Spacer(modifier = Modifier.height(16.dp))
+&nbsp;        Button(
+&nbsp;            onClick = onPlaceOrderClick,
+&nbsp;            modifier = Modifier.fillMaxWidth().height(50.dp),
+&nbsp;            shape = RoundedCornerShape(12.dp),
+&nbsp;            colors =
+&nbsp;                ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+&nbsp;            enabled = !isLoading,
+&nbsp;        ) {
+&nbsp;            if (isLoading) {
+&nbsp;                CircularProgressIndicator(
+&nbsp;                    modifier = Modifier.size(24.dp),
+&nbsp;                    color = MaterialTheme.colorScheme.onPrimary,
+&nbsp;                    strokeWidth = 2.dp,
+&nbsp;                )
+&nbsp;            } else {
+&nbsp;                Text(
+&nbsp;                    &quot;Place Order&quot;,
+&nbsp;                    style = MaterialTheme.typography.titleMedium,
+&nbsp;                    fontWeight = FontWeight.Bold,
+&nbsp;                )
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-01-04 02:26</div>
+</div>
+</body>
+</html>

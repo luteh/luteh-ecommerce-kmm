@@ -1,0 +1,161 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>composeApp Coverage Report > PinVerificationBottomSheetKt</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope: composeApp<span class="separator">|</span>    <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.luteh.ecommerce.presentation.ui.checkout</a>
+</div>
+
+<h1>Coverage Summary for Class: PinVerificationBottomSheetKt (org.luteh.ecommerce.presentation.ui.checkout)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+</tr>
+<tr>
+  <td class="name">PinVerificationBottomSheetKt</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+    <td class="coverageStat"/>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.luteh.ecommerce.presentation.ui.checkout
+&nbsp;
+&nbsp;import androidx.compose.foundation.layout.Arrangement
+&nbsp;import androidx.compose.foundation.layout.Column
+&nbsp;import androidx.compose.foundation.layout.fillMaxWidth
+&nbsp;import androidx.compose.foundation.layout.height
+&nbsp;import androidx.compose.foundation.layout.padding
+&nbsp;import androidx.compose.foundation.shape.RoundedCornerShape
+&nbsp;import androidx.compose.foundation.text.KeyboardOptions
+&nbsp;import androidx.compose.material3.Button
+&nbsp;import androidx.compose.material3.ExperimentalMaterial3Api
+&nbsp;import androidx.compose.material3.MaterialTheme
+&nbsp;import androidx.compose.material3.ModalBottomSheet
+&nbsp;import androidx.compose.material3.OutlinedTextField
+&nbsp;import androidx.compose.material3.Text
+&nbsp;import androidx.compose.material3.rememberModalBottomSheetState
+&nbsp;import androidx.compose.runtime.Composable
+&nbsp;import androidx.compose.runtime.getValue
+&nbsp;import androidx.compose.runtime.mutableStateOf
+&nbsp;import androidx.compose.runtime.remember
+&nbsp;import androidx.compose.runtime.setValue
+&nbsp;import androidx.compose.ui.Modifier
+&nbsp;import androidx.compose.ui.text.font.FontWeight
+&nbsp;import androidx.compose.ui.text.input.KeyboardType
+&nbsp;import androidx.compose.ui.text.input.PasswordVisualTransformation
+&nbsp;import androidx.compose.ui.unit.dp
+&nbsp;
+&nbsp;@OptIn(ExperimentalMaterial3Api::class)
+&nbsp;@Composable
+&nbsp;fun PinVerificationBottomSheet(
+&nbsp;    onDismissRequest: () -&gt; Unit,
+&nbsp;    onConfirm: (String) -&gt; Unit,
+&nbsp;    error: String? = null,
+&nbsp;) {
+&nbsp;    val sheetState = rememberModalBottomSheetState()
+&nbsp;    var pin by remember { mutableStateOf(&quot;&quot;) }
+&nbsp;
+&nbsp;    ModalBottomSheet(onDismissRequest = onDismissRequest, sheetState = sheetState) {
+&nbsp;        Column(
+&nbsp;            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).padding(bottom = 32.dp),
+&nbsp;            verticalArrangement = Arrangement.spacedBy(16.dp),
+&nbsp;        ) {
+&nbsp;            Text(
+&nbsp;                text = &quot;Enter PIN&quot;,
+&nbsp;                style = MaterialTheme.typography.titleLarge,
+&nbsp;                fontWeight = FontWeight.Bold,
+&nbsp;            )
+&nbsp;            Text(&quot;Please enter your 6-digit PIN to confirm the order.&quot;)
+&nbsp;
+&nbsp;            OutlinedTextField(
+&nbsp;                value = pin,
+&nbsp;                onValueChange = { if (it.length &lt;= 6) pin = it },
+&nbsp;                label = { Text(&quot;PIN&quot;) },
+&nbsp;                singleLine = true,
+&nbsp;                visualTransformation = PasswordVisualTransformation(),
+&nbsp;                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
+&nbsp;                modifier = Modifier.fillMaxWidth(),
+&nbsp;                isError = error != null,
+&nbsp;                supportingText = {
+&nbsp;                    if (error != null) {
+&nbsp;                        Text(text = error, color = MaterialTheme.colorScheme.error)
+&nbsp;                    }
+&nbsp;                },
+&nbsp;            )
+&nbsp;
+&nbsp;            Button(
+&nbsp;                onClick = { onConfirm(pin) },
+&nbsp;                enabled = pin.length == 6,
+&nbsp;                modifier = Modifier.fillMaxWidth().height(50.dp),
+&nbsp;                shape = RoundedCornerShape(12.dp),
+&nbsp;            ) {
+&nbsp;                Text(&quot;Confirm&quot;)
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-01-04 02:26</div>
+</div>
+</body>
+</html>

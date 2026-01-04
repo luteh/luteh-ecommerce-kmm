@@ -1,0 +1,183 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>composeApp Coverage Report > ProductItemKt</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope: composeApp<span class="separator">|</span>    <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.luteh.ecommerce.presentation.ui.common</a>
+</div>
+
+<h1>Coverage Summary for Class: ProductItemKt (org.luteh.ecommerce.presentation.ui.common)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+</tr>
+<tr>
+  <td class="name">ProductItemKt</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+    <td class="coverageStat"/>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.luteh.ecommerce.presentation.ui.common
+&nbsp;
+&nbsp;import androidx.compose.foundation.background
+&nbsp;import androidx.compose.foundation.clickable
+&nbsp;import androidx.compose.foundation.layout.Box
+&nbsp;import androidx.compose.foundation.layout.Column
+&nbsp;import androidx.compose.foundation.layout.Row
+&nbsp;import androidx.compose.foundation.layout.Spacer
+&nbsp;import androidx.compose.foundation.layout.fillMaxWidth
+&nbsp;import androidx.compose.foundation.layout.height
+&nbsp;import androidx.compose.foundation.layout.padding
+&nbsp;import androidx.compose.foundation.layout.size
+&nbsp;import androidx.compose.foundation.layout.width
+&nbsp;import androidx.compose.foundation.shape.RoundedCornerShape
+&nbsp;import androidx.compose.material.icons.Icons
+&nbsp;import androidx.compose.material.icons.filled.Star
+&nbsp;import androidx.compose.material.icons.outlined.FavoriteBorder
+&nbsp;import androidx.compose.material.icons.rounded.Checkroom
+&nbsp;import androidx.compose.material3.Card
+&nbsp;import androidx.compose.material3.CardDefaults
+&nbsp;import androidx.compose.material3.Icon
+&nbsp;import androidx.compose.material3.IconButton
+&nbsp;import androidx.compose.material3.MaterialTheme
+&nbsp;import androidx.compose.material3.Text
+&nbsp;import androidx.compose.runtime.Composable
+&nbsp;import androidx.compose.ui.Alignment
+&nbsp;import androidx.compose.ui.Modifier
+&nbsp;import androidx.compose.ui.graphics.Color
+&nbsp;import androidx.compose.ui.text.font.FontWeight
+&nbsp;import androidx.compose.ui.text.style.TextOverflow
+&nbsp;import androidx.compose.ui.unit.dp
+&nbsp;import org.luteh.ecommerce.domain.model.ProductUiModel
+&nbsp;
+&nbsp;@Composable
+&nbsp;fun ProductItem(product: ProductUiModel, onClick: () -&gt; Unit) {
+&nbsp;    Card(
+&nbsp;        modifier = Modifier.fillMaxWidth().clickable(onClick = onClick),
+&nbsp;        shape = RoundedCornerShape(16.dp),
+&nbsp;        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+&nbsp;        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+&nbsp;    ) {
+&nbsp;        Column {
+&nbsp;            Box(
+&nbsp;                modifier = Modifier.fillMaxWidth().height(120.dp).background(product.imageColor),
+&nbsp;                contentAlignment = Alignment.Center,
+&nbsp;            ) {
+&nbsp;                Icon(
+&nbsp;                    imageVector = Icons.Rounded.Checkroom,
+&nbsp;                    contentDescription = null,
+&nbsp;                    tint = Color.White.copy(alpha = 0.5f),
+&nbsp;                    modifier = Modifier.size(48.dp),
+&nbsp;                )
+&nbsp;                IconButton(
+&nbsp;                    onClick = {},
+&nbsp;                    modifier = Modifier.align(Alignment.TopEnd).padding(4.dp),
+&nbsp;                ) {
+&nbsp;                    Icon(
+&nbsp;                        imageVector = Icons.Outlined.FavoriteBorder,
+&nbsp;                        contentDescription = &quot;Favorite&quot;,
+&nbsp;                        tint = Color.White,
+&nbsp;                    )
+&nbsp;                }
+&nbsp;            }
+&nbsp;
+&nbsp;            Column(modifier = Modifier.padding(12.dp)) {
+&nbsp;                Text(
+&nbsp;                    text = product.name,
+&nbsp;                    style = MaterialTheme.typography.bodyMedium,
+&nbsp;                    fontWeight = FontWeight.Medium,
+&nbsp;                    maxLines = 2,
+&nbsp;                    overflow = TextOverflow.Ellipsis,
+&nbsp;                )
+&nbsp;                Spacer(modifier = Modifier.height(4.dp))
+&nbsp;                Row(verticalAlignment = Alignment.CenterVertically) {
+&nbsp;                    Icon(
+&nbsp;                        imageVector = Icons.Default.Star,
+&nbsp;                        contentDescription = null,
+&nbsp;                        modifier = Modifier.size(14.dp),
+&nbsp;                        tint = Color(0xFFFFC107),
+&nbsp;                    )
+&nbsp;                    Spacer(modifier = Modifier.width(4.dp))
+&nbsp;                    Text(
+&nbsp;                        text = product.rating.toString(),
+&nbsp;                        style = MaterialTheme.typography.labelSmall,
+&nbsp;                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+&nbsp;                    )
+&nbsp;                }
+&nbsp;                Spacer(modifier = Modifier.height(8.dp))
+&nbsp;                Text(
+&nbsp;                    text = product.price,
+&nbsp;                    style = MaterialTheme.typography.titleMedium,
+&nbsp;                    fontWeight = FontWeight.Bold,
+&nbsp;                    color = MaterialTheme.colorScheme.primary,
+&nbsp;                )
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-01-04 02:26</div>
+</div>
+</body>
+</html>

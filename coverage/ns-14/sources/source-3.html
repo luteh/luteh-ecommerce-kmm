@@ -1,0 +1,96 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>composeApp Coverage Report > AuthRepository</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope: composeApp<span class="separator">|</span>    <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.luteh.ecommerce.domain.repository</a>
+</div>
+
+<h1>Coverage Summary for Class: AuthRepository (org.luteh.ecommerce.domain.repository)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+</tr>
+<tr>
+  <td class="name">AuthRepository</td>
+    <td class="coverageStat"/>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.luteh.ecommerce.domain.repository
+&nbsp;
+&nbsp;import arrow.core.Either
+&nbsp;import org.luteh.ecommerce.domain.model.RegisterParam
+&nbsp;import org.luteh.ecommerce.domain.model.UserRole
+&nbsp;
+&nbsp;interface AuthRepository {
+&nbsp;    suspend fun setLoginSession(isLoggedIn: Boolean)
+&nbsp;
+&nbsp;    suspend fun getLoginSession(): Boolean
+&nbsp;
+&nbsp;    suspend fun getAccount(): String
+&nbsp;
+&nbsp;    suspend fun login(email: String, password: String): Either&lt;Exception, Unit&gt;
+&nbsp;
+&nbsp;    suspend fun getUserRoles(): Either&lt;Exception, List&lt;UserRole&gt;&gt;
+&nbsp;
+&nbsp;    suspend fun register(param: RegisterParam): Either&lt;Exception, Unit&gt;
+&nbsp;
+&nbsp;    suspend fun verifyPin(pin: String): Boolean
+&nbsp;
+&nbsp;    suspend fun logout()
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-01-04 02:26</div>
+</div>
+</body>
+</html>

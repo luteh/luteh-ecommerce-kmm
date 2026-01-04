@@ -1,0 +1,414 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>composeApp Coverage Report > CartScreenKt</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope: composeApp<span class="separator">|</span>    <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.luteh.ecommerce.presentation.ui.cart</a>
+</div>
+
+<h1>Coverage Summary for Class: CartScreenKt (org.luteh.ecommerce.presentation.ui.cart)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+</tr>
+<tr>
+  <td class="name">CartScreenKt</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+    <td class="coverageStat"/>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.luteh.ecommerce.presentation.ui.cart
+&nbsp;
+&nbsp;import androidx.compose.foundation.ExperimentalFoundationApi
+&nbsp;import androidx.compose.foundation.background
+&nbsp;import androidx.compose.foundation.layout.Arrangement
+&nbsp;import androidx.compose.foundation.layout.Box
+&nbsp;import androidx.compose.foundation.layout.Column
+&nbsp;import androidx.compose.foundation.layout.PaddingValues
+&nbsp;import androidx.compose.foundation.layout.Row
+&nbsp;import androidx.compose.foundation.layout.Spacer
+&nbsp;import androidx.compose.foundation.layout.fillMaxSize
+&nbsp;import androidx.compose.foundation.layout.fillMaxWidth
+&nbsp;import androidx.compose.foundation.layout.height
+&nbsp;import androidx.compose.foundation.layout.padding
+&nbsp;import androidx.compose.foundation.layout.size
+&nbsp;import androidx.compose.foundation.layout.width
+&nbsp;import androidx.compose.foundation.lazy.LazyColumn
+&nbsp;import androidx.compose.foundation.lazy.items
+&nbsp;import androidx.compose.foundation.shape.RoundedCornerShape
+&nbsp;import androidx.compose.material.icons.Icons
+&nbsp;import androidx.compose.material.icons.automirrored.filled.ArrowBack
+&nbsp;import androidx.compose.material.icons.filled.Add
+&nbsp;import androidx.compose.material.icons.filled.Delete
+&nbsp;import androidx.compose.material.icons.filled.Remove
+&nbsp;import androidx.compose.material.icons.rounded.Checkroom
+&nbsp;import androidx.compose.material3.Button
+&nbsp;import androidx.compose.material3.ButtonDefaults
+&nbsp;import androidx.compose.material3.Card
+&nbsp;import androidx.compose.material3.CardDefaults
+&nbsp;import androidx.compose.material3.CircularProgressIndicator
+&nbsp;import androidx.compose.material3.ExperimentalMaterial3Api
+&nbsp;import androidx.compose.material3.Icon
+&nbsp;import androidx.compose.material3.IconButton
+&nbsp;import androidx.compose.material3.MaterialTheme
+&nbsp;import androidx.compose.material3.Scaffold
+&nbsp;import androidx.compose.material3.SnackbarHost
+&nbsp;import androidx.compose.material3.SnackbarHostState
+&nbsp;import androidx.compose.material3.Text
+&nbsp;import androidx.compose.material3.TopAppBar
+&nbsp;import androidx.compose.material3.TopAppBarDefaults
+&nbsp;import androidx.compose.runtime.Composable
+&nbsp;import androidx.compose.runtime.LaunchedEffect
+&nbsp;import androidx.compose.runtime.collectAsState
+&nbsp;import androidx.compose.runtime.getValue
+&nbsp;import androidx.compose.runtime.remember
+&nbsp;import androidx.compose.runtime.rememberCoroutineScope
+&nbsp;import androidx.compose.ui.Alignment
+&nbsp;import androidx.compose.ui.Modifier
+&nbsp;import androidx.compose.ui.draw.alpha
+&nbsp;import androidx.compose.ui.draw.clip
+&nbsp;import androidx.compose.ui.text.font.FontWeight
+&nbsp;import androidx.compose.ui.text.style.TextOverflow
+&nbsp;import androidx.compose.ui.unit.dp
+&nbsp;import kotlinx.coroutines.launch
+&nbsp;import org.koin.compose.viewmodel.koinViewModel
+&nbsp;import org.luteh.ecommerce.domain.model.CartItemModel
+&nbsp;import org.luteh.ecommerce.presentation.core.ResultState
+&nbsp;
+&nbsp;@Composable
+&nbsp;fun CartScreen(
+&nbsp;    onNavigateBack: () -&gt; Unit,
+&nbsp;    onNavigateToCheckout: () -&gt; Unit,
+&nbsp;    viewModel: CartViewModel = koinViewModel(),
+&nbsp;) {
+&nbsp;    val state by viewModel.state.collectAsState()
+&nbsp;    val snackbarHostState = remember { SnackbarHostState() }
+&nbsp;    val scope = rememberCoroutineScope()
+&nbsp;
+&nbsp;    LaunchedEffect(Unit) {
+&nbsp;        viewModel.effect.collect { effect -&gt;
+&nbsp;            when (effect) {
+&nbsp;                is CartViewModel.Effect.NavigateBack -&gt; onNavigateBack()
+&nbsp;                is CartViewModel.Effect.NavigateToCheckout -&gt; onNavigateToCheckout()
+&nbsp;                is CartViewModel.Effect.ShowToast -&gt; {
+&nbsp;                    scope.launch { snackbarHostState.showSnackbar(effect.message) }
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    Scaffold(
+&nbsp;        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+&nbsp;        topBar = {
+&nbsp;            CartTopBar(
+&nbsp;                onBackClick = { viewModel.processEvent(CartViewModel.Event.OnNavigateBack) },
+&nbsp;                onClearCartClick = { viewModel.processEvent(CartViewModel.Event.OnClearCart) },
+&nbsp;            )
+&nbsp;        },
+&nbsp;        bottomBar = {
+&nbsp;            if (
+&nbsp;                state.cartItemsState is ResultState.Success &amp;&amp;
+&nbsp;                    (state.cartItemsState as ResultState.Success).data.isNotEmpty()
+&nbsp;            ) {
+&nbsp;                CartBottomBar(
+&nbsp;                    totalPrice = state.totalPrice,
+&nbsp;                    onCheckoutClick = { viewModel.processEvent(CartViewModel.Event.OnCheckout) },
+&nbsp;                )
+&nbsp;            }
+&nbsp;        },
+&nbsp;    ) { paddingValues -&gt;
+&nbsp;        Box(modifier = Modifier.padding(paddingValues).fillMaxSize()) {
+&nbsp;            when (val result = state.cartItemsState) {
+&nbsp;                is ResultState.Loading -&gt; {
+&nbsp;                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+&nbsp;                }
+&nbsp;                is ResultState.Error -&gt; {
+&nbsp;                    Text(
+&nbsp;                        text = result.exception.message ?: &quot;Unknown error&quot;,
+&nbsp;                        color = MaterialTheme.colorScheme.error,
+&nbsp;                        modifier = Modifier.align(Alignment.Center),
+&nbsp;                    )
+&nbsp;                }
+&nbsp;                is ResultState.Success -&gt; {
+&nbsp;                    if (result.data.isEmpty()) {
+&nbsp;                        EmptyCartView(modifier = Modifier.align(Alignment.Center))
+&nbsp;                    } else {
+&nbsp;                        CartList(
+&nbsp;                            cartItems = result.data,
+&nbsp;                            onUpdateQuantity = { id, qty -&gt;
+&nbsp;                                viewModel.processEvent(
+&nbsp;                                    CartViewModel.Event.OnUpdateQuantity(id, qty)
+&nbsp;                                )
+&nbsp;                            },
+&nbsp;                            onRemoveItem = { id -&gt;
+&nbsp;                                viewModel.processEvent(CartViewModel.Event.OnRemoveItem(id))
+&nbsp;                            },
+&nbsp;                        )
+&nbsp;                    }
+&nbsp;                }
+&nbsp;                ResultState.Idle -&gt; {}
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;@OptIn(ExperimentalMaterial3Api::class)
+&nbsp;@Composable
+&nbsp;fun CartTopBar(onBackClick: () -&gt; Unit, onClearCartClick: () -&gt; Unit) {
+&nbsp;    TopAppBar(
+&nbsp;        title = { Text(&quot;My Cart&quot;) },
+&nbsp;        navigationIcon = {
+&nbsp;            IconButton(onClick = onBackClick) {
+&nbsp;                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = &quot;Back&quot;)
+&nbsp;            }
+&nbsp;        },
+&nbsp;        actions = {
+&nbsp;            IconButton(onClick = onClearCartClick) {
+&nbsp;                Icon(Icons.Default.Delete, contentDescription = &quot;Clear Cart&quot;)
+&nbsp;            }
+&nbsp;        },
+&nbsp;        colors =
+&nbsp;            TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface),
+&nbsp;    )
+&nbsp;}
+&nbsp;
+&nbsp;@OptIn(ExperimentalFoundationApi::class)
+&nbsp;@Composable
+&nbsp;fun CartList(
+&nbsp;    cartItems: List&lt;CartItemModel&gt;,
+&nbsp;    onUpdateQuantity: (String, Int) -&gt; Unit,
+&nbsp;    onRemoveItem: (String) -&gt; Unit,
+&nbsp;) {
+&nbsp;    LazyColumn(
+&nbsp;        contentPadding = PaddingValues(16.dp),
+&nbsp;        verticalArrangement = Arrangement.spacedBy(16.dp),
+&nbsp;        modifier = Modifier.fillMaxSize(),
+&nbsp;    ) {
+&nbsp;        items(items = cartItems, key = { it.product.id }) { item -&gt;
+&nbsp;            CartItemCard(
+&nbsp;                modifier = Modifier,
+&nbsp;                item = item,
+&nbsp;                onUpdateQuantity = onUpdateQuantity,
+&nbsp;                onRemoveItem = onRemoveItem,
+&nbsp;            )
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;@Composable
+&nbsp;fun CartItemCard(
+&nbsp;    modifier: Modifier = Modifier,
+&nbsp;    item: CartItemModel,
+&nbsp;    onUpdateQuantity: (String, Int) -&gt; Unit,
+&nbsp;    onRemoveItem: (String) -&gt; Unit,
+&nbsp;) {
+&nbsp;    Card(
+&nbsp;        modifier = modifier.fillMaxWidth(),
+&nbsp;        shape = RoundedCornerShape(16.dp),
+&nbsp;        colors =
+&nbsp;            CardDefaults.cardColors(
+&nbsp;                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+&nbsp;            ),
+&nbsp;    ) {
+&nbsp;        Row(
+&nbsp;            modifier = Modifier.padding(12.dp).fillMaxWidth(),
+&nbsp;            verticalAlignment = Alignment.CenterVertically,
+&nbsp;        ) {
+&nbsp;            Box(
+&nbsp;                modifier =
+&nbsp;                    Modifier.size(80.dp)
+&nbsp;                        .clip(RoundedCornerShape(12.dp))
+&nbsp;                        .background(MaterialTheme.colorScheme.secondaryContainer),
+&nbsp;                contentAlignment = Alignment.Center,
+&nbsp;            ) {
+&nbsp;                Icon(
+&nbsp;                    imageVector = Icons.Rounded.Checkroom,
+&nbsp;                    contentDescription = null,
+&nbsp;                    tint = MaterialTheme.colorScheme.onSecondaryContainer,
+&nbsp;                    modifier = Modifier.size(40.dp),
+&nbsp;                )
+&nbsp;            }
+&nbsp;            Spacer(modifier = Modifier.width(16.dp))
+&nbsp;            Column(modifier = Modifier.weight(1f)) {
+&nbsp;                Text(
+&nbsp;                    text = item.product.name,
+&nbsp;                    style = MaterialTheme.typography.titleMedium,
+&nbsp;                    fontWeight = FontWeight.Bold,
+&nbsp;                    maxLines = 1,
+&nbsp;                    overflow = TextOverflow.Ellipsis,
+&nbsp;                )
+&nbsp;                Spacer(modifier = Modifier.height(4.dp))
+&nbsp;                Text(
+&nbsp;                    text = &quot;$${item.product.price}&quot;,
+&nbsp;                    style = MaterialTheme.typography.bodyMedium,
+&nbsp;                    color = MaterialTheme.colorScheme.primary,
+&nbsp;                    fontWeight = FontWeight.SemiBold,
+&nbsp;                )
+&nbsp;            }
+&nbsp;            Spacer(modifier = Modifier.width(8.dp))
+&nbsp;            Column(horizontalAlignment = Alignment.End) {
+&nbsp;                IconButton(onClick = { onRemoveItem(item.product.id) }) {
+&nbsp;                    Icon(
+&nbsp;                        Icons.Default.Delete,
+&nbsp;                        contentDescription = &quot;Remove&quot;,
+&nbsp;                        tint = MaterialTheme.colorScheme.error,
+&nbsp;                    )
+&nbsp;                }
+&nbsp;                Row(verticalAlignment = Alignment.CenterVertically) {
+&nbsp;                    IconButton(
+&nbsp;                        onClick = { onUpdateQuantity(item.product.id, item.quantity - 1) },
+&nbsp;                        modifier = Modifier.size(32.dp),
+&nbsp;                    ) {
+&nbsp;                        Icon(
+&nbsp;                            Icons.Default.Remove,
+&nbsp;                            contentDescription = &quot;Decrease&quot;,
+&nbsp;                            modifier = Modifier.size(16.dp),
+&nbsp;                        )
+&nbsp;                    }
+&nbsp;                    Text(
+&nbsp;                        text = &quot;${item.quantity}&quot;,
+&nbsp;                        style = MaterialTheme.typography.titleMedium,
+&nbsp;                        modifier = Modifier.padding(horizontal = 8.dp),
+&nbsp;                    )
+&nbsp;                    IconButton(
+&nbsp;                        onClick = { onUpdateQuantity(item.product.id, item.quantity + 1) },
+&nbsp;                        modifier = Modifier.size(32.dp),
+&nbsp;                    ) {
+&nbsp;                        Icon(
+&nbsp;                            Icons.Default.Add,
+&nbsp;                            contentDescription = &quot;Increase&quot;,
+&nbsp;                            modifier = Modifier.size(16.dp),
+&nbsp;                        )
+&nbsp;                    }
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;@Composable
+&nbsp;fun CartBottomBar(totalPrice: Double, onCheckoutClick: () -&gt; Unit) {
+&nbsp;    Column(
+&nbsp;        modifier =
+&nbsp;            Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface).padding(16.dp)
+&nbsp;    ) {
+&nbsp;        Row(
+&nbsp;            modifier = Modifier.fillMaxWidth(),
+&nbsp;            horizontalArrangement = Arrangement.SpaceBetween,
+&nbsp;            verticalAlignment = Alignment.CenterVertically,
+&nbsp;        ) {
+&nbsp;            Text(
+&nbsp;                text = &quot;Total:&quot;,
+&nbsp;                style = MaterialTheme.typography.titleMedium,
+&nbsp;                color = MaterialTheme.colorScheme.onSurfaceVariant,
+&nbsp;            )
+&nbsp;            Text(
+&nbsp;                text = &quot;$${totalPrice}&quot;,
+&nbsp;                style = MaterialTheme.typography.headlineSmall,
+&nbsp;                fontWeight = FontWeight.Bold,
+&nbsp;                color = MaterialTheme.colorScheme.primary,
+&nbsp;            )
+&nbsp;        }
+&nbsp;        Spacer(modifier = Modifier.height(16.dp))
+&nbsp;        Button(
+&nbsp;            onClick = onCheckoutClick,
+&nbsp;            modifier = Modifier.fillMaxWidth().height(50.dp),
+&nbsp;            shape = RoundedCornerShape(12.dp),
+&nbsp;            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+&nbsp;        ) {
+&nbsp;            Text(
+&nbsp;                &quot;Checkout&quot;,
+&nbsp;                style = MaterialTheme.typography.titleMedium,
+&nbsp;                fontWeight = FontWeight.Bold,
+&nbsp;            )
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;@Composable
+&nbsp;fun EmptyCartView(modifier: Modifier = Modifier) {
+&nbsp;    Column(
+&nbsp;        modifier = modifier,
+&nbsp;        horizontalAlignment = Alignment.CenterHorizontally,
+&nbsp;        verticalArrangement = Arrangement.Center,
+&nbsp;    ) {
+&nbsp;        Icon(
+&nbsp;            imageVector = Icons.Default.Delete, // Or a cart icon
+&nbsp;            contentDescription = null,
+&nbsp;            modifier = Modifier.size(100.dp).alpha(0.3f),
+&nbsp;            tint = MaterialTheme.colorScheme.onSurface,
+&nbsp;        )
+&nbsp;        Spacer(modifier = Modifier.height(16.dp))
+&nbsp;        Text(
+&nbsp;            text = &quot;Your cart is empty&quot;,
+&nbsp;            style = MaterialTheme.typography.titleLarge,
+&nbsp;            color = MaterialTheme.colorScheme.onSurfaceVariant,
+&nbsp;        )
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-01-04 02:26</div>
+</div>
+</body>
+</html>

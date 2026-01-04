@@ -1,0 +1,186 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>composeApp Coverage Report > RegisterScreenKt</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope: composeApp<span class="separator">|</span>    <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.luteh.ecommerce.presentation.ui.register</a>
+</div>
+
+<h1>Coverage Summary for Class: RegisterScreenKt (org.luteh.ecommerce.presentation.ui.register)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+</tr>
+<tr>
+  <td class="name">RegisterScreenKt</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+    <td class="coverageStat"/>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.luteh.ecommerce.presentation.ui.register
+&nbsp;
+&nbsp;import androidx.compose.foundation.layout.Box
+&nbsp;import androidx.compose.foundation.layout.fillMaxSize
+&nbsp;import androidx.compose.foundation.layout.padding
+&nbsp;import androidx.compose.material.icons.Icons
+&nbsp;import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+&nbsp;import androidx.compose.material3.ExperimentalMaterial3Api
+&nbsp;import androidx.compose.material3.Icon
+&nbsp;import androidx.compose.material3.IconButton
+&nbsp;import androidx.compose.material3.MaterialTheme
+&nbsp;import androidx.compose.material3.Scaffold
+&nbsp;import androidx.compose.material3.SnackbarHost
+&nbsp;import androidx.compose.material3.SnackbarHostState
+&nbsp;import androidx.compose.material3.Text
+&nbsp;import androidx.compose.material3.TopAppBar
+&nbsp;import androidx.compose.material3.TopAppBarDefaults
+&nbsp;import androidx.compose.runtime.Composable
+&nbsp;import androidx.compose.runtime.LaunchedEffect
+&nbsp;import androidx.compose.runtime.remember
+&nbsp;import androidx.compose.ui.Alignment
+&nbsp;import androidx.compose.ui.Modifier
+&nbsp;import androidx.lifecycle.compose.collectAsStateWithLifecycle
+&nbsp;import lutehecommerce.composeapp.generated.resources.Res
+&nbsp;import lutehecommerce.composeapp.generated.resources.register
+&nbsp;import org.jetbrains.compose.resources.stringResource
+&nbsp;import org.koin.compose.koinInject
+&nbsp;import org.luteh.ecommerce.presentation.component.ErrorView
+&nbsp;import org.luteh.ecommerce.presentation.component.LoadingView
+&nbsp;import org.luteh.ecommerce.presentation.core.ResultState
+&nbsp;import org.luteh.ecommerce.presentation.ui.register.component.RegisterForm
+&nbsp;
+&nbsp;@OptIn(ExperimentalMaterial3Api::class)
+&nbsp;@Composable
+&nbsp;fun RegisterScreen(vm: RegisterViewModel = koinInject(), onNavigateBack: () -&gt; Unit) {
+&nbsp;    val snackbarHostState = remember { SnackbarHostState() }
+&nbsp;    val state = vm.state.collectAsStateWithLifecycle()
+&nbsp;
+&nbsp;    LaunchedEffect(key1 = Unit) {
+&nbsp;        vm.effect.collect { effect -&gt;
+&nbsp;            when (effect) {
+&nbsp;                RegisterViewModel.Effect.NavigateBack -&gt; onNavigateBack()
+&nbsp;                is RegisterViewModel.Effect.ShowToast -&gt;
+&nbsp;                    snackbarHostState.showSnackbar(effect.message)
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    Scaffold(
+&nbsp;        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+&nbsp;        topBar = {
+&nbsp;            TopAppBar(
+&nbsp;                title = {
+&nbsp;                    Text(
+&nbsp;                        text = stringResource(Res.string.register),
+&nbsp;                        color = MaterialTheme.colorScheme.onPrimary,
+&nbsp;                    )
+&nbsp;                },
+&nbsp;                colors =
+&nbsp;                    TopAppBarDefaults.topAppBarColors(
+&nbsp;                        containerColor = MaterialTheme.colorScheme.primary
+&nbsp;                    ),
+&nbsp;                navigationIcon = {
+&nbsp;                    IconButton(
+&nbsp;                        onClick = { vm.processEvent(RegisterViewModel.Event.OnClickBackButton) }
+&nbsp;                    ) {
+&nbsp;                        Icon(
+&nbsp;                            imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+&nbsp;                            contentDescription = null,
+&nbsp;                            tint = MaterialTheme.colorScheme.onPrimary,
+&nbsp;                        )
+&nbsp;                    }
+&nbsp;                },
+&nbsp;            )
+&nbsp;        },
+&nbsp;    ) { paddingValues -&gt;
+&nbsp;        Box(
+&nbsp;            modifier = Modifier.padding(paddingValues).fillMaxSize(),
+&nbsp;            contentAlignment = Alignment.Center,
+&nbsp;        ) {
+&nbsp;            state.value.getRolesResult.let { result -&gt;
+&nbsp;                when (result) {
+&nbsp;                    is ResultState.Error -&gt;
+&nbsp;                        ErrorView(message = result.exception.message.orEmpty()) {
+&nbsp;                            vm.processEvent(RegisterViewModel.Event.OnClickRefreshButton)
+&nbsp;                        }
+&nbsp;
+&nbsp;                    is ResultState.Success -&gt;
+&nbsp;                        RegisterForm(
+&nbsp;                            state.value,
+&nbsp;                            processEvent = { event -&gt; vm.processEvent(event) },
+&nbsp;                        )
+&nbsp;
+&nbsp;                    else -&gt; {
+&nbsp;                        LoadingView(modifier = Modifier.align(Alignment.Center))
+&nbsp;                    }
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-01-04 02:26</div>
+</div>
+</body>
+</html>
