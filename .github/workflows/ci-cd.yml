@@ -9,7 +9,7 @@ on:
 
 jobs:
   check:
-    name: Check (Lint & Test)
+    name: Check Code Quality
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -17,7 +17,14 @@ jobs:
         uses: ./.github/actions/setup-env
 
       - name: Run Checks
-        run: gradle lintDebug testDebugUnitTest --parallel --build-cache
+        run: gradle lintDebug koverVerify koverHtmlReport --parallel --build-cache
+
+      - name: Upload Kover Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kover-report
+          path: '**/build/reports/kover/html'
 
   build-android-debug:
     name: Build Android App
