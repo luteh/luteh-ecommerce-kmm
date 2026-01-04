@@ -1,3 +1,4 @@
+import kotlinx.kover.gradle.plugin.dsl.CoverageUnit
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -118,6 +119,16 @@ kover {
 
                 classes("*.data.local.database.*")
                 annotatedBy("*ExcludeFromCoverage")
+            }
+        }
+
+        verify {
+            rule {
+                // Verification rule: Minimum 80% branch coverage
+                bound {
+                    coverageUnits = CoverageUnit.BRANCH
+                    minValue = 80
+                }
             }
         }
     }
