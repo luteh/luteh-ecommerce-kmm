@@ -63,6 +63,11 @@ kotlin {
             implementation(libs.turbine)
             implementation(libs.apollo.testing.support)
         }
+        androidUnitTest.dependencies {
+            implementation(libs.robolectric)
+            @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+            implementation(compose.uiTest)
+        }
     }
 }
 
@@ -165,6 +170,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    testOptions { unitTests.isIncludeAndroidResources = true }
     buildFeatures { compose = true }
     dependencies { debugImplementation(compose.uiTooling) }
 }

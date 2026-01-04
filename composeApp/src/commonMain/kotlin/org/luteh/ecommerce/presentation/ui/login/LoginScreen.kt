@@ -19,6 +19,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -30,7 +31,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -42,6 +43,7 @@ import lutehecommerce.composeapp.generated.resources.login
 import lutehecommerce.composeapp.generated.resources.or
 import lutehecommerce.composeapp.generated.resources.password
 import lutehecommerce.composeapp.generated.resources.register_here
+import lutehecommerce.composeapp.generated.resources.sign_in_with_google
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.luteh.ecommerce.presentation.component.RoundedTextField
@@ -51,16 +53,16 @@ import org.luteh.ecommerce.presentation.ui.login.component.GoogleSignInButton
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    vm: LoginViewModel = koinInject(),
+    viewModel: LoginViewModel = koinInject(),
     onNavigateToMainScreen: () -> Unit,
     onNavigateToRegisterScreen: () -> Unit,
     onNavigateBack: () -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-    val state = vm.state.collectAsState()
+    val state = viewModel.state.collectAsState()
 
-    LaunchedEffect(key1 = Unit) {
-        vm.effect.collect { effect ->
+    LaunchedEffect(Unit) {
+        viewModel.effect.collect { effect ->
             when (effect) {
                 is LoginViewModel.Effect.ShowToast -> snackbarHostState.showSnackbar(effect.message)
 
@@ -71,13 +73,32 @@ fun LoginScreen(
         }
     }
 
+    LoginScreenContent(
+        state = state.value,
+        snackbarHostState = snackbarHostState,
+        onEvent = viewModel::processEvent,
+        onNavigateBack = onNavigateBack,
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun LoginScreenContent(
+    state: LoginViewModel.State,
+    snackbarHostState: SnackbarHostState,
+    onEvent: (LoginViewModel.Event) -> Unit,
+    onNavigateBack: () -> Unit,
+) {
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(Res.string.login)) },
                 navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
+                    IconButton(
+                        onClick = onNavigateBack,
+                        modifier = Modifier.testTag("back_button"),
+                    ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back",
@@ -91,19 +112,17 @@ fun LoginScreen(
             modifier = Modifier.padding(paddingValue).fillMaxSize(),
             contentAlignment = Alignment.Center,
         ) {
-            when (state.value.loginState) {
+            when (state.loginState) {
                 ResultState.Loading -> {
-                    CircularProgressIndicator()
+                    CircularProgressIndicator(modifier = Modifier.testTag("loading_indicator"))
                 }
 
                 else -> {
                     Column(modifier = Modifier.padding(16.dp)) {
                         RoundedTextField(
-                            modifier = Modifier.fillMaxWidth(),
-                            valueText = state.value.email,
-                            onValueChange = {
-                                vm.processEvent(LoginViewModel.Event.OnChangeEmailText(it))
-                            },
+                            modifier = Modifier.fillMaxWidth().testTag("email_input"),
+                            valueText = state.email,
+                            onValueChange = { onEvent(LoginViewModel.Event.OnChangeEmailText(it)) },
                             labelText = stringResource(Res.string.email),
                             singleLine = true,
                             keyboardType = KeyboardType.Email,
@@ -111,22 +130,23 @@ fun LoginScreen(
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         RoundedTextField(
-                            modifier = Modifier.fillMaxWidth(),
-                            valueText = state.value.password,
+                            modifier = Modifier.fillMaxWidth().testTag("password_input"),
+                            valueText = state.password,
                             onValueChange = {
-                                vm.processEvent(LoginViewModel.Event.OnChangePasswordText(it))
+                                onEvent(LoginViewModel.Event.OnChangePasswordText(it))
                             },
                             labelText = stringResource(Res.string.password),
                             visualTransformation = PasswordVisualTransformation('*'),
                             singleLine = true,
                             keyboardType = KeyboardType.Password,
-                            imeAction = ImeAction.Next,
+                            imeAction = ImeAction.Done,
                         )
                         Spacer(modifier = Modifier.height(32.dp))
                         Button(
-                            modifier = Modifier.fillMaxWidth().height(50.dp),
+                            modifier =
+                                Modifier.fillMaxWidth().height(50.dp).testTag("login_button"),
                             shape = RoundedCornerShape(12.dp),
-                            onClick = { vm.processEvent(LoginViewModel.Event.OnClickLoginButton) },
+                            onClick = { onEvent(LoginViewModel.Event.OnClickLoginButton) },
                         ) {
                             Text(text = stringResource(Res.string.login))
                         }
@@ -136,14 +156,15 @@ fun LoginScreen(
                             horizontalArrangement = Arrangement.Center,
                         ) {
                             Text(text = stringResource(Res.string.don_t_have_an_account))
-                            Spacer(modifier = Modifier.width(2.dp))
+                            Spacer(modifier = Modifier.width(6.dp))
                             Text(
                                 text = stringResource(Res.string.register_here),
                                 modifier =
-                                    Modifier.padding(start = 4.dp).clickable {
-                                        vm.processEvent(LoginViewModel.Event.OnClickRegisterButton)
-                                    },
-                                color = Color.Blue,
+                                    Modifier.clickable {
+                                            onEvent(LoginViewModel.Event.OnClickRegisterButton)
+                                        }
+                                        .testTag("register_button"),
+                                color = MaterialTheme.colorScheme.primary,
                             )
                         }
                         Spacer(modifier = Modifier.height(16.dp))
@@ -153,9 +174,9 @@ fun LoginScreen(
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         GoogleSignInButton(
-                            onClick = {
-                                vm.processEvent(LoginViewModel.Event.OnClickGoogleSignInButton)
-                            }
+                            modifier = Modifier.testTag("google_signin_button"),
+                            text = stringResource(Res.string.sign_in_with_google),
+                            onClick = { onEvent(LoginViewModel.Event.OnClickGoogleSignInButton) },
                         )
                     }
                 }

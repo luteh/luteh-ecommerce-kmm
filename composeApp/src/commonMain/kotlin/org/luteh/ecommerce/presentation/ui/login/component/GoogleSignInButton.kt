@@ -20,15 +20,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import lutehecommerce.composeapp.generated.resources.Res
 import lutehecommerce.composeapp.generated.resources.ic_google
-import lutehecommerce.composeapp.generated.resources.sign_in_with_google
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun GoogleSignInButton(onClick: () -> Unit) {
+fun GoogleSignInButton(modifier: Modifier = Modifier, text: String, onClick: () -> Unit) {
     Button(
         onClick = onClick,
-        modifier = Modifier.fillMaxWidth().height(50.dp),
+        modifier = modifier.fillMaxWidth().height(50.dp),
         shape = RoundedCornerShape(12.dp),
         colors = ButtonDefaults.buttonColors(White),
         elevation = ButtonDefaults.buttonElevation(defaultElevation = 10.dp),
@@ -40,7 +38,7 @@ fun GoogleSignInButton(onClick: () -> Unit) {
                 tint = Color.Unspecified,
             )
             Text(
-                text = stringResource(Res.string.sign_in_with_google),
+                text = text,
                 color = Black,
                 fontWeight = FontWeight.W600,
                 fontSize = 16.sp,
