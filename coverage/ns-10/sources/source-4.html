@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
-  <title>composeApp Coverage Report > AppKt</title>
+  <title>composeApp Coverage Report > MainActivityKt</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -22,7 +22,7 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
     <a href="../index.html">org.luteh.ecommerce</a>
 </div>
 
-<h1>Coverage Summary for Class: AppKt (org.luteh.ecommerce)</h1>
+<h1>Coverage Summary for Class: MainActivityKt (org.luteh.ecommerce)</h1>
 
 <table class="coverageStats">
 <tr>
@@ -37,7 +37,7 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 </th>
 </tr>
 <tr>
-  <td class="name">AppKt</td>
+  <td class="name">MainActivityKt</td>
 <td class="coverageStat">
   <span class="percent">
     0%
@@ -58,161 +58,25 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 <pre>
 <code class="sourceCode" id="sourceCode">&nbsp;package org.luteh.ecommerce
 &nbsp;
-&nbsp;import androidx.compose.animation.core.tween
-&nbsp;import androidx.compose.animation.slideInHorizontally
-&nbsp;import androidx.compose.animation.slideOutHorizontally
-&nbsp;import androidx.compose.foundation.layout.Box
-&nbsp;import androidx.compose.foundation.layout.fillMaxSize
+&nbsp;import android.os.Bundle
+&nbsp;import androidx.activity.ComponentActivity
+&nbsp;import androidx.activity.compose.setContent
 &nbsp;import androidx.compose.runtime.Composable
-&nbsp;import androidx.compose.ui.Modifier
-&nbsp;import androidx.navigation.compose.NavHost
-&nbsp;import androidx.navigation.compose.composable
-&nbsp;import androidx.navigation.compose.rememberNavController
-&nbsp;import androidx.navigation.navOptions
-&nbsp;import androidx.navigation.toRoute
-&nbsp;import org.jetbrains.compose.ui.tooling.preview.Preview
-&nbsp;import org.koin.compose.KoinApplication
-&nbsp;import org.koin.dsl.KoinAppDeclaration
-&nbsp;import org.luteh.ecommerce.di.appModule
-&nbsp;import org.luteh.ecommerce.presentation.navigation.AppNavigation
-&nbsp;import org.luteh.ecommerce.presentation.theme.LutehTheme
-&nbsp;import org.luteh.ecommerce.presentation.ui.cart.CartScreen
-&nbsp;import org.luteh.ecommerce.presentation.ui.checkout.CheckoutScreen
-&nbsp;import org.luteh.ecommerce.presentation.ui.home.HomeScreen
-&nbsp;import org.luteh.ecommerce.presentation.ui.login.LoginScreen
-&nbsp;import org.luteh.ecommerce.presentation.ui.product_detail.ProductDetailScreen
-&nbsp;import org.luteh.ecommerce.presentation.ui.product_list.ProductListScreen
-&nbsp;import org.luteh.ecommerce.presentation.ui.register.RegisterScreen
-&nbsp;import org.luteh.ecommerce.presentation.ui.splash.SplashScreen
-&nbsp;import org.luteh.ecommerce.presentation.ui.transaction_detail.TransactionDetailScreen
+&nbsp;import androidx.compose.ui.tooling.preview.Preview
+&nbsp;import org.koin.android.ext.koin.androidContext
 &nbsp;
-&nbsp;@Composable
-&nbsp;@Preview
-&nbsp;fun App(koinConfig: KoinAppDeclaration? = null) {
-&nbsp;    KoinApplication(
-&nbsp;        application = {
-&nbsp;            modules(appModule())
-&nbsp;            koinConfig?.invoke(this)
-&nbsp;        }
-&nbsp;    ) {
-&nbsp;        LutehTheme {
-&nbsp;            val navigator = rememberNavController()
+&nbsp;class MainActivity : ComponentActivity() {
+&nbsp;    override fun onCreate(savedInstanceState: Bundle?) {
+&nbsp;        super.onCreate(savedInstanceState)
 &nbsp;
-&nbsp;            Box(modifier = Modifier.fillMaxSize()) {
-&nbsp;                NavHost(
-&nbsp;                    navController = navigator,
-&nbsp;                    startDestination = AppNavigation.Splash,
-&nbsp;                    modifier = Modifier.fillMaxSize(),
-&nbsp;                    enterTransition = {
-&nbsp;                        slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(300))
-&nbsp;                    },
-&nbsp;                    exitTransition = {
-&nbsp;                        slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(300))
-&nbsp;                    },
-&nbsp;                    popEnterTransition = {
-&nbsp;                        slideInHorizontally(initialOffsetX = { -it }, animationSpec = tween(300))
-&nbsp;                    },
-&nbsp;                    popExitTransition = {
-&nbsp;                        slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(300))
-&nbsp;                    },
-&nbsp;                ) {
-&nbsp;                    composable&lt;AppNavigation.Splash&gt; {
-&nbsp;                        SplashScreen(
-&nbsp;                            onNavigateToHome = {
-&nbsp;                                navigator.navigate(
-&nbsp;                                    AppNavigation.Home,
-&nbsp;                                    navOptions {
-&nbsp;                                        popUpTo(AppNavigation.Splash) { inclusive = true }
-&nbsp;                                        launchSingleTop = true
-&nbsp;                                    },
-&nbsp;                                )
-&nbsp;                            }
-&nbsp;                        )
-&nbsp;                    }
-&nbsp;                    composable&lt;AppNavigation.Login&gt; {
-&nbsp;                        LoginScreen(
-&nbsp;                            onNavigateToMainScreen = {
-&nbsp;                                navigator.navigate(
-&nbsp;                                    AppNavigation.Home,
-&nbsp;                                    navOptions {
-&nbsp;                                        popUpTo(AppNavigation.Login) { inclusive = true }
-&nbsp;                                        launchSingleTop = true
-&nbsp;                                    },
-&nbsp;                                )
-&nbsp;                            },
-&nbsp;                            onNavigateToRegisterScreen = {
-&nbsp;                                navigator.navigate(AppNavigation.Register)
-&nbsp;                            },
-&nbsp;                            onNavigateBack = { navigator.popBackStack() },
-&nbsp;                        )
-&nbsp;                    }
-&nbsp;                    composable&lt;AppNavigation.Register&gt; {
-&nbsp;                        RegisterScreen(onNavigateBack = { navigator.popBackStack() })
-&nbsp;                    }
-&nbsp;                    composable&lt;AppNavigation.Home&gt; {
-&nbsp;                        HomeScreen(
-&nbsp;                            onNavigateToLogin = { navigator.navigate(AppNavigation.Login) },
-&nbsp;                            onNavigateToProductList = {
-&nbsp;                                navigator.navigate(AppNavigation.ProductList)
-&nbsp;                            },
-&nbsp;                            onNavigateToProductDetail = { productId -&gt;
-&nbsp;                                navigator.navigate(AppNavigation.ProductDetail(productId))
-&nbsp;                            },
-&nbsp;                            onNavigateToCart = { navigator.navigate(AppNavigation.Cart) },
-&nbsp;                        )
-&nbsp;                    }
-&nbsp;                    composable&lt;AppNavigation.ProductList&gt; {
-&nbsp;                        ProductListScreen(
-&nbsp;                            onNavigateBack = { navigator.popBackStack() },
-&nbsp;                            onNavigateToProductDetail = { productId -&gt;
-&nbsp;                                navigator.navigate(AppNavigation.ProductDetail(productId))
-&nbsp;                            },
-&nbsp;                            onNavigateToCart = { navigator.navigate(AppNavigation.Cart) },
-&nbsp;                            onNavigateToLogin = { navigator.navigate(AppNavigation.Login) },
-&nbsp;                        )
-&nbsp;                    }
-&nbsp;                    composable&lt;AppNavigation.Cart&gt; {
-&nbsp;                        CartScreen(
-&nbsp;                            onNavigateBack = { navigator.popBackStack() },
-&nbsp;                            onNavigateToCheckout = { navigator.navigate(AppNavigation.Checkout) },
-&nbsp;                        )
-&nbsp;                    }
-&nbsp;                    composable&lt;AppNavigation.ProductDetail&gt; { backStackEntry -&gt;
-&nbsp;                        val args = backStackEntry.toRoute&lt;AppNavigation.ProductDetail&gt;()
-&nbsp;                        ProductDetailScreen(
-&nbsp;                            productId = args.productId,
-&nbsp;                            onNavigateBack = { navigator.popBackStack() },
-&nbsp;                            onNavigateToCart = { navigator.navigate(AppNavigation.Cart) },
-&nbsp;                            onNavigateToLogin = { navigator.navigate(AppNavigation.Login) },
-&nbsp;                        )
-&nbsp;                    }
-&nbsp;                    composable&lt;AppNavigation.Checkout&gt; {
-&nbsp;                        CheckoutScreen(
-&nbsp;                            onNavigateBack = { navigator.popBackStack() },
-&nbsp;                            onNavigateToTransactionDetail = { isSuccess, message -&gt;
-&nbsp;                                navigator.navigate(
-&nbsp;                                    AppNavigation.TransactionDetail(isSuccess, message),
-&nbsp;                                    navOptions { popUpTo(AppNavigation.Home) { inclusive = false } },
-&nbsp;                                )
-&nbsp;                            },
-&nbsp;                        )
-&nbsp;                    }
-&nbsp;                    composable&lt;AppNavigation.TransactionDetail&gt; { backStackEntry -&gt;
-&nbsp;                        val args = backStackEntry.toRoute&lt;AppNavigation.TransactionDetail&gt;()
-&nbsp;                        TransactionDetailScreen(
-&nbsp;                            isSuccess = args.isSuccess,
-&nbsp;                            message = args.message,
-&nbsp;                            onNavigateToHome = {
-&nbsp;                                navigator.navigate(AppNavigation.Home) {
-&nbsp;                                    popUpTo(AppNavigation.Home) { inclusive = true }
-&nbsp;                                }
-&nbsp;                            },
-&nbsp;                        )
-&nbsp;                    }
-&nbsp;                }
-&nbsp;            }
-&nbsp;        }
+&nbsp;        setContent { App(koinConfig = { androidContext(this@MainActivity) }) }
 &nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;@Preview
+&nbsp;@Composable
+&nbsp;fun AppAndroidPreview() {
+&nbsp;    App()
 &nbsp;}
 </code>
 </pre>
@@ -237,7 +101,7 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2026-01-04 02:26</div>
+    <div style="float:right;">generated on 2026-01-04 22:52</div>
 </div>
 </body>
 </html>
