@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
-  <title>composeApp Coverage Report > MainActivityKt</title>
+  <title>composeApp Coverage Report > Platform</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -22,30 +22,18 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
     <a href="../index.html">org.luteh.ecommerce</a>
 </div>
 
-<h1>Coverage Summary for Class: MainActivityKt (org.luteh.ecommerce)</h1>
+<h1>Coverage Summary for Class: Platform (org.luteh.ecommerce)</h1>
 
 <table class="coverageStats">
 <tr>
   <th class="name">Class</th>
 <th class="coverageStat 
 ">
-  Method, %
-</th>
-<th class="coverageStat 
-">
   Branch, %
 </th>
 </tr>
 <tr>
-  <td class="name">MainActivityKt</td>
-<td class="coverageStat">
-  <span class="percent">
-    0%
-  </span>
-  <span class="absValue">
-    (0/1)
-  </span>
-</td>
+  <td class="name">Platform</td>
     <td class="coverageStat"/>
 </tr>
 
@@ -58,26 +46,12 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 <pre>
 <code class="sourceCode" id="sourceCode">&nbsp;package org.luteh.ecommerce
 &nbsp;
-&nbsp;import android.os.Bundle
-&nbsp;import androidx.activity.ComponentActivity
-&nbsp;import androidx.activity.compose.setContent
-&nbsp;import androidx.compose.runtime.Composable
-&nbsp;import androidx.compose.ui.tooling.preview.Preview
-&nbsp;import org.koin.android.ext.koin.androidContext
-&nbsp;
-&nbsp;class MainActivity : ComponentActivity() {
-&nbsp;    override fun onCreate(savedInstanceState: Bundle?) {
-&nbsp;        super.onCreate(savedInstanceState)
-&nbsp;
-&nbsp;        setContent { App(koinConfig = { androidContext(this@MainActivity) }) }
-&nbsp;    }
+&nbsp;interface Platform {
+&nbsp;    val name: String
+&nbsp;    val isIos: Boolean
 &nbsp;}
 &nbsp;
-&nbsp;@Preview
-&nbsp;@Composable
-&nbsp;fun AppAndroidPreview() {
-&nbsp;    App()
-&nbsp;}
+&nbsp;expect fun getPlatform(): Platform
 </code>
 </pre>
 </div>
@@ -101,7 +75,7 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2026-01-05 00:56</div>
+    <div style="float:right;">generated on 2026-01-05 01:30</div>
 </div>
 </body>
 </html>

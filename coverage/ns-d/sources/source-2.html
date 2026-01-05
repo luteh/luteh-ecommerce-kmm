@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
-  <title>composeApp Coverage Report > RegisterScreenKt</title>
+  <title>composeApp Coverage Report > ProductListScreenKt</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -19,10 +19,10 @@
 <div class="breadCrumbs">
 Current scope: composeApp<span class="separator">|</span>    <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">org.luteh.ecommerce.presentation.ui.register</a>
+    <a href="../index.html">org.luteh.ecommerce.presentation.ui.product_list</a>
 </div>
 
-<h1>Coverage Summary for Class: RegisterScreenKt (org.luteh.ecommerce.presentation.ui.register)</h1>
+<h1>Coverage Summary for Class: ProductListScreenKt (org.luteh.ecommerce.presentation.ui.product_list)</h1>
 
 <table class="coverageStats">
 <tr>
@@ -37,7 +37,7 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 </th>
 </tr>
 <tr>
-  <td class="name">RegisterScreenKt</td>
+  <td class="name">ProductListScreenKt</td>
 <td class="coverageStat">
   <span class="percent">
     0%
@@ -56,101 +56,180 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package org.luteh.ecommerce.presentation.ui.register
+<code class="sourceCode" id="sourceCode">&nbsp;package org.luteh.ecommerce.presentation.ui.product_list
 &nbsp;
+&nbsp;import androidx.compose.foundation.layout.Arrangement
 &nbsp;import androidx.compose.foundation.layout.Box
+&nbsp;import androidx.compose.foundation.layout.Column
+&nbsp;import androidx.compose.foundation.layout.PaddingValues
+&nbsp;import androidx.compose.foundation.layout.Row
+&nbsp;import androidx.compose.foundation.layout.Spacer
 &nbsp;import androidx.compose.foundation.layout.fillMaxSize
+&nbsp;import androidx.compose.foundation.layout.fillMaxWidth
+&nbsp;import androidx.compose.foundation.layout.height
 &nbsp;import androidx.compose.foundation.layout.padding
+&nbsp;import androidx.compose.foundation.lazy.grid.GridCells
+&nbsp;import androidx.compose.foundation.lazy.grid.GridItemSpan
+&nbsp;import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+&nbsp;import androidx.compose.foundation.lazy.grid.items
+&nbsp;import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 &nbsp;import androidx.compose.material.icons.Icons
-&nbsp;import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+&nbsp;import androidx.compose.material.icons.automirrored.filled.ArrowBack
+&nbsp;import androidx.compose.material.icons.filled.Search
+&nbsp;import androidx.compose.material.icons.filled.ShoppingCart
+&nbsp;import androidx.compose.material3.CircularProgressIndicator
 &nbsp;import androidx.compose.material3.ExperimentalMaterial3Api
+&nbsp;import androidx.compose.material3.FilterChip
 &nbsp;import androidx.compose.material3.Icon
 &nbsp;import androidx.compose.material3.IconButton
-&nbsp;import androidx.compose.material3.MaterialTheme
+&nbsp;import androidx.compose.material3.OutlinedTextField
 &nbsp;import androidx.compose.material3.Scaffold
 &nbsp;import androidx.compose.material3.SnackbarHost
 &nbsp;import androidx.compose.material3.SnackbarHostState
 &nbsp;import androidx.compose.material3.Text
 &nbsp;import androidx.compose.material3.TopAppBar
-&nbsp;import androidx.compose.material3.TopAppBarDefaults
 &nbsp;import androidx.compose.runtime.Composable
 &nbsp;import androidx.compose.runtime.LaunchedEffect
+&nbsp;import androidx.compose.runtime.getValue
+&nbsp;import androidx.compose.runtime.mutableStateOf
 &nbsp;import androidx.compose.runtime.remember
+&nbsp;import androidx.compose.runtime.setValue
+&nbsp;import androidx.compose.runtime.snapshotFlow
 &nbsp;import androidx.compose.ui.Alignment
 &nbsp;import androidx.compose.ui.Modifier
-&nbsp;import androidx.lifecycle.compose.collectAsStateWithLifecycle
-&nbsp;import lutehecommerce.composeapp.generated.resources.Res
-&nbsp;import lutehecommerce.composeapp.generated.resources.register
-&nbsp;import org.jetbrains.compose.resources.stringResource
-&nbsp;import org.koin.compose.koinInject
-&nbsp;import org.luteh.ecommerce.presentation.component.ErrorView
-&nbsp;import org.luteh.ecommerce.presentation.component.LoadingView
-&nbsp;import org.luteh.ecommerce.presentation.core.ResultState
-&nbsp;import org.luteh.ecommerce.presentation.ui.register.component.RegisterForm
+&nbsp;import androidx.compose.ui.unit.dp
+&nbsp;import kotlinx.coroutines.delay
+&nbsp;import org.koin.compose.viewmodel.koinViewModel
+&nbsp;import org.luteh.ecommerce.domain.model.dummyProducts
+&nbsp;import org.luteh.ecommerce.presentation.ui.common.ProductItem
 &nbsp;
 &nbsp;@OptIn(ExperimentalMaterial3Api::class)
 &nbsp;@Composable
-&nbsp;fun RegisterScreen(vm: RegisterViewModel = koinInject(), onNavigateBack: () -&gt; Unit) {
+&nbsp;fun ProductListScreen(
+&nbsp;    onNavigateBack: () -&gt; Unit,
+&nbsp;    onNavigateToProductDetail: (String) -&gt; Unit,
+&nbsp;    onNavigateToCart: () -&gt; Unit,
+&nbsp;    onNavigateToLogin: () -&gt; Unit,
+&nbsp;    viewModel: ProductListViewModel = koinViewModel(),
+&nbsp;) {
+&nbsp;    var searchQuery by remember { mutableStateOf(&quot;&quot;) }
+&nbsp;    var selectedCategory by remember { mutableStateOf&lt;String?&gt;(null) }
+&nbsp;    var products by remember { mutableStateOf(dummyProducts) }
+&nbsp;    var isLoading by remember { mutableStateOf(false) }
 &nbsp;    val snackbarHostState = remember { SnackbarHostState() }
-&nbsp;    val state = vm.state.collectAsStateWithLifecycle()
 &nbsp;
-&nbsp;    LaunchedEffect(key1 = Unit) {
-&nbsp;        vm.effect.collect { effect -&gt;
+&nbsp;    LaunchedEffect(Unit) {
+&nbsp;        viewModel.effect.collect { effect -&gt;
 &nbsp;            when (effect) {
-&nbsp;                RegisterViewModel.Effect.NavigateBack -&gt; onNavigateBack()
-&nbsp;                is RegisterViewModel.Effect.ShowToast -&gt;
+&nbsp;                ProductListViewModel.Effect.NavigateToCart -&gt; onNavigateToCart()
+&nbsp;                ProductListViewModel.Effect.NavigateToLogin -&gt; onNavigateToLogin()
+&nbsp;                is ProductListViewModel.Effect.ShowSnackbar -&gt; {
 &nbsp;                    snackbarHostState.showSnackbar(effect.message)
+&nbsp;                }
 &nbsp;            }
 &nbsp;        }
 &nbsp;    }
 &nbsp;
+&nbsp;    // Simulate infinite scroll
+&nbsp;    val listState = rememberLazyGridState()
+&nbsp;
+&nbsp;    LaunchedEffect(listState) {
+&nbsp;        snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
+&nbsp;            .collect { lastIndex -&gt;
+&nbsp;                if (lastIndex != null &amp;&amp; lastIndex &gt;= products.size - 2 &amp;&amp; !isLoading) {
+&nbsp;                    isLoading = true
+&nbsp;                    delay(1000) // Simulate network delay
+&nbsp;                    products = products + dummyProducts // Append more dummy data
+&nbsp;                    isLoading = false
+&nbsp;                }
+&nbsp;            }
+&nbsp;    }
+&nbsp;
+&nbsp;    // Filter logic
+&nbsp;    val filteredProducts =
+&nbsp;        remember(searchQuery, selectedCategory, products) {
+&nbsp;            products.filter { product -&gt;
+&nbsp;                (searchQuery.isEmpty() || product.name.contains(searchQuery, ignoreCase = true)) &amp;&amp;
+&nbsp;                    (selectedCategory == null || product.category == selectedCategory)
+&nbsp;            }
+&nbsp;        }
+&nbsp;
 &nbsp;    Scaffold(
-&nbsp;        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+&nbsp;        snackbarHost = { SnackbarHost(snackbarHostState) },
 &nbsp;        topBar = {
 &nbsp;            TopAppBar(
-&nbsp;                title = {
-&nbsp;                    Text(
-&nbsp;                        text = stringResource(Res.string.register),
-&nbsp;                        color = MaterialTheme.colorScheme.onPrimary,
-&nbsp;                    )
-&nbsp;                },
-&nbsp;                colors =
-&nbsp;                    TopAppBarDefaults.topAppBarColors(
-&nbsp;                        containerColor = MaterialTheme.colorScheme.primary
-&nbsp;                    ),
+&nbsp;                title = { Text(&quot;Products&quot;) },
 &nbsp;                navigationIcon = {
+&nbsp;                    IconButton(onClick = onNavigateBack) {
+&nbsp;                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = &quot;Back&quot;)
+&nbsp;                    }
+&nbsp;                },
+&nbsp;                actions = {
 &nbsp;                    IconButton(
-&nbsp;                        onClick = { vm.processEvent(RegisterViewModel.Event.OnClickBackButton) }
+&nbsp;                        onClick = {
+&nbsp;                            viewModel.processEvent(ProductListViewModel.Event.OnCartClicked)
+&nbsp;                        }
 &nbsp;                    ) {
-&nbsp;                        Icon(
-&nbsp;                            imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-&nbsp;                            contentDescription = null,
-&nbsp;                            tint = MaterialTheme.colorScheme.onPrimary,
-&nbsp;                        )
+&nbsp;                        Icon(Icons.Default.ShoppingCart, contentDescription = &quot;Cart&quot;)
 &nbsp;                    }
 &nbsp;                },
 &nbsp;            )
 &nbsp;        },
 &nbsp;    ) { paddingValues -&gt;
-&nbsp;        Box(
-&nbsp;            modifier = Modifier.padding(paddingValues).fillMaxSize(),
-&nbsp;            contentAlignment = Alignment.Center,
-&nbsp;        ) {
-&nbsp;            state.value.getRolesResult.let { result -&gt;
-&nbsp;                when (result) {
-&nbsp;                    is ResultState.Error -&gt;
-&nbsp;                        ErrorView(message = result.exception.message.orEmpty()) {
-&nbsp;                            vm.processEvent(RegisterViewModel.Event.OnClickRefreshButton)
+&nbsp;        Column(modifier = Modifier.padding(paddingValues)) {
+&nbsp;            // Search Bar
+&nbsp;            OutlinedTextField(
+&nbsp;                value = searchQuery,
+&nbsp;                onValueChange = { searchQuery = it },
+&nbsp;                modifier = Modifier.fillMaxWidth().padding(16.dp),
+&nbsp;                placeholder = { Text(&quot;Search products...&quot;) },
+&nbsp;                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+&nbsp;                singleLine = true,
+&nbsp;            )
+&nbsp;
+&nbsp;            // Filter Chips
+&nbsp;            Row(
+&nbsp;                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+&nbsp;                horizontalArrangement = Arrangement.spacedBy(8.dp),
+&nbsp;            ) {
+&nbsp;                val categories = listOf(&quot;All&quot;, &quot;Electronics&quot;, &quot;Fashion&quot;, &quot;Home&quot;)
+&nbsp;                categories.forEach { category -&gt;
+&nbsp;                    FilterChip(
+&nbsp;                        selected =
+&nbsp;                            (category == &quot;All&quot; &amp;&amp; selectedCategory == null) ||
+&nbsp;                                category == selectedCategory,
+&nbsp;                        onClick = { selectedCategory = if (category == &quot;All&quot;) null else category },
+&nbsp;                        label = { Text(category) },
+&nbsp;                    )
+&nbsp;                }
+&nbsp;            }
+&nbsp;
+&nbsp;            Spacer(modifier = Modifier.height(8.dp))
+&nbsp;
+&nbsp;            // Product Grid
+&nbsp;            LazyVerticalGrid(
+&nbsp;                state = listState,
+&nbsp;                columns = GridCells.Fixed(2),
+&nbsp;                contentPadding = PaddingValues(16.dp),
+&nbsp;                horizontalArrangement = Arrangement.spacedBy(16.dp),
+&nbsp;                verticalArrangement = Arrangement.spacedBy(16.dp),
+&nbsp;                modifier = Modifier.fillMaxSize(),
+&nbsp;            ) {
+&nbsp;                items(items = filteredProducts, key = { product -&gt; product.id }) { product -&gt;
+&nbsp;                    ProductItem(
+&nbsp;                        product = product,
+&nbsp;                        onClick = { onNavigateToProductDetail(product.id) },
+&nbsp;                    )
+&nbsp;                }
+&nbsp;
+&nbsp;                if (isLoading) {
+&nbsp;                    item(span = { GridItemSpan(2) }) {
+&nbsp;                        Box(
+&nbsp;                            modifier = Modifier.fillMaxWidth().padding(16.dp),
+&nbsp;                            contentAlignment = Alignment.Center,
+&nbsp;                        ) {
+&nbsp;                            CircularProgressIndicator()
 &nbsp;                        }
-&nbsp;
-&nbsp;                    is ResultState.Success -&gt;
-&nbsp;                        RegisterForm(
-&nbsp;                            state.value,
-&nbsp;                            processEvent = { event -&gt; vm.processEvent(event) },
-&nbsp;                        )
-&nbsp;
-&nbsp;                    else -&gt; {
-&nbsp;                        LoadingView(modifier = Modifier.align(Alignment.Center))
 &nbsp;                    }
 &nbsp;                }
 &nbsp;            }
@@ -180,7 +259,7 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2026-01-05 00:56</div>
+    <div style="float:right;">generated on 2026-01-05 01:30</div>
 </div>
 </body>
 </html>

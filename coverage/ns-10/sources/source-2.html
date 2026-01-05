@@ -82,6 +82,7 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 &nbsp;import org.luteh.ecommerce.presentation.ui.login.LoginScreen
 &nbsp;import org.luteh.ecommerce.presentation.ui.product_detail.ProductDetailScreen
 &nbsp;import org.luteh.ecommerce.presentation.ui.product_list.ProductListScreen
+&nbsp;import org.luteh.ecommerce.presentation.ui.profile.ProfileScreen
 &nbsp;import org.luteh.ecommerce.presentation.ui.register.RegisterScreen
 &nbsp;import org.luteh.ecommerce.presentation.ui.splash.SplashScreen
 &nbsp;import org.luteh.ecommerce.presentation.ui.transaction_detail.TransactionDetailScreen
@@ -152,6 +153,7 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 &nbsp;                    composable&lt;AppNavigation.Home&gt; {
 &nbsp;                        HomeScreen(
 &nbsp;                            onNavigateToLogin = { navigator.navigate(AppNavigation.Login) },
+&nbsp;                            onNavigateToProfile = { navigator.navigate(AppNavigation.Profile) },
 &nbsp;                            onNavigateToProductList = {
 &nbsp;                                navigator.navigate(AppNavigation.ProductList)
 &nbsp;                            },
@@ -160,6 +162,9 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 &nbsp;                            },
 &nbsp;                            onNavigateToCart = { navigator.navigate(AppNavigation.Cart) },
 &nbsp;                        )
+&nbsp;                    }
+&nbsp;                    composable&lt;AppNavigation.Profile&gt; {
+&nbsp;                        ProfileScreen(onNavigateBack = { navigator.popBackStack() })
 &nbsp;                    }
 &nbsp;                    composable&lt;AppNavigation.ProductList&gt; {
 &nbsp;                        ProductListScreen(
@@ -237,7 +242,7 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2026-01-05 00:56</div>
+    <div style="float:right;">generated on 2026-01-05 01:30</div>
 </div>
 </body>
 </html>

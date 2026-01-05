@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
-  <title>composeApp Coverage Report > ProductRepository</title>
+  <title>composeApp Coverage Report > CartRepository</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -22,7 +22,7 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
     <a href="../index.html">org.luteh.ecommerce.domain.repository</a>
 </div>
 
-<h1>Coverage Summary for Class: ProductRepository (org.luteh.ecommerce.domain.repository)</h1>
+<h1>Coverage Summary for Class: CartRepository (org.luteh.ecommerce.domain.repository)</h1>
 
 <table class="coverageStats">
 <tr>
@@ -33,7 +33,7 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 </th>
 </tr>
 <tr>
-  <td class="name">ProductRepository</td>
+  <td class="name">CartRepository</td>
     <td class="coverageStat"/>
 </tr>
 
@@ -46,13 +46,22 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 <pre>
 <code class="sourceCode" id="sourceCode">&nbsp;package org.luteh.ecommerce.domain.repository
 &nbsp;
-&nbsp;import arrow.core.Either
-&nbsp;import org.luteh.ecommerce.domain.model.ProductDetailModel
+&nbsp;import kotlinx.coroutines.flow.Flow
+&nbsp;import org.luteh.ecommerce.domain.model.CartItemModel
+&nbsp;import org.luteh.ecommerce.domain.model.ProductModel
 &nbsp;
-&nbsp;interface ProductRepository {
-&nbsp;    suspend fun getProduct(id: String): Either&lt;Exception, ProductDetailModel&gt;
+&nbsp;interface CartRepository {
+&nbsp;    fun getCartItems(): Flow&lt;List&lt;CartItemModel&gt;&gt;
 &nbsp;
-&nbsp;    suspend fun getProducts(): Either&lt;Exception, List&lt;ProductDetailModel&gt;&gt;
+&nbsp;    suspend fun addToCart(product: ProductModel)
+&nbsp;
+&nbsp;    suspend fun updateQuantity(productId: String, quantity: Int)
+&nbsp;
+&nbsp;    suspend fun removeFromCart(productId: String)
+&nbsp;
+&nbsp;    suspend fun clearCart()
+&nbsp;
+&nbsp;    fun getCartItemCount(): Flow&lt;Int&gt;
 &nbsp;}
 </code>
 </pre>
@@ -77,7 +86,7 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2026-01-05 00:56</div>
+    <div style="float:right;">generated on 2026-01-05 01:30</div>
 </div>
 </body>
 </html>
