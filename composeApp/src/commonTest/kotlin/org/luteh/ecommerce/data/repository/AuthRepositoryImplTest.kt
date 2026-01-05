@@ -1,5 +1,6 @@
 package org.luteh.ecommerce.data.repository
 
+import app.cash.turbine.test
 import dev.mokkery.MockMode
 import dev.mokkery.answering.returns
 import dev.mokkery.answering.throws
@@ -8,6 +9,7 @@ import dev.mokkery.everySuspend
 import dev.mokkery.matcher.any
 import dev.mokkery.mock
 import dev.mokkery.verifySuspend
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.luteh.ecommerce.CreateUserMutation
 import org.luteh.ecommerce.GetRolesQuery
@@ -254,5 +256,53 @@ class AuthRepositoryImplTest {
         repository.logout()
 
         verifySuspend { userSessionDao.clearUserSession() }
+    }
+
+    @Test
+    fun `observeLoginSession should emit false when session is null`() = runTest {
+        every { userSessionDao.observeUserSession() } returns flowOf(null)
+
+        repository.observeLoginSession().test {
+            assertFalse(awaitItem())
+            awaitComplete()
+        }
+    }
+
+    @Test
+    fun `observeLoginSession should emit false when session is expired`() = runTest {
+        val pastTime = Clock.System.now().toEpochMilliseconds() - 10000
+        val session =
+            UserSessionEntity(
+                accessToken = "token",
+                expirationTimestamp = pastTime,
+                userId = "user1",
+                email = "test@example.com",
+                name = "User",
+            )
+        every { userSessionDao.observeUserSession() } returns flowOf(session)
+
+        repository.observeLoginSession().test {
+            assertFalse(awaitItem())
+            awaitComplete()
+        }
+    }
+
+    @Test
+    fun `observeLoginSession should emit true when session is valid`() = runTest {
+        val futureTime = Clock.System.now().toEpochMilliseconds() + 10000
+        val session =
+            UserSessionEntity(
+                accessToken = "token",
+                expirationTimestamp = futureTime,
+                userId = "user1",
+                email = "test@example.com",
+                name = "User",
+            )
+        every { userSessionDao.observeUserSession() } returns flowOf(session)
+
+        repository.observeLoginSession().test {
+            assertTrue(awaitItem())
+            awaitComplete()
+        }
     }
 }
