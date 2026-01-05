@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
-  <title>composeApp Coverage Report > AuthRepository</title>
+  <title>composeApp Coverage Report > OrderRepository</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -22,7 +22,7 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
     <a href="../index.html">org.luteh.ecommerce.domain.repository</a>
 </div>
 
-<h1>Coverage Summary for Class: AuthRepository (org.luteh.ecommerce.domain.repository)</h1>
+<h1>Coverage Summary for Class: OrderRepository (org.luteh.ecommerce.domain.repository)</h1>
 
 <table class="coverageStats">
 <tr>
@@ -33,7 +33,7 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 </th>
 </tr>
 <tr>
-  <td class="name">AuthRepository</td>
+  <td class="name">OrderRepository</td>
     <td class="coverageStat"/>
 </tr>
 
@@ -46,26 +46,15 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 <pre>
 <code class="sourceCode" id="sourceCode">&nbsp;package org.luteh.ecommerce.domain.repository
 &nbsp;
-&nbsp;import arrow.core.Either
-&nbsp;import org.luteh.ecommerce.domain.model.RegisterParam
-&nbsp;import org.luteh.ecommerce.domain.model.UserRole
+&nbsp;import org.luteh.ecommerce.domain.model.CartItemModel
+&nbsp;import org.luteh.ecommerce.domain.model.ShippingAddress
 &nbsp;
-&nbsp;interface AuthRepository {
-&nbsp;    suspend fun setLoginSession(isLoggedIn: Boolean)
-&nbsp;
-&nbsp;    suspend fun getLoginSession(): Boolean
-&nbsp;
-&nbsp;    suspend fun getAccount(): String
-&nbsp;
-&nbsp;    suspend fun login(email: String, password: String): Either&lt;Exception, Unit&gt;
-&nbsp;
-&nbsp;    suspend fun getUserRoles(): Either&lt;Exception, List&lt;UserRole&gt;&gt;
-&nbsp;
-&nbsp;    suspend fun register(param: RegisterParam): Either&lt;Exception, Unit&gt;
-&nbsp;
-&nbsp;    suspend fun verifyPin(pin: String): Boolean
-&nbsp;
-&nbsp;    suspend fun logout()
+&nbsp;interface OrderRepository {
+&nbsp;    suspend fun placeOrder(
+&nbsp;        items: List&lt;CartItemModel&gt;,
+&nbsp;        shippingAddress: ShippingAddress,
+&nbsp;        totalAmount: Double,
+&nbsp;    )
 &nbsp;}
 </code>
 </pre>
@@ -90,7 +79,7 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2026-01-04 22:52</div>
+    <div style="float:right;">generated on 2026-01-05 00:41</div>
 </div>
 </body>
 </html>
