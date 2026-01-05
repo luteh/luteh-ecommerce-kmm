@@ -24,6 +24,7 @@ import org.luteh.ecommerce.presentation.ui.home.HomeScreen
 import org.luteh.ecommerce.presentation.ui.login.LoginScreen
 import org.luteh.ecommerce.presentation.ui.product_detail.ProductDetailScreen
 import org.luteh.ecommerce.presentation.ui.product_list.ProductListScreen
+import org.luteh.ecommerce.presentation.ui.profile.ProfileScreen
 import org.luteh.ecommerce.presentation.ui.register.RegisterScreen
 import org.luteh.ecommerce.presentation.ui.splash.SplashScreen
 import org.luteh.ecommerce.presentation.ui.transaction_detail.TransactionDetailScreen
@@ -94,6 +95,7 @@ fun App(koinConfig: KoinAppDeclaration? = null) {
                     composable<AppNavigation.Home> {
                         HomeScreen(
                             onNavigateToLogin = { navigator.navigate(AppNavigation.Login) },
+                            onNavigateToProfile = { navigator.navigate(AppNavigation.Profile) },
                             onNavigateToProductList = {
                                 navigator.navigate(AppNavigation.ProductList)
                             },
@@ -102,6 +104,9 @@ fun App(koinConfig: KoinAppDeclaration? = null) {
                             },
                             onNavigateToCart = { navigator.navigate(AppNavigation.Cart) },
                         )
+                    }
+                    composable<AppNavigation.Profile> {
+                        ProfileScreen(onNavigateBack = { navigator.popBackStack() })
                     }
                     composable<AppNavigation.ProductList> {
                         ProductListScreen(

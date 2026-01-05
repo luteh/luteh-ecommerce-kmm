@@ -4,6 +4,8 @@ import arrow.core.Either
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import org.luteh.ecommerce.CreateUserMutation
 import org.luteh.ecommerce.data.config.FeatureConfig
@@ -21,6 +23,19 @@ class AuthRepositoryImpl(
     private val userSessionDao: UserSessionDao,
 ) : AuthRepository {
     override suspend fun setLoginSession(isLoggedIn: Boolean) {}
+
+    override fun observeLoginSession(): Flow<Boolean> {
+        return userSessionDao.observeUserSession().map { session ->
+            if (session == null) return@map false
+            val currentTime = Clock.System.now().toEpochMilliseconds()
+            session.expirationTimestamp > currentTime
+            // Side effect in flow map is generally discouraged but for this simple case it
+            // might be ok.
+            // Ideally we should handle expiration cleanup elsewhere or just return false here.
+            // Let's just return false for now to be safe and pure.
+            // Actual cleanup happens in getLoginSession or explicit logout.
+        }
+    }
 
     override suspend fun getLoginSession(): Boolean {
         val session = userSessionDao.getUserSession() ?: return false

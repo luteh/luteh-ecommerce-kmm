@@ -26,6 +26,7 @@ import org.luteh.ecommerce.domain.usecase.cart.UpdateCartItemQuantityUseCaseImpl
 import org.luteh.ecommerce.getPlatform
 import org.luteh.ecommerce.presentation.ui.cart.CartViewModel
 import org.luteh.ecommerce.presentation.ui.checkout.CheckoutViewModel
+import org.luteh.ecommerce.presentation.ui.home.HomeViewModel
 import org.luteh.ecommerce.presentation.ui.login.LoginViewModel
 import org.luteh.ecommerce.presentation.ui.product_detail.ProductDetailViewModel
 import org.luteh.ecommerce.presentation.ui.product_list.ProductListViewModel
@@ -34,6 +35,7 @@ import org.luteh.ecommerce.presentation.ui.transaction_detail.TransactionDetailV
 
 fun appModule() = module {
     factory { LoginViewModel(get()) }
+    factory { HomeViewModel(get()) }
     factory { RegisterViewModel(get()) }
     factory { ProductDetailViewModel(get(), get()) }
     factory { ProductListViewModel(get()) }

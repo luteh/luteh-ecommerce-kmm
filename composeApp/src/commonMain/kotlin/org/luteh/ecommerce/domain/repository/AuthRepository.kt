@@ -1,11 +1,14 @@
 package org.luteh.ecommerce.domain.repository
 
 import arrow.core.Either
+import kotlinx.coroutines.flow.Flow
 import org.luteh.ecommerce.domain.model.RegisterParam
 import org.luteh.ecommerce.domain.model.UserRole
 
 interface AuthRepository {
     suspend fun setLoginSession(isLoggedIn: Boolean)
+
+    fun observeLoginSession(): Flow<Boolean>
 
     suspend fun getLoginSession(): Boolean
 

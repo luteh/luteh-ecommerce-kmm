@@ -26,6 +26,7 @@ import androidx.compose.material.icons.automirrored.filled.Login
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.ShoppingCart
+import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Checkroom
 import androidx.compose.material.icons.rounded.Devices
 import androidx.compose.material.icons.rounded.Home
@@ -46,6 +47,8 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -53,19 +56,56 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import org.koin.compose.viewmodel.koinViewModel
 import org.luteh.ecommerce.domain.model.Category
 import org.luteh.ecommerce.domain.model.dummyProducts
 import org.luteh.ecommerce.presentation.ui.common.ProductItem
 
 @Composable
 fun HomeScreen(
+    viewModel: HomeViewModel = koinViewModel(),
     onNavigateToLogin: () -> Unit,
+    onNavigateToProfile: () -> Unit,
+    onNavigateToProductList: () -> Unit,
+    onNavigateToProductDetail: (String) -> Unit,
+    onNavigateToCart: () -> Unit,
+) {
+    val state by viewModel.state.collectAsState()
+
+    HomeScreenContent(
+        isLoggedIn = state.isLoggedIn,
+        onNavigateToLogin = onNavigateToLogin,
+        onNavigateToProfile = onNavigateToProfile,
+        onNavigateToProductList = onNavigateToProductList,
+        onNavigateToProductDetail = onNavigateToProductDetail,
+        onNavigateToCart = onNavigateToCart,
+    )
+}
+
+@Composable
+fun HomeScreenContent(
+    isLoggedIn: Boolean,
+    onNavigateToLogin: () -> Unit,
+    onNavigateToProfile: () -> Unit,
     onNavigateToProductList: () -> Unit,
     onNavigateToProductDetail: (String) -> Unit,
     onNavigateToCart: () -> Unit,
 ) {
     Scaffold(
-        topBar = { HomeTopBar(onLoginClick = onNavigateToLogin, onCartClick = onNavigateToCart) }
+        topBar = {
+            HomeTopBar(
+                isLoggedIn = isLoggedIn,
+                onLoginClick = onNavigateToLogin,
+                onProfileClick = onNavigateToProfile,
+                onCartClick = {
+                    if (isLoggedIn) {
+                        onNavigateToCart()
+                    } else {
+                        onNavigateToLogin()
+                    }
+                },
+            )
+        }
     ) { paddingValues ->
         HomeContent(
             modifier = Modifier.padding(paddingValues),
@@ -83,10 +123,10 @@ fun HomeContent(
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
-        modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = modifier.fillMaxSize(),
     ) {
         item(span = { GridItemSpan(2) }) { PromotionalBanner() }
 
@@ -106,7 +146,12 @@ fun HomeContent(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeTopBar(onLoginClick: () -> Unit, onCartClick: () -> Unit) {
+fun HomeTopBar(
+    isLoggedIn: Boolean,
+    onLoginClick: () -> Unit,
+    onProfileClick: () -> Unit,
+    onCartClick: () -> Unit,
+) {
     Column(modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface)) {
         TopAppBar(
             title = {
@@ -130,8 +175,14 @@ fun HomeTopBar(onLoginClick: () -> Unit, onCartClick: () -> Unit) {
                 IconButton(onClick = onCartClick) {
                     Icon(Icons.Outlined.ShoppingCart, contentDescription = "Cart")
                 }
-                IconButton(onClick = onLoginClick) {
-                    Icon(Icons.AutoMirrored.Filled.Login, contentDescription = "Login")
+                if (isLoggedIn) {
+                    IconButton(onClick = onProfileClick) {
+                        Icon(Icons.Rounded.AccountCircle, contentDescription = "Profile")
+                    }
+                } else {
+                    IconButton(onClick = onLoginClick) {
+                        Icon(Icons.AutoMirrored.Filled.Login, contentDescription = "Login")
+                    }
                 }
             },
             colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
