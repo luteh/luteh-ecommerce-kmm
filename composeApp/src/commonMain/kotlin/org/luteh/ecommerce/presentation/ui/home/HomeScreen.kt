@@ -22,6 +22,8 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -50,6 +52,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -57,9 +60,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import coil3.compose.SubcomposeAsyncImage
+import kotlinx.coroutines.delay
 import org.koin.compose.viewmodel.koinViewModel
+import org.luteh.ecommerce.domain.model.BannerModel
 import org.luteh.ecommerce.domain.model.Category
 import org.luteh.ecommerce.domain.model.ProductModel
 import org.luteh.ecommerce.presentation.ui.common.ProductItem
@@ -237,50 +244,85 @@ fun HomeTopBar(
 }
 
 @Composable
-fun PromotionalBanner() {
-    Card(
-        modifier = Modifier.fillMaxWidth().height(160.dp),
-        shape = RoundedCornerShape(16.dp),
-        colors =
-            CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-    ) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            Column(
-                modifier = Modifier.align(Alignment.CenterStart).padding(16.dp).fillMaxWidth(0.6f)
+fun PromotionalBanner(banners: List<BannerModel> = BannerModel.dummies) {
+    val pagerState = rememberPagerState(pageCount = { banners.size })
+
+    LaunchedEffect(pagerState.settledPage) {
+        delay(4000)
+        val nextPage = (pagerState.currentPage + 1) % banners.size
+        pagerState.animateScrollToPage(nextPage)
+    }
+
+    Column {
+        HorizontalPager(state = pagerState, modifier = Modifier.fillMaxWidth().height(160.dp)) {
+            page ->
+            val banner = banners[page]
+            Card(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = banner.backgroundColor),
             ) {
-                Text(
-                    text = "Summer Sale",
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Get up to 50% off on selected items",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = {},
-                    colors =
-                        ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary
-                        ),
-                ) {
-                    Text("Shop Now")
+                Box(modifier = Modifier.fillMaxSize()) {
+                    banner.imageUrl?.let { imageUrl ->
+                        SubcomposeAsyncImage(
+                            model = imageUrl,
+                            contentDescription = banner.title,
+                            modifier = Modifier.fillMaxSize().alpha(0.3f),
+                            contentScale = ContentScale.Crop,
+                        )
+                    }
+
+                    Column(
+                        modifier =
+                            Modifier.align(Alignment.CenterStart).padding(16.dp).fillMaxWidth(0.7f)
+                    ) {
+                        Text(
+                            text = banner.title,
+                            style = MaterialTheme.typography.headlineSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = banner.textColor,
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = banner.subtitle,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = banner.textColor.copy(alpha = 0.9f),
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Button(
+                            onClick = {},
+                            colors =
+                                ButtonDefaults.buttonColors(
+                                    containerColor = banner.textColor,
+                                    contentColor = banner.backgroundColor,
+                                ),
+                        ) {
+                            Text(banner.buttonText)
+                        }
+                    }
                 }
             }
-            Icon(
-                imageVector = Icons.Rounded.Checkroom,
-                contentDescription = null,
-                modifier =
-                    Modifier.align(Alignment.CenterEnd)
-                        .size(120.dp)
-                        .padding(end = 16.dp)
-                        .alpha(0.2f),
-                tint = MaterialTheme.colorScheme.onPrimaryContainer,
-            )
+        }
+
+        if (banners.size > 1) {
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
+                horizontalArrangement = Arrangement.Center,
+            ) {
+                repeat(banners.size) { index ->
+                    Box(
+                        modifier =
+                            Modifier.padding(horizontal = 4.dp)
+                                .size(if (pagerState.currentPage == index) 8.dp else 6.dp)
+                                .clip(CircleShape)
+                                .background(
+                                    if (pagerState.currentPage == index)
+                                        MaterialTheme.colorScheme.primary
+                                    else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
+                                )
+                    )
+                }
+            }
         }
     }
 }
