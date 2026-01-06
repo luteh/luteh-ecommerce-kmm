@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
-  <title>composeApp Coverage Report > ProductDetailEvent</title>
+  <title>composeApp Coverage Report > MainViewModel</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -19,10 +19,10 @@
 <div class="breadCrumbs">
 Current scope: composeApp<span class="separator">|</span>    <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">org.luteh.ecommerce.presentation.ui.product_detail</a>
+    <a href="../index.html">org.luteh.ecommerce.presentation.ui.main</a>
 </div>
 
-<h1>Coverage Summary for Class: ProductDetailEvent (org.luteh.ecommerce.presentation.ui.product_detail)</h1>
+<h1>Coverage Summary for Class: MainViewModel (org.luteh.ecommerce.presentation.ui.main)</h1>
 
 <table class="coverageStats">
 
@@ -45,25 +45,8 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
   Instruction, %
 </th>
 </tr>
-  <tr>
-    <td class="name">ProductDetailEvent$AddToCart</td>
-<td class="coverageStat">
-  <span class="percent">
-    100%
-  </span>
-  <span class="absValue">
-    (1/1)
-  </span>
-</td>
-    <td class="coverageStat"/>
-<td class="coverageStat">
-  <span class="percent">
-    100%
-  </span>
-  <span class="absValue">
-    (1/1)
-  </span>
-</td>
+<tr>
+  <td class="name">MainViewModel</td>
 <td class="coverageStat">
   <span class="percent">
     100%
@@ -72,26 +55,7 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
     (2/2)
   </span>
 </td>
-  </tr>
-  <tr>
-    <td class="name">ProductDetailEvent$LoadProduct</td>
-<td class="coverageStat">
-  <span class="percent">
-    100%
-  </span>
-  <span class="absValue">
-    (1/1)
-  </span>
-</td>
     <td class="coverageStat"/>
-<td class="coverageStat">
-  <span class="percent">
-    100%
-  </span>
-  <span class="absValue">
-    (1/1)
-  </span>
-</td>
 <td class="coverageStat">
   <span class="percent">
     100%
@@ -100,9 +64,17 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
     (7/7)
   </span>
 </td>
-  </tr>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (40/40)
+  </span>
+</td>
+</tr>
   <tr>
-    <td class="name">ProductDetailEvent$OnCartClicked</td>
+    <td class="name">MainViewModel$observeSessionState$1</td>
 <td class="coverageStat">
   <span class="percent">
     100%
@@ -125,7 +97,63 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
     100%
   </span>
   <span class="absValue">
-    (2/2)
+    (19/19)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">MainViewModel$observeSessionState$1$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+    <td class="coverageStat"/>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (9/9)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">MainViewModel$State</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+    <td class="coverageStat"/>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (16/16)
   </span>
 </td>
   </tr>
@@ -136,7 +164,7 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
     100%
   </span>
   <span class="absValue">
-    (3/3)
+    (5/5)
   </span>
 </td>
     <td class="coverageStat"/>
@@ -145,7 +173,7 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
     100%
   </span>
   <span class="absValue">
-    (3/3)
+    (10/10)
   </span>
 </td>
 <td class="coverageStat">
@@ -153,7 +181,7 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
     100%
   </span>
   <span class="absValue">
-    (11/11)
+    (84/84)
   </span>
 </td>
 </tr>
@@ -164,31 +192,35 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package org.luteh.ecommerce.presentation.ui.product_detail
+<code class="sourceCode" id="sourceCode">&nbsp;package org.luteh.ecommerce.presentation.ui.main
 &nbsp;
-&nbsp;import org.luteh.ecommerce.domain.model.ProductModel
+&nbsp;import androidx.lifecycle.ViewModel
+&nbsp;import androidx.lifecycle.viewModelScope
+&nbsp;import kotlinx.coroutines.flow.MutableStateFlow
+&nbsp;import kotlinx.coroutines.flow.StateFlow
+&nbsp;import kotlinx.coroutines.flow.asStateFlow
+&nbsp;import kotlinx.coroutines.flow.update
+&nbsp;import kotlinx.coroutines.launch
+&nbsp;import org.luteh.ecommerce.domain.repository.AuthRepository
 &nbsp;
-&nbsp;data class ProductDetailState(
-&nbsp;    val product: ProductModel? = null,
-&nbsp;    val isLoading: Boolean = false,
-&nbsp;    val error: String? = null,
-&nbsp;    val isAddedToCart: Boolean = false,
-&nbsp;)
+<b class="fc">&nbsp;class MainViewModel(private val authRepository: AuthRepository) : ViewModel() {</b>
 &nbsp;
-&nbsp;sealed interface ProductDetailEvent {
-<b class="fc">&nbsp;    data class LoadProduct(val productId: String) : ProductDetailEvent</b>
+<b class="fc">&nbsp;    private val _state = MutableStateFlow(State())</b>
+<b class="fc">&nbsp;    val state: StateFlow&lt;State&gt; = _state.asStateFlow()</b>
 &nbsp;
-<b class="fc">&nbsp;    data object AddToCart : ProductDetailEvent</b>
+<b class="fc">&nbsp;    init {</b>
+<b class="fc">&nbsp;        observeSessionState()</b>
+<b class="fc">&nbsp;    }</b>
 &nbsp;
-<b class="fc">&nbsp;    data object OnCartClicked : ProductDetailEvent</b>
-&nbsp;}
+&nbsp;    private fun observeSessionState() {
+<b class="fc">&nbsp;        viewModelScope.launch {</b>
+<b class="fc">&nbsp;            authRepository.observeLoginSession().collect { isLoggedIn -&gt;</b>
+<b class="fc">&nbsp;                _state.update { it.copy(isLoggedIn = isLoggedIn) }</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
 &nbsp;
-&nbsp;sealed interface ProductDetailEffect {
-&nbsp;    data class ShowSnackbar(val message: String) : ProductDetailEffect
-&nbsp;
-&nbsp;    data object NavigateToCart : ProductDetailEffect
-&nbsp;
-&nbsp;    data object NavigateToLogin : ProductDetailEffect
+<b class="fc">&nbsp;    data class State(val isLoggedIn: Boolean = false)</b>
 &nbsp;}
 </code>
 </pre>
@@ -213,7 +245,7 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2026-01-05 01:30</div>
+    <div style="float:right;">generated on 2026-01-06 16:28</div>
 </div>
 </body>
 </html>

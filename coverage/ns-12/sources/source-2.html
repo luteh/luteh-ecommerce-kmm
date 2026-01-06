@@ -1,0 +1,330 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>composeApp Coverage Report > TransactionDetailScreenKt</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope: composeApp<span class="separator">|</span>    <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.luteh.ecommerce.presentation.ui.transaction_detail</a>
+</div>
+
+<h1>Coverage Summary for Class: TransactionDetailScreenKt (org.luteh.ecommerce.presentation.ui.transaction_detail)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+</tr>
+<tr>
+  <td class="name">TransactionDetailScreenKt</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+    <td class="coverageStat"/>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.luteh.ecommerce.presentation.ui.transaction_detail
+&nbsp;
+&nbsp;import androidx.compose.animation.core.Animatable
+&nbsp;import androidx.compose.animation.core.FastOutSlowInEasing
+&nbsp;import androidx.compose.animation.core.tween
+&nbsp;import androidx.compose.foundation.Canvas
+&nbsp;import androidx.compose.foundation.layout.Arrangement
+&nbsp;import androidx.compose.foundation.layout.Box
+&nbsp;import androidx.compose.foundation.layout.Column
+&nbsp;import androidx.compose.foundation.layout.Spacer
+&nbsp;import androidx.compose.foundation.layout.fillMaxSize
+&nbsp;import androidx.compose.foundation.layout.fillMaxWidth
+&nbsp;import androidx.compose.foundation.layout.height
+&nbsp;import androidx.compose.foundation.layout.padding
+&nbsp;import androidx.compose.foundation.layout.size
+&nbsp;import androidx.compose.foundation.shape.RoundedCornerShape
+&nbsp;import androidx.compose.material3.Button
+&nbsp;import androidx.compose.material3.ButtonDefaults
+&nbsp;import androidx.compose.material3.MaterialTheme
+&nbsp;import androidx.compose.material3.Scaffold
+&nbsp;import androidx.compose.material3.Text
+&nbsp;import androidx.compose.runtime.Composable
+&nbsp;import androidx.compose.runtime.LaunchedEffect
+&nbsp;import androidx.compose.runtime.collectAsState
+&nbsp;import androidx.compose.runtime.getValue
+&nbsp;import androidx.compose.runtime.remember
+&nbsp;import androidx.compose.ui.Alignment
+&nbsp;import androidx.compose.ui.Modifier
+&nbsp;import androidx.compose.ui.geometry.Offset
+&nbsp;import androidx.compose.ui.graphics.Path
+&nbsp;import androidx.compose.ui.graphics.PathMeasure
+&nbsp;import androidx.compose.ui.graphics.StrokeCap
+&nbsp;import androidx.compose.ui.graphics.drawscope.Stroke
+&nbsp;import androidx.compose.ui.text.font.FontWeight
+&nbsp;import androidx.compose.ui.text.style.TextAlign
+&nbsp;import androidx.compose.ui.unit.dp
+&nbsp;import org.koin.compose.viewmodel.koinViewModel
+&nbsp;
+&nbsp;@Composable
+&nbsp;fun TransactionDetailScreen(
+&nbsp;    isSuccess: Boolean,
+&nbsp;    message: String,
+&nbsp;    onNavigateToHome: () -&gt; Unit,
+&nbsp;    viewModel: TransactionDetailViewModel = koinViewModel(),
+&nbsp;) {
+&nbsp;    val state by viewModel.state.collectAsState()
+&nbsp;
+&nbsp;    LaunchedEffect(Unit) {
+&nbsp;        viewModel.processEvent(TransactionDetailViewModel.Event.Init(isSuccess, message))
+&nbsp;    }
+&nbsp;
+&nbsp;    LaunchedEffect(Unit) {
+&nbsp;        viewModel.effect.collect { effect -&gt;
+&nbsp;            when (effect) {
+&nbsp;                TransactionDetailViewModel.Effect.NavigateToHome -&gt; onNavigateToHome()
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    Scaffold(
+&nbsp;        bottomBar = {
+&nbsp;            Box(modifier = Modifier.padding(16.dp)) {
+&nbsp;                Button(
+&nbsp;                    onClick = {
+&nbsp;                        viewModel.processEvent(TransactionDetailViewModel.Event.OnBackToHome)
+&nbsp;                    },
+&nbsp;                    modifier = Modifier.fillMaxWidth().height(50.dp),
+&nbsp;                    shape = RoundedCornerShape(12.dp),
+&nbsp;                    colors =
+&nbsp;                        ButtonDefaults.buttonColors(
+&nbsp;                            containerColor =
+&nbsp;                                if (state.isSuccess) MaterialTheme.colorScheme.primary
+&nbsp;                                else MaterialTheme.colorScheme.error
+&nbsp;                        ),
+&nbsp;                ) {
+&nbsp;                    Text(
+&nbsp;                        text = if (state.isSuccess) &quot;Back to Home&quot; else &quot;Try Again&quot;,
+&nbsp;                        style = MaterialTheme.typography.titleMedium,
+&nbsp;                        fontWeight = FontWeight.Bold,
+&nbsp;                    )
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+&nbsp;    ) { paddingValues -&gt;
+&nbsp;        Column(
+&nbsp;            modifier = Modifier.padding(paddingValues).fillMaxSize().padding(24.dp),
+&nbsp;            horizontalAlignment = Alignment.CenterHorizontally,
+&nbsp;            verticalArrangement = Arrangement.Center,
+&nbsp;        ) {
+&nbsp;            if (state.isSuccess) {
+&nbsp;                SuccessAnimation()
+&nbsp;            } else {
+&nbsp;                FailureAnimation()
+&nbsp;            }
+&nbsp;
+&nbsp;            Spacer(modifier = Modifier.height(32.dp))
+&nbsp;
+&nbsp;            Text(
+&nbsp;                text = if (state.isSuccess) &quot;Order Placed Successfully!&quot; else &quot;Transaction Failed&quot;,
+&nbsp;                style = MaterialTheme.typography.headlineMedium,
+&nbsp;                fontWeight = FontWeight.Bold,
+&nbsp;                color =
+&nbsp;                    if (state.isSuccess) MaterialTheme.colorScheme.primary
+&nbsp;                    else MaterialTheme.colorScheme.error,
+&nbsp;                textAlign = TextAlign.Center,
+&nbsp;            )
+&nbsp;
+&nbsp;            Spacer(modifier = Modifier.height(16.dp))
+&nbsp;
+&nbsp;            Text(
+&nbsp;                text = state.message,
+&nbsp;                style = MaterialTheme.typography.bodyLarge,
+&nbsp;                color = MaterialTheme.colorScheme.onSurfaceVariant,
+&nbsp;                textAlign = TextAlign.Center,
+&nbsp;            )
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;@Composable
+&nbsp;fun SuccessAnimation() {
+&nbsp;    val circleProgress = remember { Animatable(0f) }
+&nbsp;    val checkProgress = remember { Animatable(0f) }
+&nbsp;
+&nbsp;    LaunchedEffect(Unit) {
+&nbsp;        circleProgress.animateTo(
+&nbsp;            targetValue = 1f,
+&nbsp;            animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing),
+&nbsp;        )
+&nbsp;        checkProgress.animateTo(
+&nbsp;            targetValue = 1f,
+&nbsp;            animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing),
+&nbsp;        )
+&nbsp;    }
+&nbsp;
+&nbsp;    val primaryColor = MaterialTheme.colorScheme.primary
+&nbsp;
+&nbsp;    Canvas(modifier = Modifier.size(120.dp)) {
+&nbsp;        val center = Offset(size.width / 2, size.height / 2)
+&nbsp;        val radius = size.width / 2
+&nbsp;        val strokeWidth = 8.dp.toPx()
+&nbsp;
+&nbsp;        // Draw Circle
+&nbsp;        drawCircle(
+&nbsp;            color = primaryColor,
+&nbsp;            radius = radius,
+&nbsp;            style = Stroke(width = strokeWidth),
+&nbsp;            alpha = circleProgress.value,
+&nbsp;        )
+&nbsp;
+&nbsp;        // Draw Checkmark
+&nbsp;        if (circleProgress.value &gt;= 0.8f) {
+&nbsp;            val path =
+&nbsp;                Path().apply {
+&nbsp;                    moveTo(center.x - radius * 0.4f, center.y)
+&nbsp;                    lineTo(center.x - radius * 0.1f, center.y + radius * 0.3f)
+&nbsp;                    lineTo(center.x + radius * 0.5f, center.y - radius * 0.4f)
+&nbsp;                }
+&nbsp;
+&nbsp;            // Animate path drawing
+&nbsp;            val pathMeasure = PathMeasure()
+&nbsp;            pathMeasure.setPath(path, false)
+&nbsp;            val length = pathMeasure.length
+&nbsp;            val partialPath = Path()
+&nbsp;            pathMeasure.getSegment(0f, length * checkProgress.value, partialPath, true)
+&nbsp;
+&nbsp;            drawPath(
+&nbsp;                path = partialPath,
+&nbsp;                color = primaryColor,
+&nbsp;                style = Stroke(width = strokeWidth, cap = StrokeCap.Round),
+&nbsp;            )
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;@Composable
+&nbsp;fun FailureAnimation() {
+&nbsp;    val circleProgress = remember { Animatable(0f) }
+&nbsp;    val crossProgress = remember { Animatable(0f) }
+&nbsp;
+&nbsp;    LaunchedEffect(Unit) {
+&nbsp;        circleProgress.animateTo(
+&nbsp;            targetValue = 1f,
+&nbsp;            animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing),
+&nbsp;        )
+&nbsp;        crossProgress.animateTo(
+&nbsp;            targetValue = 1f,
+&nbsp;            animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing),
+&nbsp;        )
+&nbsp;    }
+&nbsp;
+&nbsp;    val errorColor = MaterialTheme.colorScheme.error
+&nbsp;
+&nbsp;    Canvas(modifier = Modifier.size(120.dp)) {
+&nbsp;        val center = Offset(size.width / 2, size.height / 2)
+&nbsp;        val radius = size.width / 2
+&nbsp;        val strokeWidth = 8.dp.toPx()
+&nbsp;
+&nbsp;        // Draw Circle
+&nbsp;        drawCircle(
+&nbsp;            color = errorColor,
+&nbsp;            radius = radius,
+&nbsp;            style = Stroke(width = strokeWidth),
+&nbsp;            alpha = circleProgress.value,
+&nbsp;        )
+&nbsp;
+&nbsp;        // Draw Cross
+&nbsp;        if (circleProgress.value &gt;= 0.8f) {
+&nbsp;            val path1 =
+&nbsp;                Path().apply {
+&nbsp;                    moveTo(center.x - radius * 0.3f, center.y - radius * 0.3f)
+&nbsp;                    lineTo(center.x + radius * 0.3f, center.y + radius * 0.3f)
+&nbsp;                }
+&nbsp;            val path2 =
+&nbsp;                Path().apply {
+&nbsp;                    moveTo(center.x + radius * 0.3f, center.y - radius * 0.3f)
+&nbsp;                    lineTo(center.x - radius * 0.3f, center.y + radius * 0.3f)
+&nbsp;                }
+&nbsp;
+&nbsp;            val pathMeasure1 = PathMeasure()
+&nbsp;            pathMeasure1.setPath(path1, false)
+&nbsp;            val length1 = pathMeasure1.length
+&nbsp;            val partialPath1 = Path()
+&nbsp;            pathMeasure1.getSegment(0f, length1 * crossProgress.value, partialPath1, true)
+&nbsp;
+&nbsp;            drawPath(
+&nbsp;                path = partialPath1,
+&nbsp;                color = errorColor,
+&nbsp;                style = Stroke(width = strokeWidth, cap = StrokeCap.Round),
+&nbsp;            )
+&nbsp;
+&nbsp;            val pathMeasure2 = PathMeasure()
+&nbsp;            pathMeasure2.setPath(path2, false)
+&nbsp;            val length2 = pathMeasure2.length
+&nbsp;            val partialPath2 = Path()
+&nbsp;            pathMeasure2.getSegment(0f, length2 * crossProgress.value, partialPath2, true)
+&nbsp;
+&nbsp;            drawPath(
+&nbsp;                path = partialPath2,
+&nbsp;                color = errorColor,
+&nbsp;                style = Stroke(width = strokeWidth, cap = StrokeCap.Round),
+&nbsp;            )
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-01-06 16:28</div>
+</div>
+</body>
+</html>

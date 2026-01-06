@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
-  <title>composeApp Coverage Report > TransactionDetailScreenKt</title>
+  <title>composeApp Coverage Report > ProductListScreenKt</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -19,10 +19,10 @@
 <div class="breadCrumbs">
 Current scope: composeApp<span class="separator">|</span>    <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">org.luteh.ecommerce.presentation.ui.transaction_detail</a>
+    <a href="../index.html">org.luteh.ecommerce.presentation.ui.product_list</a>
 </div>
 
-<h1>Coverage Summary for Class: TransactionDetailScreenKt (org.luteh.ecommerce.presentation.ui.transaction_detail)</h1>
+<h1>Coverage Summary for Class: ProductListScreenKt (org.luteh.ecommerce.presentation.ui.product_list)</h1>
 
 <table class="coverageStats">
 <tr>
@@ -37,13 +37,13 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 </th>
 </tr>
 <tr>
-  <td class="name">TransactionDetailScreenKt</td>
+  <td class="name">ProductListScreenKt</td>
 <td class="coverageStat">
   <span class="percent">
     0%
   </span>
   <span class="absValue">
-    (0/3)
+    (0/1)
   </span>
 </td>
     <td class="coverageStat"/>
@@ -56,248 +56,196 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package org.luteh.ecommerce.presentation.ui.transaction_detail
+<code class="sourceCode" id="sourceCode">&nbsp;package org.luteh.ecommerce.presentation.ui.product_list
 &nbsp;
-&nbsp;import androidx.compose.animation.core.Animatable
-&nbsp;import androidx.compose.animation.core.FastOutSlowInEasing
-&nbsp;import androidx.compose.animation.core.tween
-&nbsp;import androidx.compose.foundation.Canvas
+&nbsp;import androidx.compose.animation.AnimatedVisibilityScope
+&nbsp;import androidx.compose.animation.ExperimentalSharedTransitionApi
+&nbsp;import androidx.compose.animation.SharedTransitionScope
 &nbsp;import androidx.compose.foundation.layout.Arrangement
 &nbsp;import androidx.compose.foundation.layout.Box
 &nbsp;import androidx.compose.foundation.layout.Column
+&nbsp;import androidx.compose.foundation.layout.PaddingValues
+&nbsp;import androidx.compose.foundation.layout.Row
 &nbsp;import androidx.compose.foundation.layout.Spacer
 &nbsp;import androidx.compose.foundation.layout.fillMaxSize
 &nbsp;import androidx.compose.foundation.layout.fillMaxWidth
 &nbsp;import androidx.compose.foundation.layout.height
 &nbsp;import androidx.compose.foundation.layout.padding
-&nbsp;import androidx.compose.foundation.layout.size
-&nbsp;import androidx.compose.foundation.shape.RoundedCornerShape
-&nbsp;import androidx.compose.material3.Button
-&nbsp;import androidx.compose.material3.ButtonDefaults
-&nbsp;import androidx.compose.material3.MaterialTheme
+&nbsp;import androidx.compose.foundation.lazy.grid.GridCells
+&nbsp;import androidx.compose.foundation.lazy.grid.GridItemSpan
+&nbsp;import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+&nbsp;import androidx.compose.foundation.lazy.grid.items
+&nbsp;import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+&nbsp;import androidx.compose.material.icons.Icons
+&nbsp;import androidx.compose.material.icons.automirrored.filled.ArrowBack
+&nbsp;import androidx.compose.material.icons.filled.Search
+&nbsp;import androidx.compose.material.icons.filled.ShoppingCart
+&nbsp;import androidx.compose.material3.CircularProgressIndicator
+&nbsp;import androidx.compose.material3.ExperimentalMaterial3Api
+&nbsp;import androidx.compose.material3.FilterChip
+&nbsp;import androidx.compose.material3.Icon
+&nbsp;import androidx.compose.material3.IconButton
+&nbsp;import androidx.compose.material3.OutlinedTextField
 &nbsp;import androidx.compose.material3.Scaffold
+&nbsp;import androidx.compose.material3.SnackbarHost
+&nbsp;import androidx.compose.material3.SnackbarHostState
 &nbsp;import androidx.compose.material3.Text
+&nbsp;import androidx.compose.material3.TopAppBar
 &nbsp;import androidx.compose.runtime.Composable
 &nbsp;import androidx.compose.runtime.LaunchedEffect
-&nbsp;import androidx.compose.runtime.collectAsState
 &nbsp;import androidx.compose.runtime.getValue
+&nbsp;import androidx.compose.runtime.mutableStateOf
 &nbsp;import androidx.compose.runtime.remember
+&nbsp;import androidx.compose.runtime.setValue
+&nbsp;import androidx.compose.runtime.snapshotFlow
 &nbsp;import androidx.compose.ui.Alignment
 &nbsp;import androidx.compose.ui.Modifier
-&nbsp;import androidx.compose.ui.geometry.Offset
-&nbsp;import androidx.compose.ui.graphics.Path
-&nbsp;import androidx.compose.ui.graphics.PathMeasure
-&nbsp;import androidx.compose.ui.graphics.StrokeCap
-&nbsp;import androidx.compose.ui.graphics.drawscope.Stroke
-&nbsp;import androidx.compose.ui.text.font.FontWeight
-&nbsp;import androidx.compose.ui.text.style.TextAlign
 &nbsp;import androidx.compose.ui.unit.dp
+&nbsp;import kotlinx.coroutines.delay
 &nbsp;import org.koin.compose.viewmodel.koinViewModel
+&nbsp;import org.luteh.ecommerce.domain.model.ProductModel
+&nbsp;import org.luteh.ecommerce.presentation.ui.common.ProductItem
 &nbsp;
+&nbsp;@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 &nbsp;@Composable
-&nbsp;fun TransactionDetailScreen(
-&nbsp;    isSuccess: Boolean,
-&nbsp;    message: String,
-&nbsp;    onNavigateToHome: () -&gt; Unit,
-&nbsp;    viewModel: TransactionDetailViewModel = koinViewModel(),
+&nbsp;fun ProductListScreen(
+&nbsp;    onNavigateBack: () -&gt; Unit,
+&nbsp;    onNavigateToProductDetail: (String) -&gt; Unit,
+&nbsp;    onNavigateToCart: () -&gt; Unit,
+&nbsp;    onNavigateToLogin: () -&gt; Unit,
+&nbsp;    viewModel: ProductListViewModel = koinViewModel(),
+&nbsp;    sharedTransitionScope: SharedTransitionScope,
+&nbsp;    animatedVisibilityScope: AnimatedVisibilityScope,
 &nbsp;) {
-&nbsp;    val state by viewModel.state.collectAsState()
-&nbsp;
-&nbsp;    LaunchedEffect(Unit) {
-&nbsp;        viewModel.processEvent(TransactionDetailViewModel.Event.Init(isSuccess, message))
-&nbsp;    }
+&nbsp;    var searchQuery by remember { mutableStateOf(&quot;&quot;) }
+&nbsp;    var selectedCategory by remember { mutableStateOf&lt;String?&gt;(null) }
+&nbsp;    var products by remember { mutableStateOf(ProductModel.dummies) }
+&nbsp;    var isLoading by remember { mutableStateOf(false) }
+&nbsp;    val snackbarHostState = remember { SnackbarHostState() }
 &nbsp;
 &nbsp;    LaunchedEffect(Unit) {
 &nbsp;        viewModel.effect.collect { effect -&gt;
 &nbsp;            when (effect) {
-&nbsp;                TransactionDetailViewModel.Effect.NavigateToHome -&gt; onNavigateToHome()
+&nbsp;                ProductListViewModel.Effect.NavigateToCart -&gt; onNavigateToCart()
+&nbsp;                ProductListViewModel.Effect.NavigateToLogin -&gt; onNavigateToLogin()
+&nbsp;                is ProductListViewModel.Effect.ShowSnackbar -&gt; {
+&nbsp;                    snackbarHostState.showSnackbar(effect.message)
+&nbsp;                }
 &nbsp;            }
 &nbsp;        }
 &nbsp;    }
 &nbsp;
+&nbsp;    // Simulate infinite scroll
+&nbsp;    val listState = rememberLazyGridState()
+&nbsp;
+&nbsp;    LaunchedEffect(listState) {
+&nbsp;        snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
+&nbsp;            .collect { lastIndex -&gt;
+&nbsp;                if (lastIndex != null &amp;&amp; lastIndex &gt;= products.size - 2 &amp;&amp; !isLoading) {
+&nbsp;                    isLoading = true
+&nbsp;                    delay(1000) // Simulate network delay
+&nbsp;                    products = products + ProductModel.dummies // Append more dummy data
+&nbsp;                    isLoading = false
+&nbsp;                }
+&nbsp;            }
+&nbsp;    }
+&nbsp;
+&nbsp;    // Filter logic
+&nbsp;    val filteredProducts =
+&nbsp;        remember(searchQuery, selectedCategory, products) {
+&nbsp;            products.filter { product -&gt;
+&nbsp;                (searchQuery.isEmpty() || product.name.contains(searchQuery, ignoreCase = true)) &amp;&amp;
+&nbsp;                    (selectedCategory == null || product.category == selectedCategory)
+&nbsp;            }
+&nbsp;        }
+&nbsp;
 &nbsp;    Scaffold(
-&nbsp;        bottomBar = {
-&nbsp;            Box(modifier = Modifier.padding(16.dp)) {
-&nbsp;                Button(
-&nbsp;                    onClick = {
-&nbsp;                        viewModel.processEvent(TransactionDetailViewModel.Event.OnBackToHome)
-&nbsp;                    },
-&nbsp;                    modifier = Modifier.fillMaxWidth().height(50.dp),
-&nbsp;                    shape = RoundedCornerShape(12.dp),
-&nbsp;                    colors =
-&nbsp;                        ButtonDefaults.buttonColors(
-&nbsp;                            containerColor =
-&nbsp;                                if (state.isSuccess) MaterialTheme.colorScheme.primary
-&nbsp;                                else MaterialTheme.colorScheme.error
-&nbsp;                        ),
-&nbsp;                ) {
-&nbsp;                    Text(
-&nbsp;                        text = if (state.isSuccess) &quot;Back to Home&quot; else &quot;Try Again&quot;,
-&nbsp;                        style = MaterialTheme.typography.titleMedium,
-&nbsp;                        fontWeight = FontWeight.Bold,
+&nbsp;        snackbarHost = { SnackbarHost(snackbarHostState) },
+&nbsp;        topBar = {
+&nbsp;            TopAppBar(
+&nbsp;                title = { Text(&quot;Products&quot;) },
+&nbsp;                navigationIcon = {
+&nbsp;                    IconButton(onClick = onNavigateBack) {
+&nbsp;                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = &quot;Back&quot;)
+&nbsp;                    }
+&nbsp;                },
+&nbsp;                actions = {
+&nbsp;                    IconButton(
+&nbsp;                        onClick = {
+&nbsp;                            viewModel.processEvent(ProductListViewModel.Event.OnCartClicked)
+&nbsp;                        }
+&nbsp;                    ) {
+&nbsp;                        Icon(Icons.Default.ShoppingCart, contentDescription = &quot;Cart&quot;)
+&nbsp;                    }
+&nbsp;                },
+&nbsp;            )
+&nbsp;        },
+&nbsp;    ) { paddingValues -&gt;
+&nbsp;        Column(modifier = Modifier.padding(paddingValues)) {
+&nbsp;            // Search Bar
+&nbsp;            OutlinedTextField(
+&nbsp;                value = searchQuery,
+&nbsp;                onValueChange = { searchQuery = it },
+&nbsp;                modifier = Modifier.fillMaxWidth().padding(16.dp),
+&nbsp;                placeholder = { Text(&quot;Search products...&quot;) },
+&nbsp;                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+&nbsp;                singleLine = true,
+&nbsp;            )
+&nbsp;
+&nbsp;            // Filter Chips
+&nbsp;            Row(
+&nbsp;                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+&nbsp;                horizontalArrangement = Arrangement.spacedBy(8.dp),
+&nbsp;            ) {
+&nbsp;                val categories = listOf(&quot;All&quot;, &quot;Electronics&quot;, &quot;Fashion&quot;, &quot;Home&quot;)
+&nbsp;                categories.forEach { category -&gt;
+&nbsp;                    FilterChip(
+&nbsp;                        selected =
+&nbsp;                            (category == &quot;All&quot; &amp;&amp; selectedCategory == null) ||
+&nbsp;                                category == selectedCategory,
+&nbsp;                        onClick = { selectedCategory = if (category == &quot;All&quot;) null else category },
+&nbsp;                        label = { Text(category) },
 &nbsp;                    )
 &nbsp;                }
 &nbsp;            }
-&nbsp;        }
-&nbsp;    ) { paddingValues -&gt;
-&nbsp;        Column(
-&nbsp;            modifier = Modifier.padding(paddingValues).fillMaxSize().padding(24.dp),
-&nbsp;            horizontalAlignment = Alignment.CenterHorizontally,
-&nbsp;            verticalArrangement = Arrangement.Center,
-&nbsp;        ) {
-&nbsp;            if (state.isSuccess) {
-&nbsp;                SuccessAnimation()
-&nbsp;            } else {
-&nbsp;                FailureAnimation()
+&nbsp;
+&nbsp;            Spacer(modifier = Modifier.height(8.dp))
+&nbsp;
+&nbsp;            // Product Grid
+&nbsp;            LazyVerticalGrid(
+&nbsp;                state = listState,
+&nbsp;                columns = GridCells.Fixed(2),
+&nbsp;                contentPadding = PaddingValues(16.dp),
+&nbsp;                horizontalArrangement = Arrangement.spacedBy(16.dp),
+&nbsp;                verticalArrangement = Arrangement.spacedBy(16.dp),
+&nbsp;                modifier = Modifier.fillMaxSize(),
+&nbsp;            ) {
+&nbsp;                items(items = filteredProducts, key = { product -&gt; product.id }) { product -&gt;
+&nbsp;                    with(sharedTransitionScope) {
+&nbsp;                        ProductItem(
+&nbsp;                            product = product,
+&nbsp;                            onClick = { onNavigateToProductDetail(product.id) },
+&nbsp;                            modifier =
+&nbsp;                                Modifier.sharedElement(
+&nbsp;                                    sharedContentState =
+&nbsp;                                        rememberSharedContentState(key = &quot;image-${product.id}&quot;),
+&nbsp;                                    animatedVisibilityScope = animatedVisibilityScope,
+&nbsp;                                ),
+&nbsp;                        )
+&nbsp;                    }
+&nbsp;                }
+&nbsp;
+&nbsp;                if (isLoading) {
+&nbsp;                    item(span = { GridItemSpan(2) }) {
+&nbsp;                        Box(
+&nbsp;                            modifier = Modifier.fillMaxWidth().padding(16.dp),
+&nbsp;                            contentAlignment = Alignment.Center,
+&nbsp;                        ) {
+&nbsp;                            CircularProgressIndicator()
+&nbsp;                        }
+&nbsp;                    }
+&nbsp;                }
 &nbsp;            }
-&nbsp;
-&nbsp;            Spacer(modifier = Modifier.height(32.dp))
-&nbsp;
-&nbsp;            Text(
-&nbsp;                text = if (state.isSuccess) &quot;Order Placed Successfully!&quot; else &quot;Transaction Failed&quot;,
-&nbsp;                style = MaterialTheme.typography.headlineMedium,
-&nbsp;                fontWeight = FontWeight.Bold,
-&nbsp;                color =
-&nbsp;                    if (state.isSuccess) MaterialTheme.colorScheme.primary
-&nbsp;                    else MaterialTheme.colorScheme.error,
-&nbsp;                textAlign = TextAlign.Center,
-&nbsp;            )
-&nbsp;
-&nbsp;            Spacer(modifier = Modifier.height(16.dp))
-&nbsp;
-&nbsp;            Text(
-&nbsp;                text = state.message,
-&nbsp;                style = MaterialTheme.typography.bodyLarge,
-&nbsp;                color = MaterialTheme.colorScheme.onSurfaceVariant,
-&nbsp;                textAlign = TextAlign.Center,
-&nbsp;            )
-&nbsp;        }
-&nbsp;    }
-&nbsp;}
-&nbsp;
-&nbsp;@Composable
-&nbsp;fun SuccessAnimation() {
-&nbsp;    val circleProgress = remember { Animatable(0f) }
-&nbsp;    val checkProgress = remember { Animatable(0f) }
-&nbsp;
-&nbsp;    LaunchedEffect(Unit) {
-&nbsp;        circleProgress.animateTo(
-&nbsp;            targetValue = 1f,
-&nbsp;            animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing),
-&nbsp;        )
-&nbsp;        checkProgress.animateTo(
-&nbsp;            targetValue = 1f,
-&nbsp;            animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing),
-&nbsp;        )
-&nbsp;    }
-&nbsp;
-&nbsp;    val primaryColor = MaterialTheme.colorScheme.primary
-&nbsp;
-&nbsp;    Canvas(modifier = Modifier.size(120.dp)) {
-&nbsp;        val center = Offset(size.width / 2, size.height / 2)
-&nbsp;        val radius = size.width / 2
-&nbsp;        val strokeWidth = 8.dp.toPx()
-&nbsp;
-&nbsp;        // Draw Circle
-&nbsp;        drawCircle(
-&nbsp;            color = primaryColor,
-&nbsp;            radius = radius,
-&nbsp;            style = Stroke(width = strokeWidth),
-&nbsp;            alpha = circleProgress.value,
-&nbsp;        )
-&nbsp;
-&nbsp;        // Draw Checkmark
-&nbsp;        if (circleProgress.value &gt;= 0.8f) {
-&nbsp;            val path =
-&nbsp;                Path().apply {
-&nbsp;                    moveTo(center.x - radius * 0.4f, center.y)
-&nbsp;                    lineTo(center.x - radius * 0.1f, center.y + radius * 0.3f)
-&nbsp;                    lineTo(center.x + radius * 0.5f, center.y - radius * 0.4f)
-&nbsp;                }
-&nbsp;
-&nbsp;            // Animate path drawing
-&nbsp;            val pathMeasure = PathMeasure()
-&nbsp;            pathMeasure.setPath(path, false)
-&nbsp;            val length = pathMeasure.length
-&nbsp;            val partialPath = Path()
-&nbsp;            pathMeasure.getSegment(0f, length * checkProgress.value, partialPath, true)
-&nbsp;
-&nbsp;            drawPath(
-&nbsp;                path = partialPath,
-&nbsp;                color = primaryColor,
-&nbsp;                style = Stroke(width = strokeWidth, cap = StrokeCap.Round),
-&nbsp;            )
-&nbsp;        }
-&nbsp;    }
-&nbsp;}
-&nbsp;
-&nbsp;@Composable
-&nbsp;fun FailureAnimation() {
-&nbsp;    val circleProgress = remember { Animatable(0f) }
-&nbsp;    val crossProgress = remember { Animatable(0f) }
-&nbsp;
-&nbsp;    LaunchedEffect(Unit) {
-&nbsp;        circleProgress.animateTo(
-&nbsp;            targetValue = 1f,
-&nbsp;            animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing),
-&nbsp;        )
-&nbsp;        crossProgress.animateTo(
-&nbsp;            targetValue = 1f,
-&nbsp;            animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing),
-&nbsp;        )
-&nbsp;    }
-&nbsp;
-&nbsp;    val errorColor = MaterialTheme.colorScheme.error
-&nbsp;
-&nbsp;    Canvas(modifier = Modifier.size(120.dp)) {
-&nbsp;        val center = Offset(size.width / 2, size.height / 2)
-&nbsp;        val radius = size.width / 2
-&nbsp;        val strokeWidth = 8.dp.toPx()
-&nbsp;
-&nbsp;        // Draw Circle
-&nbsp;        drawCircle(
-&nbsp;            color = errorColor,
-&nbsp;            radius = radius,
-&nbsp;            style = Stroke(width = strokeWidth),
-&nbsp;            alpha = circleProgress.value,
-&nbsp;        )
-&nbsp;
-&nbsp;        // Draw Cross
-&nbsp;        if (circleProgress.value &gt;= 0.8f) {
-&nbsp;            val path1 =
-&nbsp;                Path().apply {
-&nbsp;                    moveTo(center.x - radius * 0.3f, center.y - radius * 0.3f)
-&nbsp;                    lineTo(center.x + radius * 0.3f, center.y + radius * 0.3f)
-&nbsp;                }
-&nbsp;            val path2 =
-&nbsp;                Path().apply {
-&nbsp;                    moveTo(center.x + radius * 0.3f, center.y - radius * 0.3f)
-&nbsp;                    lineTo(center.x - radius * 0.3f, center.y + radius * 0.3f)
-&nbsp;                }
-&nbsp;
-&nbsp;            val pathMeasure1 = PathMeasure()
-&nbsp;            pathMeasure1.setPath(path1, false)
-&nbsp;            val length1 = pathMeasure1.length
-&nbsp;            val partialPath1 = Path()
-&nbsp;            pathMeasure1.getSegment(0f, length1 * crossProgress.value, partialPath1, true)
-&nbsp;
-&nbsp;            drawPath(
-&nbsp;                path = partialPath1,
-&nbsp;                color = errorColor,
-&nbsp;                style = Stroke(width = strokeWidth, cap = StrokeCap.Round),
-&nbsp;            )
-&nbsp;
-&nbsp;            val pathMeasure2 = PathMeasure()
-&nbsp;            pathMeasure2.setPath(path2, false)
-&nbsp;            val length2 = pathMeasure2.length
-&nbsp;            val partialPath2 = Path()
-&nbsp;            pathMeasure2.getSegment(0f, length2 * crossProgress.value, partialPath2, true)
-&nbsp;
-&nbsp;            drawPath(
-&nbsp;                path = partialPath2,
-&nbsp;                color = errorColor,
-&nbsp;                style = Stroke(width = strokeWidth, cap = StrokeCap.Round),
-&nbsp;            )
 &nbsp;        }
 &nbsp;    }
 &nbsp;}
@@ -324,7 +272,7 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2026-01-05 01:30</div>
+    <div style="float:right;">generated on 2026-01-06 16:28</div>
 </div>
 </body>
 </html>

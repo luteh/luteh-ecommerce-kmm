@@ -1,0 +1,388 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>composeApp Coverage Report > OrdersScreenKt</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope: composeApp<span class="separator">|</span>    <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.luteh.ecommerce.presentation.ui.orders</a>
+</div>
+
+<h1>Coverage Summary for Class: OrdersScreenKt (org.luteh.ecommerce.presentation.ui.orders)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+<th class="coverageStat 
+">
+  Instruction, %
+</th>
+</tr>
+<tr>
+  <td class="name">OrdersScreenKt</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/7)
+  </span>
+</td>
+    <td class="coverageStat"/>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/37)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/78)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.luteh.ecommerce.presentation.ui.orders
+&nbsp;
+&nbsp;import androidx.compose.foundation.background
+&nbsp;import androidx.compose.foundation.layout.Arrangement
+&nbsp;import androidx.compose.foundation.layout.Box
+&nbsp;import androidx.compose.foundation.layout.Column
+&nbsp;import androidx.compose.foundation.layout.PaddingValues
+&nbsp;import androidx.compose.foundation.layout.Row
+&nbsp;import androidx.compose.foundation.layout.Spacer
+&nbsp;import androidx.compose.foundation.layout.fillMaxSize
+&nbsp;import androidx.compose.foundation.layout.fillMaxWidth
+&nbsp;import androidx.compose.foundation.layout.height
+&nbsp;import androidx.compose.foundation.layout.padding
+&nbsp;import androidx.compose.foundation.layout.size
+&nbsp;import androidx.compose.foundation.layout.width
+&nbsp;import androidx.compose.foundation.lazy.LazyColumn
+&nbsp;import androidx.compose.foundation.lazy.items
+&nbsp;import androidx.compose.foundation.shape.RoundedCornerShape
+&nbsp;import androidx.compose.material.icons.Icons
+&nbsp;import androidx.compose.material.icons.filled.LocalShipping
+&nbsp;import androidx.compose.material.icons.outlined.Inventory2
+&nbsp;import androidx.compose.material3.Card
+&nbsp;import androidx.compose.material3.CardDefaults
+&nbsp;import androidx.compose.material3.ExperimentalMaterial3Api
+&nbsp;import androidx.compose.material3.Icon
+&nbsp;import androidx.compose.material3.MaterialTheme
+&nbsp;import androidx.compose.material3.Scaffold
+&nbsp;import androidx.compose.material3.Text
+&nbsp;import androidx.compose.material3.TopAppBar
+&nbsp;import androidx.compose.material3.TopAppBarDefaults
+&nbsp;import androidx.compose.runtime.Composable
+&nbsp;import androidx.compose.ui.Alignment
+&nbsp;import androidx.compose.ui.Modifier
+&nbsp;import androidx.compose.ui.draw.clip
+&nbsp;import androidx.compose.ui.graphics.Color
+&nbsp;import androidx.compose.ui.layout.ContentScale
+&nbsp;import androidx.compose.ui.text.font.FontWeight
+&nbsp;import androidx.compose.ui.unit.dp
+&nbsp;import coil3.compose.SubcomposeAsyncImage
+&nbsp;import kotlin.math.roundToInt
+&nbsp;
+&nbsp;private fun Double.formatPrice(): String {
+<b class="nc">&nbsp;    val intPart = this.toLong()</b>
+<b class="nc">&nbsp;    val decPart = ((this - intPart) * 100).roundToInt()</b>
+<b class="nc">&nbsp;    return &quot;$intPart.${decPart.toString().padStart(2, &#39;0&#39;)}&quot;</b>
+&nbsp;}
+&nbsp;
+&nbsp;data class OrderItem(
+&nbsp;    val id: String,
+&nbsp;    val productName: String,
+&nbsp;    val productImage: String,
+&nbsp;    val quantity: Int,
+&nbsp;    val totalPrice: Double,
+&nbsp;    val status: OrderStatus,
+&nbsp;    val date: String,
+&nbsp;)
+&nbsp;
+&nbsp;enum class OrderStatus(val label: String, val color: Color) {
+&nbsp;    PENDING(&quot;Pending&quot;, Color(0xFFFFA726)),
+&nbsp;    PROCESSING(&quot;Processing&quot;, Color(0xFF42A5F5)),
+&nbsp;    SHIPPED(&quot;Shipped&quot;, Color(0xFF7E57C2)),
+&nbsp;    DELIVERED(&quot;Delivered&quot;, Color(0xFF66BB6A)),
+&nbsp;    CANCELLED(&quot;Cancelled&quot;, Color(0xFFEF5350)),
+&nbsp;}
+&nbsp;
+<b class="nc">&nbsp;val dummyOrders =</b>
+<b class="nc">&nbsp;    listOf(</b>
+<b class="nc">&nbsp;        OrderItem(</b>
+<b class="nc">&nbsp;            id = &quot;ORD-001&quot;,</b>
+<b class="nc">&nbsp;            productName = &quot;Classic White T-Shirt&quot;,</b>
+<b class="nc">&nbsp;            productImage = &quot;https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&quot;,</b>
+<b class="nc">&nbsp;            quantity = 2,</b>
+<b class="nc">&nbsp;            totalPrice = 59.98,</b>
+<b class="nc">&nbsp;            status = OrderStatus.DELIVERED,</b>
+<b class="nc">&nbsp;            date = &quot;Dec 28, 2025&quot;,</b>
+&nbsp;        ),
+<b class="nc">&nbsp;        OrderItem(</b>
+<b class="nc">&nbsp;            id = &quot;ORD-002&quot;,</b>
+<b class="nc">&nbsp;            productName = &quot;Wireless Headphones&quot;,</b>
+<b class="nc">&nbsp;            productImage = &quot;https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&quot;,</b>
+<b class="nc">&nbsp;            quantity = 1,</b>
+<b class="nc">&nbsp;            totalPrice = 149.99,</b>
+<b class="nc">&nbsp;            status = OrderStatus.SHIPPED,</b>
+<b class="nc">&nbsp;            date = &quot;Jan 2, 2026&quot;,</b>
+&nbsp;        ),
+<b class="nc">&nbsp;        OrderItem(</b>
+<b class="nc">&nbsp;            id = &quot;ORD-003&quot;,</b>
+<b class="nc">&nbsp;            productName = &quot;Running Shoes&quot;,</b>
+<b class="nc">&nbsp;            productImage = &quot;https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&quot;,</b>
+<b class="nc">&nbsp;            quantity = 1,</b>
+<b class="nc">&nbsp;            totalPrice = 129.99,</b>
+<b class="nc">&nbsp;            status = OrderStatus.PROCESSING,</b>
+<b class="nc">&nbsp;            date = &quot;Jan 4, 2026&quot;,</b>
+&nbsp;        ),
+<b class="nc">&nbsp;        OrderItem(</b>
+<b class="nc">&nbsp;            id = &quot;ORD-004&quot;,</b>
+<b class="nc">&nbsp;            productName = &quot;Smart Watch&quot;,</b>
+<b class="nc">&nbsp;            productImage = &quot;https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&quot;,</b>
+<b class="nc">&nbsp;            quantity = 1,</b>
+<b class="nc">&nbsp;            totalPrice = 299.99,</b>
+<b class="nc">&nbsp;            status = OrderStatus.PENDING,</b>
+<b class="nc">&nbsp;            date = &quot;Jan 5, 2026&quot;,</b>
+&nbsp;        ),
+&nbsp;    )
+&nbsp;
+&nbsp;@OptIn(ExperimentalMaterial3Api::class)
+&nbsp;@Composable
+&nbsp;fun OrdersScreen(modifier: Modifier = Modifier) {
+&nbsp;    Scaffold(
+&nbsp;        modifier = modifier,
+&nbsp;        topBar = {
+&nbsp;            TopAppBar(
+&nbsp;                title = {
+&nbsp;                    Text(
+&nbsp;                        text = &quot;My Orders&quot;,
+&nbsp;                        style = MaterialTheme.typography.titleLarge,
+&nbsp;                        fontWeight = FontWeight.Bold,
+&nbsp;                    )
+&nbsp;                },
+&nbsp;                colors =
+&nbsp;                    TopAppBarDefaults.topAppBarColors(
+&nbsp;                        containerColor = MaterialTheme.colorScheme.surface
+&nbsp;                    ),
+&nbsp;            )
+&nbsp;        },
+&nbsp;    ) { paddingValues -&gt;
+&nbsp;        OrdersScreenContent(modifier = Modifier.padding(paddingValues))
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;@Composable
+&nbsp;fun OrdersScreenContent(modifier: Modifier = Modifier) {
+&nbsp;    if (dummyOrders.isEmpty()) {
+&nbsp;        EmptyOrdersContent(modifier = modifier)
+&nbsp;    } else {
+&nbsp;        LazyColumn(
+&nbsp;            modifier = modifier.fillMaxSize(),
+&nbsp;            contentPadding = PaddingValues(16.dp),
+&nbsp;            verticalArrangement = Arrangement.spacedBy(12.dp),
+&nbsp;        ) {
+&nbsp;            items(dummyOrders) { order -&gt; OrderItemCard(order = order) }
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;@Composable
+&nbsp;fun EmptyOrdersContent(modifier: Modifier = Modifier) {
+&nbsp;    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+&nbsp;        Column(
+&nbsp;            horizontalAlignment = Alignment.CenterHorizontally,
+&nbsp;            verticalArrangement = Arrangement.Center,
+&nbsp;        ) {
+&nbsp;            Icon(
+&nbsp;                imageVector = Icons.Outlined.Inventory2,
+&nbsp;                contentDescription = null,
+&nbsp;                modifier = Modifier.size(80.dp),
+&nbsp;                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+&nbsp;            )
+&nbsp;            Spacer(modifier = Modifier.height(16.dp))
+&nbsp;            Text(
+&nbsp;                text = &quot;No orders yet&quot;,
+&nbsp;                style = MaterialTheme.typography.titleMedium,
+&nbsp;                color = MaterialTheme.colorScheme.onSurfaceVariant,
+&nbsp;            )
+&nbsp;            Spacer(modifier = Modifier.height(8.dp))
+&nbsp;            Text(
+&nbsp;                text = &quot;Your order history will appear here&quot;,
+&nbsp;                style = MaterialTheme.typography.bodyMedium,
+&nbsp;                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+&nbsp;            )
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;@Composable
+&nbsp;fun OrderItemCard(order: OrderItem) {
+&nbsp;    Card(
+&nbsp;        modifier = Modifier.fillMaxWidth(),
+&nbsp;        shape = RoundedCornerShape(12.dp),
+&nbsp;        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+&nbsp;        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+&nbsp;    ) {
+&nbsp;        Column(modifier = Modifier.padding(12.dp)) {
+&nbsp;            Row(
+&nbsp;                modifier = Modifier.fillMaxWidth(),
+&nbsp;                horizontalArrangement = Arrangement.SpaceBetween,
+&nbsp;                verticalAlignment = Alignment.CenterVertically,
+&nbsp;            ) {
+&nbsp;                Text(
+&nbsp;                    text = order.id,
+&nbsp;                    style = MaterialTheme.typography.labelMedium,
+&nbsp;                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+&nbsp;                )
+&nbsp;                Text(
+&nbsp;                    text = order.date,
+&nbsp;                    style = MaterialTheme.typography.labelMedium,
+&nbsp;                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+&nbsp;                )
+&nbsp;            }
+&nbsp;
+&nbsp;            Spacer(modifier = Modifier.height(12.dp))
+&nbsp;
+&nbsp;            Row(verticalAlignment = Alignment.CenterVertically) {
+&nbsp;                SubcomposeAsyncImage(
+&nbsp;                    model = order.productImage,
+&nbsp;                    contentDescription = order.productName,
+&nbsp;                    modifier = Modifier.size(60.dp).clip(RoundedCornerShape(8.dp)),
+&nbsp;                    contentScale = ContentScale.Crop,
+&nbsp;                    loading = {
+&nbsp;                        Box(
+&nbsp;                            modifier =
+&nbsp;                                Modifier.fillMaxSize()
+&nbsp;                                    .background(MaterialTheme.colorScheme.surfaceVariant)
+&nbsp;                        )
+&nbsp;                    },
+&nbsp;                )
+&nbsp;
+&nbsp;                Spacer(modifier = Modifier.width(12.dp))
+&nbsp;
+&nbsp;                Column(modifier = Modifier.weight(1f)) {
+&nbsp;                    Text(
+&nbsp;                        text = order.productName,
+&nbsp;                        style = MaterialTheme.typography.bodyLarge,
+&nbsp;                        fontWeight = FontWeight.Medium,
+&nbsp;                    )
+&nbsp;                    Spacer(modifier = Modifier.height(4.dp))
+&nbsp;                    Text(
+&nbsp;                        text = &quot;Qty: ${order.quantity}&quot;,
+&nbsp;                        style = MaterialTheme.typography.bodySmall,
+&nbsp;                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+&nbsp;                    )
+&nbsp;                }
+&nbsp;
+&nbsp;                Text(
+&nbsp;                    text = &quot;$${order.totalPrice.formatPrice()}&quot;,
+&nbsp;                    style = MaterialTheme.typography.titleMedium,
+&nbsp;                    fontWeight = FontWeight.Bold,
+&nbsp;                    color = MaterialTheme.colorScheme.primary,
+&nbsp;                )
+&nbsp;            }
+&nbsp;
+&nbsp;            Spacer(modifier = Modifier.height(12.dp))
+&nbsp;
+&nbsp;            Row(
+&nbsp;                modifier = Modifier.fillMaxWidth(),
+&nbsp;                horizontalArrangement = Arrangement.SpaceBetween,
+&nbsp;                verticalAlignment = Alignment.CenterVertically,
+&nbsp;            ) {
+&nbsp;                Row(verticalAlignment = Alignment.CenterVertically) {
+&nbsp;                    Icon(
+&nbsp;                        imageVector = Icons.Default.LocalShipping,
+&nbsp;                        contentDescription = null,
+&nbsp;                        modifier = Modifier.size(16.dp),
+&nbsp;                        tint = order.status.color,
+&nbsp;                    )
+&nbsp;                    Spacer(modifier = Modifier.width(6.dp))
+&nbsp;                    Text(
+&nbsp;                        text = order.status.label,
+&nbsp;                        style = MaterialTheme.typography.labelMedium,
+&nbsp;                        color = order.status.color,
+&nbsp;                        fontWeight = FontWeight.Medium,
+&nbsp;                    )
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-01-06 16:28</div>
+</div>
+</body>
+</html>

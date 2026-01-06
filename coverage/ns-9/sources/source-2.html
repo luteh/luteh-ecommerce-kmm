@@ -58,6 +58,9 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 <pre>
 <code class="sourceCode" id="sourceCode">&nbsp;package org.luteh.ecommerce.presentation.ui.home
 &nbsp;
+&nbsp;import androidx.compose.animation.AnimatedVisibilityScope
+&nbsp;import androidx.compose.animation.ExperimentalSharedTransitionApi
+&nbsp;import androidx.compose.animation.SharedTransitionScope
 &nbsp;import androidx.compose.foundation.background
 &nbsp;import androidx.compose.foundation.clickable
 &nbsp;import androidx.compose.foundation.layout.Arrangement
@@ -77,6 +80,8 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 &nbsp;import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 &nbsp;import androidx.compose.foundation.lazy.grid.items
 &nbsp;import androidx.compose.foundation.lazy.items
+&nbsp;import androidx.compose.foundation.pager.HorizontalPager
+&nbsp;import androidx.compose.foundation.pager.rememberPagerState
 &nbsp;import androidx.compose.foundation.shape.CircleShape
 &nbsp;import androidx.compose.foundation.shape.RoundedCornerShape
 &nbsp;import androidx.compose.material.icons.Icons
@@ -105,6 +110,7 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 &nbsp;import androidx.compose.material3.TopAppBar
 &nbsp;import androidx.compose.material3.TopAppBarDefaults
 &nbsp;import androidx.compose.runtime.Composable
+&nbsp;import androidx.compose.runtime.LaunchedEffect
 &nbsp;import androidx.compose.runtime.collectAsState
 &nbsp;import androidx.compose.runtime.getValue
 &nbsp;import androidx.compose.ui.Alignment
@@ -112,13 +118,18 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 &nbsp;import androidx.compose.ui.draw.alpha
 &nbsp;import androidx.compose.ui.draw.clip
 &nbsp;import androidx.compose.ui.graphics.Color
+&nbsp;import androidx.compose.ui.layout.ContentScale
 &nbsp;import androidx.compose.ui.text.font.FontWeight
 &nbsp;import androidx.compose.ui.unit.dp
+&nbsp;import coil3.compose.SubcomposeAsyncImage
+&nbsp;import kotlinx.coroutines.delay
 &nbsp;import org.koin.compose.viewmodel.koinViewModel
+&nbsp;import org.luteh.ecommerce.domain.model.BannerModel
 &nbsp;import org.luteh.ecommerce.domain.model.Category
-&nbsp;import org.luteh.ecommerce.domain.model.dummyProducts
+&nbsp;import org.luteh.ecommerce.domain.model.ProductModel
 &nbsp;import org.luteh.ecommerce.presentation.ui.common.ProductItem
 &nbsp;
+&nbsp;@OptIn(ExperimentalSharedTransitionApi::class)
 &nbsp;@Composable
 &nbsp;fun HomeScreen(
 &nbsp;    viewModel: HomeViewModel = koinViewModel(),
@@ -127,6 +138,8 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 &nbsp;    onNavigateToProductList: () -&gt; Unit,
 &nbsp;    onNavigateToProductDetail: (String) -&gt; Unit,
 &nbsp;    onNavigateToCart: () -&gt; Unit,
+&nbsp;    sharedTransitionScope: SharedTransitionScope,
+&nbsp;    animatedVisibilityScope: AnimatedVisibilityScope,
 &nbsp;) {
 &nbsp;    val state by viewModel.state.collectAsState()
 &nbsp;
@@ -137,9 +150,12 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 &nbsp;        onNavigateToProductList = onNavigateToProductList,
 &nbsp;        onNavigateToProductDetail = onNavigateToProductDetail,
 &nbsp;        onNavigateToCart = onNavigateToCart,
+&nbsp;        sharedTransitionScope = sharedTransitionScope,
+&nbsp;        animatedVisibilityScope = animatedVisibilityScope,
 &nbsp;    )
 &nbsp;}
 &nbsp;
+&nbsp;@OptIn(ExperimentalSharedTransitionApi::class)
 &nbsp;@Composable
 &nbsp;fun HomeScreenContent(
 &nbsp;    isLoggedIn: Boolean,
@@ -148,8 +164,12 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 &nbsp;    onNavigateToProductList: () -&gt; Unit,
 &nbsp;    onNavigateToProductDetail: (String) -&gt; Unit,
 &nbsp;    onNavigateToCart: () -&gt; Unit,
+&nbsp;    sharedTransitionScope: SharedTransitionScope,
+&nbsp;    animatedVisibilityScope: AnimatedVisibilityScope,
+&nbsp;    modifier: Modifier = Modifier,
 &nbsp;) {
 &nbsp;    Scaffold(
+&nbsp;        modifier = modifier,
 &nbsp;        topBar = {
 &nbsp;            HomeTopBar(
 &nbsp;                isLoggedIn = isLoggedIn,
@@ -163,21 +183,26 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 &nbsp;                    }
 &nbsp;                },
 &nbsp;            )
-&nbsp;        }
+&nbsp;        },
 &nbsp;    ) { paddingValues -&gt;
 &nbsp;        HomeContent(
 &nbsp;            modifier = Modifier.padding(paddingValues),
 &nbsp;            onNavigateToProductList = onNavigateToProductList,
 &nbsp;            onNavigateToProductDetail = onNavigateToProductDetail,
+&nbsp;            sharedTransitionScope = sharedTransitionScope,
+&nbsp;            animatedVisibilityScope = animatedVisibilityScope,
 &nbsp;        )
 &nbsp;    }
 &nbsp;}
 &nbsp;
+&nbsp;@OptIn(ExperimentalSharedTransitionApi::class)
 &nbsp;@Composable
 &nbsp;fun HomeContent(
 &nbsp;    modifier: Modifier = Modifier,
 &nbsp;    onNavigateToProductList: () -&gt; Unit,
 &nbsp;    onNavigateToProductDetail: (String) -&gt; Unit,
+&nbsp;    sharedTransitionScope: SharedTransitionScope,
+&nbsp;    animatedVisibilityScope: AnimatedVisibilityScope,
 &nbsp;) {
 &nbsp;    LazyVerticalGrid(
 &nbsp;        columns = GridCells.Fixed(2),
@@ -196,8 +221,19 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 &nbsp;            SectionHeader(title = &quot;Popular Products&quot;, onSeeAllClick = onNavigateToProductList)
 &nbsp;        }
 &nbsp;
-&nbsp;        items(dummyProducts.take(6)) { product -&gt;
-&nbsp;            ProductItem(product = product, onClick = { onNavigateToProductDetail(product.id) })
+&nbsp;        items(ProductModel.dummies.take(6)) { product -&gt;
+&nbsp;            with(sharedTransitionScope) {
+&nbsp;                ProductItem(
+&nbsp;                    product = product,
+&nbsp;                    onClick = { onNavigateToProductDetail(product.id) },
+&nbsp;                    modifier =
+&nbsp;                        Modifier.sharedElement(
+&nbsp;                            sharedContentState =
+&nbsp;                                rememberSharedContentState(key = &quot;image-${product.id}&quot;),
+&nbsp;                            animatedVisibilityScope = animatedVisibilityScope,
+&nbsp;                        ),
+&nbsp;                )
+&nbsp;            }
 &nbsp;        }
 &nbsp;    }
 &nbsp;}
@@ -268,50 +304,85 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 &nbsp;}
 &nbsp;
 &nbsp;@Composable
-&nbsp;fun PromotionalBanner() {
-&nbsp;    Card(
-&nbsp;        modifier = Modifier.fillMaxWidth().height(160.dp),
-&nbsp;        shape = RoundedCornerShape(16.dp),
-&nbsp;        colors =
-&nbsp;            CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-&nbsp;    ) {
-&nbsp;        Box(modifier = Modifier.fillMaxSize()) {
-&nbsp;            Column(
-&nbsp;                modifier = Modifier.align(Alignment.CenterStart).padding(16.dp).fillMaxWidth(0.6f)
+&nbsp;fun PromotionalBanner(banners: List&lt;BannerModel&gt; = BannerModel.dummies) {
+&nbsp;    val pagerState = rememberPagerState(pageCount = { banners.size })
+&nbsp;
+&nbsp;    LaunchedEffect(pagerState.settledPage) {
+&nbsp;        delay(4000)
+&nbsp;        val nextPage = (pagerState.currentPage + 1) % banners.size
+&nbsp;        pagerState.animateScrollToPage(nextPage)
+&nbsp;    }
+&nbsp;
+&nbsp;    Column {
+&nbsp;        HorizontalPager(state = pagerState, modifier = Modifier.fillMaxWidth().height(160.dp)) {
+&nbsp;            page -&gt;
+&nbsp;            val banner = banners[page]
+&nbsp;            Card(
+&nbsp;                modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
+&nbsp;                shape = RoundedCornerShape(16.dp),
+&nbsp;                colors = CardDefaults.cardColors(containerColor = banner.backgroundColor),
 &nbsp;            ) {
-&nbsp;                Text(
-&nbsp;                    text = &quot;Summer Sale&quot;,
-&nbsp;                    style = MaterialTheme.typography.headlineSmall,
-&nbsp;                    fontWeight = FontWeight.Bold,
-&nbsp;                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-&nbsp;                )
-&nbsp;                Spacer(modifier = Modifier.height(8.dp))
-&nbsp;                Text(
-&nbsp;                    text = &quot;Get up to 50% off on selected items&quot;,
-&nbsp;                    style = MaterialTheme.typography.bodyMedium,
-&nbsp;                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-&nbsp;                )
-&nbsp;                Spacer(modifier = Modifier.height(16.dp))
-&nbsp;                Button(
-&nbsp;                    onClick = {},
-&nbsp;                    colors =
-&nbsp;                        ButtonDefaults.buttonColors(
-&nbsp;                            containerColor = MaterialTheme.colorScheme.primary
-&nbsp;                        ),
-&nbsp;                ) {
-&nbsp;                    Text(&quot;Shop Now&quot;)
+&nbsp;                Box(modifier = Modifier.fillMaxSize()) {
+&nbsp;                    banner.imageUrl?.let { imageUrl -&gt;
+&nbsp;                        SubcomposeAsyncImage(
+&nbsp;                            model = imageUrl,
+&nbsp;                            contentDescription = banner.title,
+&nbsp;                            modifier = Modifier.fillMaxSize().alpha(0.3f),
+&nbsp;                            contentScale = ContentScale.Crop,
+&nbsp;                        )
+&nbsp;                    }
+&nbsp;
+&nbsp;                    Column(
+&nbsp;                        modifier =
+&nbsp;                            Modifier.align(Alignment.CenterStart).padding(16.dp).fillMaxWidth(0.7f)
+&nbsp;                    ) {
+&nbsp;                        Text(
+&nbsp;                            text = banner.title,
+&nbsp;                            style = MaterialTheme.typography.headlineSmall,
+&nbsp;                            fontWeight = FontWeight.Bold,
+&nbsp;                            color = banner.textColor,
+&nbsp;                        )
+&nbsp;                        Spacer(modifier = Modifier.height(8.dp))
+&nbsp;                        Text(
+&nbsp;                            text = banner.subtitle,
+&nbsp;                            style = MaterialTheme.typography.bodyMedium,
+&nbsp;                            color = banner.textColor.copy(alpha = 0.9f),
+&nbsp;                        )
+&nbsp;                        Spacer(modifier = Modifier.height(16.dp))
+&nbsp;                        Button(
+&nbsp;                            onClick = {},
+&nbsp;                            colors =
+&nbsp;                                ButtonDefaults.buttonColors(
+&nbsp;                                    containerColor = banner.textColor,
+&nbsp;                                    contentColor = banner.backgroundColor,
+&nbsp;                                ),
+&nbsp;                        ) {
+&nbsp;                            Text(banner.buttonText)
+&nbsp;                        }
+&nbsp;                    }
 &nbsp;                }
 &nbsp;            }
-&nbsp;            Icon(
-&nbsp;                imageVector = Icons.Rounded.Checkroom,
-&nbsp;                contentDescription = null,
-&nbsp;                modifier =
-&nbsp;                    Modifier.align(Alignment.CenterEnd)
-&nbsp;                        .size(120.dp)
-&nbsp;                        .padding(end = 16.dp)
-&nbsp;                        .alpha(0.2f),
-&nbsp;                tint = MaterialTheme.colorScheme.onPrimaryContainer,
-&nbsp;            )
+&nbsp;        }
+&nbsp;
+&nbsp;        if (banners.size &gt; 1) {
+&nbsp;            Row(
+&nbsp;                modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
+&nbsp;                horizontalArrangement = Arrangement.Center,
+&nbsp;            ) {
+&nbsp;                repeat(banners.size) { index -&gt;
+&nbsp;                    Box(
+&nbsp;                        modifier =
+&nbsp;                            Modifier.padding(horizontal = 4.dp)
+&nbsp;                                .size(if (pagerState.currentPage == index) 8.dp else 6.dp)
+&nbsp;                                .clip(CircleShape)
+&nbsp;                                .background(
+&nbsp;                                    if (pagerState.currentPage == index)
+&nbsp;                                        MaterialTheme.colorScheme.primary
+&nbsp;                                    else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
+&nbsp;                                )
+&nbsp;                    )
+&nbsp;                }
+&nbsp;            }
 &nbsp;        }
 &nbsp;    }
 &nbsp;}
@@ -395,7 +466,7 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2026-01-05 01:30</div>
+    <div style="float:right;">generated on 2026-01-06 16:28</div>
 </div>
 </body>
 </html>

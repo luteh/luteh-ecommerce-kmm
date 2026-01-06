@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
-  <title>composeApp Coverage Report > ProductDetailState</title>
+  <title>composeApp Coverage Report > MainScreenKt</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -19,18 +19,15 @@
 <div class="breadCrumbs">
 Current scope: composeApp<span class="separator">|</span>    <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">org.luteh.ecommerce.presentation.ui.product_detail</a>
+    <a href="../index.html">org.luteh.ecommerce.presentation.ui.main</a>
 </div>
 
-<h1>Coverage Summary for Class: ProductDetailState (org.luteh.ecommerce.presentation.ui.product_detail)</h1>
+<h1>Coverage Summary for Class: MainScreenKt (org.luteh.ecommerce.presentation.ui.main)</h1>
 
 <table class="coverageStats">
+
 <tr>
   <th class="name">Class</th>
-<th class="coverageStat 
-">
-  Class, %
-</th>
 <th class="coverageStat 
 ">
   Method, %
@@ -39,52 +36,23 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 ">
   Branch, %
 </th>
-<th class="coverageStat 
-">
-  Line, %
-</th>
-<th class="coverageStat 
-">
-  Instruction, %
-</th>
 </tr>
+  <tr>
+    <td class="name">MainScreenKt$WhenMappings</td>
+    <td class="coverageStat"/>
+  </tr>
 <tr>
-  <td class="name">ProductDetailState</td>
+  <td class="name"><strong>Total</strong></td>
 <td class="coverageStat">
   <span class="percent">
-    100%
+    0%
   </span>
   <span class="absValue">
-    (1/1)
-  </span>
-</td>
-<td class="coverageStat">
-  <span class="percent">
-    100%
-  </span>
-  <span class="absValue">
-    (1/1)
+    (0/1)
   </span>
 </td>
     <td class="coverageStat"/>
-<td class="coverageStat">
-  <span class="percent">
-    100%
-  </span>
-  <span class="absValue">
-    (4/4)
-  </span>
-</td>
-<td class="coverageStat">
-  <span class="percent">
-    100%
-  </span>
-  <span class="absValue">
-    (28/28)
-  </span>
-</td>
 </tr>
-
 </table>
 
 <br/>
@@ -92,31 +60,147 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package org.luteh.ecommerce.presentation.ui.product_detail
+<code class="sourceCode" id="sourceCode">&nbsp;package org.luteh.ecommerce.presentation.ui.main
 &nbsp;
-&nbsp;import org.luteh.ecommerce.domain.model.ProductModel
+&nbsp;import androidx.compose.animation.AnimatedVisibilityScope
+&nbsp;import androidx.compose.animation.ExperimentalSharedTransitionApi
+&nbsp;import androidx.compose.animation.SharedTransitionScope
+&nbsp;import androidx.compose.foundation.layout.Box
+&nbsp;import androidx.compose.foundation.layout.fillMaxSize
+&nbsp;import androidx.compose.foundation.layout.padding
+&nbsp;import androidx.compose.material.icons.Icons
+&nbsp;import androidx.compose.material.icons.filled.Favorite
+&nbsp;import androidx.compose.material.icons.filled.Home
+&nbsp;import androidx.compose.material.icons.filled.Person
+&nbsp;import androidx.compose.material.icons.filled.Receipt
+&nbsp;import androidx.compose.material.icons.outlined.FavoriteBorder
+&nbsp;import androidx.compose.material.icons.outlined.Home
+&nbsp;import androidx.compose.material.icons.outlined.Person
+&nbsp;import androidx.compose.material.icons.outlined.Receipt
+&nbsp;import androidx.compose.material3.Icon
+&nbsp;import androidx.compose.material3.MaterialTheme
+&nbsp;import androidx.compose.material3.NavigationBar
+&nbsp;import androidx.compose.material3.NavigationBarItem
+&nbsp;import androidx.compose.material3.NavigationBarItemDefaults
+&nbsp;import androidx.compose.material3.Scaffold
+&nbsp;import androidx.compose.material3.Text
+&nbsp;import androidx.compose.runtime.Composable
+&nbsp;import androidx.compose.runtime.collectAsState
+&nbsp;import androidx.compose.runtime.getValue
+&nbsp;import androidx.compose.runtime.mutableStateOf
+&nbsp;import androidx.compose.runtime.saveable.rememberSaveable
+&nbsp;import androidx.compose.runtime.setValue
+&nbsp;import androidx.compose.ui.Modifier
+&nbsp;import androidx.compose.ui.graphics.vector.ImageVector
+&nbsp;import androidx.compose.ui.unit.dp
+&nbsp;import org.koin.compose.viewmodel.koinViewModel
+&nbsp;import org.luteh.ecommerce.presentation.ui.home.HomeContent
+&nbsp;import org.luteh.ecommerce.presentation.ui.home.HomeTopBar
+&nbsp;import org.luteh.ecommerce.presentation.ui.orders.OrdersScreenContent
+&nbsp;import org.luteh.ecommerce.presentation.ui.profile.ProfileScreenContent
+&nbsp;import org.luteh.ecommerce.presentation.ui.wishlist.WishlistScreenContent
 &nbsp;
-&nbsp;data class ProductDetailState(
-<b class="fc">&nbsp;    val product: ProductModel? = null,</b>
-<b class="fc">&nbsp;    val isLoading: Boolean = false,</b>
-<b class="fc">&nbsp;    val error: String? = null,</b>
-<b class="fc">&nbsp;    val isAddedToCart: Boolean = false,</b>
-&nbsp;)
-&nbsp;
-&nbsp;sealed interface ProductDetailEvent {
-&nbsp;    data class LoadProduct(val productId: String) : ProductDetailEvent
-&nbsp;
-&nbsp;    data object AddToCart : ProductDetailEvent
-&nbsp;
-&nbsp;    data object OnCartClicked : ProductDetailEvent
+&nbsp;enum class BottomNavItem(
+&nbsp;    val label: String,
+&nbsp;    val selectedIcon: ImageVector,
+&nbsp;    val unselectedIcon: ImageVector,
+&nbsp;) {
+&nbsp;    HOME(&quot;Home&quot;, Icons.Filled.Home, Icons.Outlined.Home),
+&nbsp;    ORDERS(&quot;Orders&quot;, Icons.Filled.Receipt, Icons.Outlined.Receipt),
+&nbsp;    WISHLIST(&quot;Wishlist&quot;, Icons.Filled.Favorite, Icons.Outlined.FavoriteBorder),
+&nbsp;    PROFILE(&quot;Profile&quot;, Icons.Filled.Person, Icons.Outlined.Person),
 &nbsp;}
 &nbsp;
-&nbsp;sealed interface ProductDetailEffect {
-&nbsp;    data class ShowSnackbar(val message: String) : ProductDetailEffect
+&nbsp;@OptIn(ExperimentalSharedTransitionApi::class)
+&nbsp;@Composable
+&nbsp;fun MainScreen(
+&nbsp;    onNavigateToLogin: () -&gt; Unit,
+&nbsp;    onNavigateToProductList: () -&gt; Unit,
+&nbsp;    onNavigateToProductDetail: (String) -&gt; Unit,
+&nbsp;    onNavigateToCart: () -&gt; Unit,
+&nbsp;    sharedTransitionScope: SharedTransitionScope,
+&nbsp;    animatedVisibilityScope: AnimatedVisibilityScope,
+&nbsp;    viewModel: MainViewModel = koinViewModel(),
+&nbsp;) {
+&nbsp;    val state by viewModel.state.collectAsState()
+&nbsp;    var selectedTab by rememberSaveable { mutableStateOf(BottomNavItem.HOME) }
 &nbsp;
-&nbsp;    data object NavigateToCart : ProductDetailEffect
-&nbsp;
-&nbsp;    data object NavigateToLogin : ProductDetailEffect
+&nbsp;    Scaffold(
+&nbsp;        topBar = {
+&nbsp;            when (selectedTab) {
+&nbsp;                BottomNavItem.HOME -&gt; {
+&nbsp;                    HomeTopBar(
+&nbsp;                        isLoggedIn = state.isLoggedIn,
+&nbsp;                        onLoginClick = onNavigateToLogin,
+&nbsp;                        onProfileClick = { selectedTab = BottomNavItem.PROFILE },
+&nbsp;                        onCartClick = {
+&nbsp;                            if (state.isLoggedIn) {
+&nbsp;                                onNavigateToCart()
+&nbsp;                            } else {
+&nbsp;                                onNavigateToLogin()
+&nbsp;                            }
+&nbsp;                        },
+&nbsp;                    )
+&nbsp;                }
+&nbsp;                else -&gt; {}
+&nbsp;            }
+&nbsp;        },
+&nbsp;        bottomBar = {
+&nbsp;            NavigationBar(
+&nbsp;                containerColor = MaterialTheme.colorScheme.surface,
+&nbsp;                tonalElevation = 8.dp,
+&nbsp;            ) {
+&nbsp;                BottomNavItem.entries.forEach { item -&gt;
+&nbsp;                    NavigationBarItem(
+&nbsp;                        selected = selectedTab == item,
+&nbsp;                        onClick = { selectedTab = item },
+&nbsp;                        icon = {
+&nbsp;                            Icon(
+&nbsp;                                imageVector =
+&nbsp;                                    if (selectedTab == item) item.selectedIcon
+&nbsp;                                    else item.unselectedIcon,
+&nbsp;                                contentDescription = item.label,
+&nbsp;                            )
+&nbsp;                        },
+&nbsp;                        label = { Text(item.label) },
+&nbsp;                        colors =
+&nbsp;                            NavigationBarItemDefaults.colors(
+&nbsp;                                selectedIconColor = MaterialTheme.colorScheme.primary,
+&nbsp;                                selectedTextColor = MaterialTheme.colorScheme.primary,
+&nbsp;                                indicatorColor = MaterialTheme.colorScheme.primaryContainer,
+&nbsp;                                unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+&nbsp;                                unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+&nbsp;                            ),
+&nbsp;                    )
+&nbsp;                }
+&nbsp;            }
+&nbsp;        },
+&nbsp;    ) { paddingValues -&gt;
+&nbsp;        Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
+&nbsp;            when (selectedTab) {
+&nbsp;                BottomNavItem.HOME -&gt; {
+&nbsp;                    HomeContent(
+&nbsp;                        onNavigateToProductList = onNavigateToProductList,
+&nbsp;                        onNavigateToProductDetail = onNavigateToProductDetail,
+&nbsp;                        sharedTransitionScope = sharedTransitionScope,
+&nbsp;                        animatedVisibilityScope = animatedVisibilityScope,
+&nbsp;                    )
+&nbsp;                }
+&nbsp;                BottomNavItem.ORDERS -&gt; {
+&nbsp;                    OrdersScreenContent()
+&nbsp;                }
+&nbsp;                BottomNavItem.WISHLIST -&gt; {
+&nbsp;                    WishlistScreenContent(onNavigateToProductDetail = onNavigateToProductDetail)
+&nbsp;                }
+&nbsp;                BottomNavItem.PROFILE -&gt; {
+&nbsp;                    ProfileScreenContent(
+&nbsp;                        isLoggedIn = state.isLoggedIn,
+&nbsp;                        onNavigateToLogin = onNavigateToLogin,
+&nbsp;                    )
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
 &nbsp;}
 </code>
 </pre>
@@ -141,7 +225,7 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2026-01-05 01:30</div>
+    <div style="float:right;">generated on 2026-01-06 16:28</div>
 </div>
 </body>
 </html>

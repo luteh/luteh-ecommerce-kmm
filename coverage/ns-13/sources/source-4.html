@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
-  <title>composeApp Coverage Report > MainActivityKt</title>
+  <title>composeApp Coverage Report > Platform_androidKt</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -22,7 +22,7 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
     <a href="../index.html">org.luteh.ecommerce</a>
 </div>
 
-<h1>Coverage Summary for Class: MainActivityKt (org.luteh.ecommerce)</h1>
+<h1>Coverage Summary for Class: Platform_androidKt (org.luteh.ecommerce)</h1>
 
 <table class="coverageStats">
 <tr>
@@ -37,7 +37,7 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 </th>
 </tr>
 <tr>
-  <td class="name">MainActivityKt</td>
+  <td class="name">Platform_androidKt</td>
 <td class="coverageStat">
   <span class="percent">
     0%
@@ -58,26 +58,17 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 <pre>
 <code class="sourceCode" id="sourceCode">&nbsp;package org.luteh.ecommerce
 &nbsp;
-&nbsp;import android.os.Bundle
-&nbsp;import androidx.activity.ComponentActivity
-&nbsp;import androidx.activity.compose.setContent
-&nbsp;import androidx.compose.runtime.Composable
-&nbsp;import androidx.compose.ui.tooling.preview.Preview
-&nbsp;import org.koin.android.ext.koin.androidContext
+&nbsp;import android.os.Build
+&nbsp;import org.luteh.ecommerce.domain.annotation.ExcludeFromCoverage
 &nbsp;
-&nbsp;class MainActivity : ComponentActivity() {
-&nbsp;    override fun onCreate(savedInstanceState: Bundle?) {
-&nbsp;        super.onCreate(savedInstanceState)
-&nbsp;
-&nbsp;        setContent { App(koinConfig = { androidContext(this@MainActivity) }) }
-&nbsp;    }
+&nbsp;@ExcludeFromCoverage
+&nbsp;class AndroidPlatform : Platform {
+&nbsp;    override val name: String = &quot;Android ${Build.VERSION.SDK_INT}&quot;
+&nbsp;    override val isIos: Boolean
+&nbsp;        get() = false
 &nbsp;}
 &nbsp;
-&nbsp;@Preview
-&nbsp;@Composable
-&nbsp;fun AppAndroidPreview() {
-&nbsp;    App()
-&nbsp;}
+&nbsp;@ExcludeFromCoverage actual fun getPlatform(): Platform = AndroidPlatform()
 </code>
 </pre>
 </div>
@@ -101,7 +92,7 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2026-01-05 01:30</div>
+    <div style="float:right;">generated on 2026-01-06 16:28</div>
 </div>
 </body>
 </html>

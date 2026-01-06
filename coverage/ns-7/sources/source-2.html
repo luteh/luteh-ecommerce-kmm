@@ -80,7 +80,6 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 &nbsp;import androidx.compose.material.icons.filled.Add
 &nbsp;import androidx.compose.material.icons.filled.Delete
 &nbsp;import androidx.compose.material.icons.filled.Remove
-&nbsp;import androidx.compose.material.icons.rounded.Checkroom
 &nbsp;import androidx.compose.material3.Button
 &nbsp;import androidx.compose.material3.ButtonDefaults
 &nbsp;import androidx.compose.material3.Card
@@ -106,9 +105,11 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 &nbsp;import androidx.compose.ui.Modifier
 &nbsp;import androidx.compose.ui.draw.alpha
 &nbsp;import androidx.compose.ui.draw.clip
+&nbsp;import androidx.compose.ui.layout.ContentScale
 &nbsp;import androidx.compose.ui.text.font.FontWeight
 &nbsp;import androidx.compose.ui.text.style.TextOverflow
 &nbsp;import androidx.compose.ui.unit.dp
+&nbsp;import coil3.compose.SubcomposeAsyncImage
 &nbsp;import kotlinx.coroutines.launch
 &nbsp;import org.koin.compose.viewmodel.koinViewModel
 &nbsp;import org.luteh.ecommerce.domain.model.CartItemModel
@@ -253,20 +254,39 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 &nbsp;            modifier = Modifier.padding(12.dp).fillMaxWidth(),
 &nbsp;            verticalAlignment = Alignment.CenterVertically,
 &nbsp;        ) {
-&nbsp;            Box(
-&nbsp;                modifier =
-&nbsp;                    Modifier.size(80.dp)
-&nbsp;                        .clip(RoundedCornerShape(12.dp))
-&nbsp;                        .background(MaterialTheme.colorScheme.secondaryContainer),
-&nbsp;                contentAlignment = Alignment.Center,
-&nbsp;            ) {
-&nbsp;                Icon(
-&nbsp;                    imageVector = Icons.Rounded.Checkroom,
-&nbsp;                    contentDescription = null,
-&nbsp;                    tint = MaterialTheme.colorScheme.onSecondaryContainer,
-&nbsp;                    modifier = Modifier.size(40.dp),
-&nbsp;                )
-&nbsp;            }
+&nbsp;            SubcomposeAsyncImage(
+&nbsp;                model = item.product.image.thumbnailUrl,
+&nbsp;                contentDescription = item.product.name,
+&nbsp;                modifier = Modifier.size(80.dp).clip(RoundedCornerShape(12.dp)),
+&nbsp;                contentScale = ContentScale.Crop,
+&nbsp;                loading = {
+&nbsp;                    Box(
+&nbsp;                        modifier =
+&nbsp;                            Modifier.fillMaxSize()
+&nbsp;                                .background(MaterialTheme.colorScheme.secondaryContainer),
+&nbsp;                        contentAlignment = Alignment.Center,
+&nbsp;                    ) {
+&nbsp;                        CircularProgressIndicator(
+&nbsp;                            modifier = Modifier.size(24.dp),
+&nbsp;                            color = MaterialTheme.colorScheme.primary,
+&nbsp;                        )
+&nbsp;                    }
+&nbsp;                },
+&nbsp;                error = {
+&nbsp;                    Box(
+&nbsp;                        modifier =
+&nbsp;                            Modifier.fillMaxSize()
+&nbsp;                                .background(MaterialTheme.colorScheme.surfaceVariant),
+&nbsp;                        contentAlignment = Alignment.Center,
+&nbsp;                    ) {
+&nbsp;                        Text(
+&nbsp;                            text = &quot;N/A&quot;,
+&nbsp;                            style = MaterialTheme.typography.bodySmall,
+&nbsp;                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+&nbsp;                        )
+&nbsp;                    }
+&nbsp;                },
+&nbsp;            )
 &nbsp;            Spacer(modifier = Modifier.width(16.dp))
 &nbsp;            Column(modifier = Modifier.weight(1f)) {
 &nbsp;                Text(
@@ -408,7 +428,7 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2026-01-05 01:30</div>
+    <div style="float:right;">generated on 2026-01-06 16:28</div>
 </div>
 </body>
 </html>

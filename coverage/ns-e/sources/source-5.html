@@ -1,0 +1,501 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>composeApp Coverage Report > ProductDetailScreenKt</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope: composeApp<span class="separator">|</span>    <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.luteh.ecommerce.presentation.ui.product_detail</a>
+</div>
+
+<h1>Coverage Summary for Class: ProductDetailScreenKt (org.luteh.ecommerce.presentation.ui.product_detail)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+</tr>
+<tr>
+  <td class="name">ProductDetailScreenKt</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+    <td class="coverageStat"/>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.luteh.ecommerce.presentation.ui.product_detail
+&nbsp;
+&nbsp;import androidx.compose.animation.AnimatedVisibilityScope
+&nbsp;import androidx.compose.animation.ExperimentalSharedTransitionApi
+&nbsp;import androidx.compose.animation.SharedTransitionScope
+&nbsp;import androidx.compose.animation.core.FastOutSlowInEasing
+&nbsp;import androidx.compose.animation.core.animateFloatAsState
+&nbsp;import androidx.compose.animation.core.tween
+&nbsp;import androidx.compose.foundation.background
+&nbsp;import androidx.compose.foundation.border
+&nbsp;import androidx.compose.foundation.layout.Arrangement
+&nbsp;import androidx.compose.foundation.layout.Box
+&nbsp;import androidx.compose.foundation.layout.Column
+&nbsp;import androidx.compose.foundation.layout.Row
+&nbsp;import androidx.compose.foundation.layout.Spacer
+&nbsp;import androidx.compose.foundation.layout.fillMaxSize
+&nbsp;import androidx.compose.foundation.layout.fillMaxWidth
+&nbsp;import androidx.compose.foundation.layout.height
+&nbsp;import androidx.compose.foundation.layout.navigationBarsPadding
+&nbsp;import androidx.compose.foundation.layout.offset
+&nbsp;import androidx.compose.foundation.layout.padding
+&nbsp;import androidx.compose.foundation.layout.size
+&nbsp;import androidx.compose.foundation.layout.statusBarsPadding
+&nbsp;import androidx.compose.foundation.layout.width
+&nbsp;import androidx.compose.foundation.pager.HorizontalPager
+&nbsp;import androidx.compose.foundation.pager.rememberPagerState
+&nbsp;import androidx.compose.foundation.rememberScrollState
+&nbsp;import androidx.compose.foundation.shape.CircleShape
+&nbsp;import androidx.compose.foundation.shape.RoundedCornerShape
+&nbsp;import androidx.compose.foundation.verticalScroll
+&nbsp;import androidx.compose.material.icons.Icons
+&nbsp;import androidx.compose.material.icons.automirrored.filled.ArrowBack
+&nbsp;import androidx.compose.material.icons.filled.ShoppingCart
+&nbsp;import androidx.compose.material.icons.filled.Star
+&nbsp;import androidx.compose.material.icons.outlined.FavoriteBorder
+&nbsp;import androidx.compose.material.icons.outlined.ShoppingCart
+&nbsp;import androidx.compose.material3.Button
+&nbsp;import androidx.compose.material3.ButtonDefaults
+&nbsp;import androidx.compose.material3.CircularProgressIndicator
+&nbsp;import androidx.compose.material3.Icon
+&nbsp;import androidx.compose.material3.IconButton
+&nbsp;import androidx.compose.material3.MaterialTheme
+&nbsp;import androidx.compose.material3.OutlinedButton
+&nbsp;import androidx.compose.material3.Scaffold
+&nbsp;import androidx.compose.material3.SnackbarHost
+&nbsp;import androidx.compose.material3.SnackbarHostState
+&nbsp;import androidx.compose.material3.Surface
+&nbsp;import androidx.compose.material3.Text
+&nbsp;import androidx.compose.runtime.Composable
+&nbsp;import androidx.compose.runtime.LaunchedEffect
+&nbsp;import androidx.compose.runtime.collectAsState
+&nbsp;import androidx.compose.runtime.getValue
+&nbsp;import androidx.compose.runtime.mutableStateOf
+&nbsp;import androidx.compose.runtime.remember
+&nbsp;import androidx.compose.runtime.setValue
+&nbsp;import androidx.compose.ui.Alignment
+&nbsp;import androidx.compose.ui.Modifier
+&nbsp;import androidx.compose.ui.draw.alpha
+&nbsp;import androidx.compose.ui.draw.clip
+&nbsp;import androidx.compose.ui.graphics.Color
+&nbsp;import androidx.compose.ui.layout.ContentScale
+&nbsp;import androidx.compose.ui.text.font.FontWeight
+&nbsp;import androidx.compose.ui.unit.dp
+&nbsp;import androidx.compose.ui.unit.sp
+&nbsp;import coil3.compose.SubcomposeAsyncImage
+&nbsp;import org.koin.compose.viewmodel.koinViewModel
+&nbsp;
+&nbsp;@OptIn(ExperimentalSharedTransitionApi::class)
+&nbsp;@Composable
+&nbsp;fun ProductDetailScreen(
+&nbsp;    productId: String,
+&nbsp;    onNavigateBack: () -&gt; Unit,
+&nbsp;    onNavigateToCart: () -&gt; Unit,
+&nbsp;    onNavigateToLogin: () -&gt; Unit,
+&nbsp;    viewModel: ProductDetailViewModel = koinViewModel(),
+&nbsp;    sharedTransitionScope: SharedTransitionScope,
+&nbsp;    animatedVisibilityScope: AnimatedVisibilityScope,
+&nbsp;) {
+&nbsp;    val state by viewModel.state.collectAsState()
+&nbsp;    val snackbarHostState = remember { SnackbarHostState() }
+&nbsp;
+&nbsp;    LaunchedEffect(productId) { viewModel.onEvent(ProductDetailEvent.LoadProduct(productId)) }
+&nbsp;
+&nbsp;    LaunchedEffect(Unit) {
+&nbsp;        viewModel.effect.collect { effect -&gt;
+&nbsp;            when (effect) {
+&nbsp;                is ProductDetailEffect.ShowSnackbar -&gt; {
+&nbsp;                    snackbarHostState.showSnackbar(effect.message)
+&nbsp;                }
+&nbsp;                ProductDetailEffect.NavigateToCart -&gt; onNavigateToCart()
+&nbsp;                ProductDetailEffect.NavigateToLogin -&gt; onNavigateToLogin()
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) { paddingValues -&gt;
+&nbsp;        val product = state.product
+&nbsp;
+&nbsp;        var isVisible by remember { mutableStateOf(false) }
+&nbsp;
+&nbsp;        LaunchedEffect(Unit) { isVisible = true }
+&nbsp;
+&nbsp;        val contentAlpha by
+&nbsp;            animateFloatAsState(
+&nbsp;                targetValue = if (isVisible) 1f else 0f,
+&nbsp;                animationSpec = tween(durationMillis = 500, delayMillis = 300),
+&nbsp;            )
+&nbsp;
+&nbsp;        val slideUpOffset by
+&nbsp;            animateFloatAsState(
+&nbsp;                targetValue = if (isVisible) 0f else 100f,
+&nbsp;                animationSpec =
+&nbsp;                    tween(durationMillis = 500, delayMillis = 300, easing = FastOutSlowInEasing),
+&nbsp;            )
+&nbsp;
+&nbsp;        val imageUrls = product?.image?.imageUrls ?: emptyList()
+&nbsp;        val pagerState = rememberPagerState(pageCount = { imageUrls.size.coerceAtLeast(1) })
+&nbsp;
+&nbsp;        Box(
+&nbsp;            modifier =
+&nbsp;                Modifier.fillMaxSize()
+&nbsp;                    .background(MaterialTheme.colorScheme.background)
+&nbsp;                    .padding(paddingValues)
+&nbsp;        ) {
+&nbsp;            Column(modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
+&nbsp;                // Header Image Area
+&nbsp;                Box(modifier = Modifier.fillMaxWidth().height(400.dp)) {
+&nbsp;                    with(sharedTransitionScope) {
+&nbsp;                        Box(
+&nbsp;                            modifier =
+&nbsp;                                Modifier.fillMaxSize()
+&nbsp;                                    .sharedElement(
+&nbsp;                                        sharedContentState =
+&nbsp;                                            rememberSharedContentState(key = &quot;image-${productId}&quot;),
+&nbsp;                                        animatedVisibilityScope = animatedVisibilityScope,
+&nbsp;                                    )
+&nbsp;                        ) {
+&nbsp;                            if (imageUrls.isNotEmpty()) {
+&nbsp;                                HorizontalPager(
+&nbsp;                                    state = pagerState,
+&nbsp;                                    modifier = Modifier.fillMaxSize(),
+&nbsp;                                ) { page -&gt;
+&nbsp;                                    SubcomposeAsyncImage(
+&nbsp;                                        model = imageUrls[page],
+&nbsp;                                        contentDescription = product?.name,
+&nbsp;                                        modifier = Modifier.fillMaxSize(),
+&nbsp;                                        contentScale = ContentScale.Crop,
+&nbsp;                                        loading = {
+&nbsp;                                            Box(
+&nbsp;                                                modifier = Modifier.fillMaxSize(),
+&nbsp;                                                contentAlignment = Alignment.Center,
+&nbsp;                                            ) {
+&nbsp;                                                CircularProgressIndicator(
+&nbsp;                                                    modifier = Modifier.size(48.dp),
+&nbsp;                                                    color = MaterialTheme.colorScheme.primary,
+&nbsp;                                                )
+&nbsp;                                            }
+&nbsp;                                        },
+&nbsp;                                        error = {
+&nbsp;                                            Box(
+&nbsp;                                                modifier =
+&nbsp;                                                    Modifier.fillMaxSize()
+&nbsp;                                                        .background(
+&nbsp;                                                            MaterialTheme.colorScheme.surfaceVariant
+&nbsp;                                                        ),
+&nbsp;                                                contentAlignment = Alignment.Center,
+&nbsp;                                            ) {
+&nbsp;                                                Text(
+&nbsp;                                                    text = &quot;Image not available&quot;,
+&nbsp;                                                    style = MaterialTheme.typography.bodyMedium,
+&nbsp;                                                    color =
+&nbsp;                                                        MaterialTheme.colorScheme.onSurfaceVariant,
+&nbsp;                                                )
+&nbsp;                                            }
+&nbsp;                                        },
+&nbsp;                                    )
+&nbsp;                                }
+&nbsp;                            } else {
+&nbsp;                                Box(
+&nbsp;                                    modifier =
+&nbsp;                                        Modifier.fillMaxSize()
+&nbsp;                                            .background(MaterialTheme.colorScheme.surfaceVariant),
+&nbsp;                                    contentAlignment = Alignment.Center,
+&nbsp;                                ) {
+&nbsp;                                    CircularProgressIndicator()
+&nbsp;                                }
+&nbsp;                            }
+&nbsp;                        }
+&nbsp;                    }
+&nbsp;
+&nbsp;                    if (imageUrls.size &gt; 1) {
+&nbsp;                        Row(
+&nbsp;                            modifier =
+&nbsp;                                Modifier.align(Alignment.BottomCenter).padding(bottom = 48.dp),
+&nbsp;                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+&nbsp;                        ) {
+&nbsp;                            repeat(imageUrls.size) { index -&gt;
+&nbsp;                                Box(
+&nbsp;                                    modifier =
+&nbsp;                                        Modifier.size(
+&nbsp;                                                if (pagerState.currentPage == index) 10.dp else 8.dp
+&nbsp;                                            )
+&nbsp;                                            .clip(CircleShape)
+&nbsp;                                            .background(
+&nbsp;                                                if (pagerState.currentPage == index) Color.White
+&nbsp;                                                else Color.White.copy(alpha = 0.5f)
+&nbsp;                                            )
+&nbsp;                                )
+&nbsp;                            }
+&nbsp;                        }
+&nbsp;                    }
+&nbsp;
+&nbsp;                    // Top Bar Actions
+&nbsp;                    Row(
+&nbsp;                        modifier = Modifier.fillMaxWidth().statusBarsPadding().padding(16.dp),
+&nbsp;                        horizontalArrangement = Arrangement.SpaceBetween,
+&nbsp;                        verticalAlignment = Alignment.CenterVertically,
+&nbsp;                    ) {
+&nbsp;                        IconButton(
+&nbsp;                            onClick = onNavigateBack,
+&nbsp;                            modifier =
+&nbsp;                                Modifier.clip(CircleShape)
+&nbsp;                                    .background(Color.Black.copy(alpha = 0.2f)),
+&nbsp;                        ) {
+&nbsp;                            Icon(
+&nbsp;                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+&nbsp;                                contentDescription = &quot;Back&quot;,
+&nbsp;                                tint = Color.White,
+&nbsp;                            )
+&nbsp;                        }
+&nbsp;
+&nbsp;                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+&nbsp;                            IconButton(
+&nbsp;                                onClick = { /* TODO: Add to favorite logic */ },
+&nbsp;                                modifier =
+&nbsp;                                    Modifier.clip(CircleShape)
+&nbsp;                                        .background(Color.Black.copy(alpha = 0.2f)),
+&nbsp;                            ) {
+&nbsp;                                Icon(
+&nbsp;                                    imageVector = Icons.Outlined.FavoriteBorder,
+&nbsp;                                    contentDescription = &quot;Favorite&quot;,
+&nbsp;                                    tint = Color.White,
+&nbsp;                                )
+&nbsp;                            }
+&nbsp;
+&nbsp;                            IconButton(
+&nbsp;                                onClick = { viewModel.onEvent(ProductDetailEvent.OnCartClicked) },
+&nbsp;                                modifier =
+&nbsp;                                    Modifier.clip(CircleShape)
+&nbsp;                                        .background(Color.Black.copy(alpha = 0.2f)),
+&nbsp;                            ) {
+&nbsp;                                Icon(
+&nbsp;                                    imageVector = Icons.Default.ShoppingCart,
+&nbsp;                                    contentDescription = &quot;Cart&quot;,
+&nbsp;                                    tint = Color.White,
+&nbsp;                                )
+&nbsp;                            }
+&nbsp;                        }
+&nbsp;                    }
+&nbsp;                }
+&nbsp;
+&nbsp;                if (product != null) {
+&nbsp;                    // Product Details Content
+&nbsp;                    Column(
+&nbsp;                        modifier =
+&nbsp;                            Modifier.offset(y = -30.dp)
+&nbsp;                                .fillMaxWidth()
+&nbsp;                                .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
+&nbsp;                                .background(MaterialTheme.colorScheme.surface)
+&nbsp;                                .padding(24.dp)
+&nbsp;                                .alpha(contentAlpha)
+&nbsp;                                .offset(y = slideUpOffset.dp)
+&nbsp;                    ) {
+&nbsp;                        Row(
+&nbsp;                            modifier = Modifier.fillMaxWidth(),
+&nbsp;                            horizontalArrangement = Arrangement.SpaceBetween,
+&nbsp;                            verticalAlignment = Alignment.CenterVertically,
+&nbsp;                        ) {
+&nbsp;                            Column(modifier = Modifier.weight(1f)) {
+&nbsp;                                Text(
+&nbsp;                                    text = product.category.uppercase(),
+&nbsp;                                    style = MaterialTheme.typography.labelMedium,
+&nbsp;                                    color = MaterialTheme.colorScheme.primary,
+&nbsp;                                )
+&nbsp;                                Spacer(modifier = Modifier.height(4.dp))
+&nbsp;                                Text(
+&nbsp;                                    text = product.name,
+&nbsp;                                    style = MaterialTheme.typography.headlineMedium,
+&nbsp;                                    fontWeight = FontWeight.Bold,
+&nbsp;                                )
+&nbsp;                            }
+&nbsp;
+&nbsp;                            Text(
+&nbsp;                                text = &quot;$${product.price}&quot;,
+&nbsp;                                style = MaterialTheme.typography.headlineSmall,
+&nbsp;                                fontWeight = FontWeight.Bold,
+&nbsp;                                color = MaterialTheme.colorScheme.primary,
+&nbsp;                            )
+&nbsp;                        }
+&nbsp;
+&nbsp;                        Spacer(modifier = Modifier.height(16.dp))
+&nbsp;
+&nbsp;                        // Rating
+&nbsp;                        Row(verticalAlignment = Alignment.CenterVertically) {
+&nbsp;                            Icon(
+&nbsp;                                imageVector = Icons.Default.Star,
+&nbsp;                                contentDescription = null,
+&nbsp;                                tint = Color(0xFFFFC107),
+&nbsp;                                modifier = Modifier.size(20.dp),
+&nbsp;                            )
+&nbsp;                            Spacer(modifier = Modifier.width(4.dp))
+&nbsp;                            Text(
+&nbsp;                                text = &quot;${product.rating} (${product.ratingCount} reviews)&quot;,
+&nbsp;                                style = MaterialTheme.typography.bodyMedium,
+&nbsp;                                fontWeight = FontWeight.Medium,
+&nbsp;                            )
+&nbsp;                        }
+&nbsp;
+&nbsp;                        Spacer(modifier = Modifier.height(24.dp))
+&nbsp;
+&nbsp;                        Text(
+&nbsp;                            text = &quot;Description&quot;,
+&nbsp;                            style = MaterialTheme.typography.titleMedium,
+&nbsp;                            fontWeight = FontWeight.Bold,
+&nbsp;                        )
+&nbsp;                        Spacer(modifier = Modifier.height(8.dp))
+&nbsp;                        Text(
+&nbsp;                            text =
+&nbsp;                                product.description.ifEmpty {
+&nbsp;                                    &quot;No description available for this product.&quot;
+&nbsp;                                },
+&nbsp;                            style = MaterialTheme.typography.bodyLarge,
+&nbsp;                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+&nbsp;                            lineHeight = 24.sp,
+&nbsp;                        )
+&nbsp;
+&nbsp;                        Spacer(modifier = Modifier.height(24.dp))
+&nbsp;
+&nbsp;                        Text(
+&nbsp;                            text = &quot;Color&quot;,
+&nbsp;                            style = MaterialTheme.typography.titleMedium,
+&nbsp;                            fontWeight = FontWeight.Bold,
+&nbsp;                        )
+&nbsp;                        Spacer(modifier = Modifier.height(12.dp))
+&nbsp;                        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+&nbsp;                            listOf(Color(0xFFE57373), Color(0xFF81C784), Color(0xFF64B5F6))
+&nbsp;                                .forEach { color -&gt;
+&nbsp;                                    Box(
+&nbsp;                                        modifier =
+&nbsp;                                            Modifier.size(32.dp)
+&nbsp;                                                .clip(CircleShape)
+&nbsp;                                                .background(color)
+&nbsp;                                                .then(
+&nbsp;                                                    if (color == Color(0xFFE57373)) {
+&nbsp;                                                        Modifier.border(
+&nbsp;                                                            2.dp,
+&nbsp;                                                            MaterialTheme.colorScheme.primary,
+&nbsp;                                                            CircleShape,
+&nbsp;                                                        )
+&nbsp;                                                    } else Modifier
+&nbsp;                                                )
+&nbsp;                                    )
+&nbsp;                                }
+&nbsp;                        }
+&nbsp;
+&nbsp;                        Spacer(modifier = Modifier.height(100.dp)) // Bottom padding for FAB
+&nbsp;                    }
+&nbsp;                } else {
+&nbsp;                    Box(
+&nbsp;                        modifier = Modifier.fillMaxWidth().height(200.dp),
+&nbsp;                        contentAlignment = Alignment.Center,
+&nbsp;                    ) {
+&nbsp;                        CircularProgressIndicator()
+&nbsp;                    }
+&nbsp;                }
+&nbsp;            }
+&nbsp;
+&nbsp;            // Bottom Action Bar
+&nbsp;            if (product != null) {
+&nbsp;                Surface(
+&nbsp;                    modifier = Modifier.align(Alignment.BottomCenter),
+&nbsp;                    shadowElevation = 16.dp,
+&nbsp;                    color = MaterialTheme.colorScheme.surface,
+&nbsp;                ) {
+&nbsp;                    Row(
+&nbsp;                        modifier = Modifier.fillMaxWidth().padding(16.dp).navigationBarsPadding(),
+&nbsp;                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+&nbsp;                        verticalAlignment = Alignment.CenterVertically,
+&nbsp;                    ) {
+&nbsp;                        OutlinedButton(
+&nbsp;                            onClick = { viewModel.onEvent(ProductDetailEvent.AddToCart) },
+&nbsp;                            modifier = Modifier.weight(1f).height(56.dp),
+&nbsp;                            shape = RoundedCornerShape(16.dp),
+&nbsp;                        ) {
+&nbsp;                            Icon(Icons.Outlined.ShoppingCart, contentDescription = null)
+&nbsp;                            Spacer(modifier = Modifier.width(8.dp))
+&nbsp;                            Text(&quot;Add to Cart&quot;)
+&nbsp;                        }
+&nbsp;
+&nbsp;                        Button(
+&nbsp;                            onClick = {},
+&nbsp;                            modifier = Modifier.weight(1f).height(56.dp),
+&nbsp;                            shape = RoundedCornerShape(16.dp),
+&nbsp;                            colors =
+&nbsp;                                ButtonDefaults.buttonColors(
+&nbsp;                                    containerColor = MaterialTheme.colorScheme.primary
+&nbsp;                                ),
+&nbsp;                        ) {
+&nbsp;                            Text(&quot;Buy Now&quot;, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+&nbsp;                        }
+&nbsp;                    }
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-01-06 16:28</div>
+</div>
+</body>
+</html>

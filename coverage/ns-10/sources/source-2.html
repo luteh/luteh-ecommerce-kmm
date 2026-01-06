@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
-  <title>composeApp Coverage Report > AppKt</title>
+  <title>composeApp Coverage Report > ProfileScreenKt</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -19,10 +19,10 @@
 <div class="breadCrumbs">
 Current scope: composeApp<span class="separator">|</span>    <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">org.luteh.ecommerce</a>
+    <a href="../index.html">org.luteh.ecommerce.presentation.ui.profile</a>
 </div>
 
-<h1>Coverage Summary for Class: AppKt (org.luteh.ecommerce)</h1>
+<h1>Coverage Summary for Class: ProfileScreenKt (org.luteh.ecommerce.presentation.ui.profile)</h1>
 
 <table class="coverageStats">
 <tr>
@@ -37,13 +37,13 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 </th>
 </tr>
 <tr>
-  <td class="name">AppKt</td>
+  <td class="name">ProfileScreenKt</td>
 <td class="coverageStat">
   <span class="percent">
     0%
   </span>
   <span class="absValue">
-    (0/1)
+    (0/6)
   </span>
 </td>
     <td class="coverageStat"/>
@@ -56,167 +56,363 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package org.luteh.ecommerce
+<code class="sourceCode" id="sourceCode">&nbsp;package org.luteh.ecommerce.presentation.ui.profile
 &nbsp;
-&nbsp;import androidx.compose.animation.core.tween
-&nbsp;import androidx.compose.animation.slideInHorizontally
-&nbsp;import androidx.compose.animation.slideOutHorizontally
+&nbsp;import androidx.compose.foundation.background
+&nbsp;import androidx.compose.foundation.clickable
+&nbsp;import androidx.compose.foundation.layout.Arrangement
 &nbsp;import androidx.compose.foundation.layout.Box
+&nbsp;import androidx.compose.foundation.layout.Column
+&nbsp;import androidx.compose.foundation.layout.Row
+&nbsp;import androidx.compose.foundation.layout.Spacer
 &nbsp;import androidx.compose.foundation.layout.fillMaxSize
+&nbsp;import androidx.compose.foundation.layout.fillMaxWidth
+&nbsp;import androidx.compose.foundation.layout.height
+&nbsp;import androidx.compose.foundation.layout.padding
+&nbsp;import androidx.compose.foundation.layout.size
+&nbsp;import androidx.compose.foundation.layout.width
+&nbsp;import androidx.compose.foundation.rememberScrollState
+&nbsp;import androidx.compose.foundation.shape.CircleShape
+&nbsp;import androidx.compose.foundation.shape.RoundedCornerShape
+&nbsp;import androidx.compose.foundation.verticalScroll
+&nbsp;import androidx.compose.material.icons.Icons
+&nbsp;import androidx.compose.material.icons.automirrored.filled.ArrowBack
+&nbsp;import androidx.compose.material.icons.automirrored.filled.HelpOutline
+&nbsp;import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+&nbsp;import androidx.compose.material.icons.automirrored.filled.Logout
+&nbsp;import androidx.compose.material.icons.outlined.CreditCard
+&nbsp;import androidx.compose.material.icons.outlined.LocationOn
+&nbsp;import androidx.compose.material.icons.outlined.Notifications
+&nbsp;import androidx.compose.material.icons.outlined.Person
+&nbsp;import androidx.compose.material.icons.outlined.Settings
+&nbsp;import androidx.compose.material3.AlertDialog
+&nbsp;import androidx.compose.material3.Button
+&nbsp;import androidx.compose.material3.Card
+&nbsp;import androidx.compose.material3.CardDefaults
+&nbsp;import androidx.compose.material3.CircularProgressIndicator
+&nbsp;import androidx.compose.material3.ExperimentalMaterial3Api
+&nbsp;import androidx.compose.material3.HorizontalDivider
+&nbsp;import androidx.compose.material3.Icon
+&nbsp;import androidx.compose.material3.IconButton
+&nbsp;import androidx.compose.material3.MaterialTheme
+&nbsp;import androidx.compose.material3.Scaffold
+&nbsp;import androidx.compose.material3.SnackbarHost
+&nbsp;import androidx.compose.material3.SnackbarHostState
+&nbsp;import androidx.compose.material3.Text
+&nbsp;import androidx.compose.material3.TextButton
+&nbsp;import androidx.compose.material3.TopAppBar
+&nbsp;import androidx.compose.material3.TopAppBarDefaults
 &nbsp;import androidx.compose.runtime.Composable
+&nbsp;import androidx.compose.runtime.LaunchedEffect
+&nbsp;import androidx.compose.runtime.collectAsState
+&nbsp;import androidx.compose.runtime.getValue
+&nbsp;import androidx.compose.runtime.remember
+&nbsp;import androidx.compose.ui.Alignment
 &nbsp;import androidx.compose.ui.Modifier
-&nbsp;import androidx.navigation.compose.NavHost
-&nbsp;import androidx.navigation.compose.composable
-&nbsp;import androidx.navigation.compose.rememberNavController
-&nbsp;import androidx.navigation.navOptions
-&nbsp;import androidx.navigation.toRoute
-&nbsp;import org.jetbrains.compose.ui.tooling.preview.Preview
-&nbsp;import org.koin.compose.KoinApplication
-&nbsp;import org.koin.dsl.KoinAppDeclaration
-&nbsp;import org.luteh.ecommerce.di.appModule
-&nbsp;import org.luteh.ecommerce.presentation.navigation.AppNavigation
-&nbsp;import org.luteh.ecommerce.presentation.theme.LutehTheme
-&nbsp;import org.luteh.ecommerce.presentation.ui.cart.CartScreen
-&nbsp;import org.luteh.ecommerce.presentation.ui.checkout.CheckoutScreen
-&nbsp;import org.luteh.ecommerce.presentation.ui.home.HomeScreen
-&nbsp;import org.luteh.ecommerce.presentation.ui.login.LoginScreen
-&nbsp;import org.luteh.ecommerce.presentation.ui.product_detail.ProductDetailScreen
-&nbsp;import org.luteh.ecommerce.presentation.ui.product_list.ProductListScreen
-&nbsp;import org.luteh.ecommerce.presentation.ui.profile.ProfileScreen
-&nbsp;import org.luteh.ecommerce.presentation.ui.register.RegisterScreen
-&nbsp;import org.luteh.ecommerce.presentation.ui.splash.SplashScreen
-&nbsp;import org.luteh.ecommerce.presentation.ui.transaction_detail.TransactionDetailScreen
+&nbsp;import androidx.compose.ui.draw.clip
+&nbsp;import androidx.compose.ui.graphics.Color
+&nbsp;import androidx.compose.ui.graphics.vector.ImageVector
+&nbsp;import androidx.compose.ui.text.font.FontWeight
+&nbsp;import androidx.compose.ui.unit.dp
+&nbsp;import org.koin.compose.viewmodel.koinViewModel
 &nbsp;
+&nbsp;@OptIn(ExperimentalMaterial3Api::class)
 &nbsp;@Composable
-&nbsp;@Preview
-&nbsp;fun App(koinConfig: KoinAppDeclaration? = null) {
-&nbsp;    KoinApplication(
-&nbsp;        application = {
-&nbsp;            modules(appModule())
-&nbsp;            koinConfig?.invoke(this)
+&nbsp;fun ProfileScreen(onNavigateBack: () -&gt; Unit) {
+&nbsp;    Scaffold(
+&nbsp;        topBar = {
+&nbsp;            TopAppBar(
+&nbsp;                title = {
+&nbsp;                    Text(
+&nbsp;                        text = &quot;Profile&quot;,
+&nbsp;                        style = MaterialTheme.typography.titleLarge,
+&nbsp;                        fontWeight = FontWeight.Bold,
+&nbsp;                    )
+&nbsp;                },
+&nbsp;                navigationIcon = {
+&nbsp;                    IconButton(onClick = onNavigateBack) {
+&nbsp;                        Icon(
+&nbsp;                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+&nbsp;                            contentDescription = &quot;Back&quot;,
+&nbsp;                        )
+&nbsp;                    }
+&nbsp;                },
+&nbsp;                colors =
+&nbsp;                    TopAppBarDefaults.topAppBarColors(
+&nbsp;                        containerColor = MaterialTheme.colorScheme.surface
+&nbsp;                    ),
+&nbsp;            )
 &nbsp;        }
-&nbsp;    ) {
-&nbsp;        LutehTheme {
-&nbsp;            val navigator = rememberNavController()
+&nbsp;    ) { paddingValues -&gt;
+&nbsp;        ProfileScreenContent(
+&nbsp;            isLoggedIn = true,
+&nbsp;            onNavigateToLogin = {},
+&nbsp;            modifier = Modifier.padding(paddingValues),
+&nbsp;        )
+&nbsp;    }
+&nbsp;}
 &nbsp;
-&nbsp;            Box(modifier = Modifier.fillMaxSize()) {
-&nbsp;                NavHost(
-&nbsp;                    navController = navigator,
-&nbsp;                    startDestination = AppNavigation.Splash,
-&nbsp;                    modifier = Modifier.fillMaxSize(),
-&nbsp;                    enterTransition = {
-&nbsp;                        slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(300))
-&nbsp;                    },
-&nbsp;                    exitTransition = {
-&nbsp;                        slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(300))
-&nbsp;                    },
-&nbsp;                    popEnterTransition = {
-&nbsp;                        slideInHorizontally(initialOffsetX = { -it }, animationSpec = tween(300))
-&nbsp;                    },
-&nbsp;                    popExitTransition = {
-&nbsp;                        slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(300))
-&nbsp;                    },
-&nbsp;                ) {
-&nbsp;                    composable&lt;AppNavigation.Splash&gt; {
-&nbsp;                        SplashScreen(
-&nbsp;                            onNavigateToHome = {
-&nbsp;                                navigator.navigate(
-&nbsp;                                    AppNavigation.Home,
-&nbsp;                                    navOptions {
-&nbsp;                                        popUpTo(AppNavigation.Splash) { inclusive = true }
-&nbsp;                                        launchSingleTop = true
-&nbsp;                                    },
-&nbsp;                                )
-&nbsp;                            }
-&nbsp;                        )
-&nbsp;                    }
-&nbsp;                    composable&lt;AppNavigation.Login&gt; {
-&nbsp;                        LoginScreen(
-&nbsp;                            onNavigateToMainScreen = {
-&nbsp;                                navigator.navigate(
-&nbsp;                                    AppNavigation.Home,
-&nbsp;                                    navOptions {
-&nbsp;                                        popUpTo(AppNavigation.Login) { inclusive = true }
-&nbsp;                                        launchSingleTop = true
-&nbsp;                                    },
-&nbsp;                                )
-&nbsp;                            },
-&nbsp;                            onNavigateToRegisterScreen = {
-&nbsp;                                navigator.navigate(AppNavigation.Register)
-&nbsp;                            },
-&nbsp;                            onNavigateBack = { navigator.popBackStack() },
-&nbsp;                        )
-&nbsp;                    }
-&nbsp;                    composable&lt;AppNavigation.Register&gt; {
-&nbsp;                        RegisterScreen(onNavigateBack = { navigator.popBackStack() })
-&nbsp;                    }
-&nbsp;                    composable&lt;AppNavigation.Home&gt; {
-&nbsp;                        HomeScreen(
-&nbsp;                            onNavigateToLogin = { navigator.navigate(AppNavigation.Login) },
-&nbsp;                            onNavigateToProfile = { navigator.navigate(AppNavigation.Profile) },
-&nbsp;                            onNavigateToProductList = {
-&nbsp;                                navigator.navigate(AppNavigation.ProductList)
-&nbsp;                            },
-&nbsp;                            onNavigateToProductDetail = { productId -&gt;
-&nbsp;                                navigator.navigate(AppNavigation.ProductDetail(productId))
-&nbsp;                            },
-&nbsp;                            onNavigateToCart = { navigator.navigate(AppNavigation.Cart) },
-&nbsp;                        )
-&nbsp;                    }
-&nbsp;                    composable&lt;AppNavigation.Profile&gt; {
-&nbsp;                        ProfileScreen(onNavigateBack = { navigator.popBackStack() })
-&nbsp;                    }
-&nbsp;                    composable&lt;AppNavigation.ProductList&gt; {
-&nbsp;                        ProductListScreen(
-&nbsp;                            onNavigateBack = { navigator.popBackStack() },
-&nbsp;                            onNavigateToProductDetail = { productId -&gt;
-&nbsp;                                navigator.navigate(AppNavigation.ProductDetail(productId))
-&nbsp;                            },
-&nbsp;                            onNavigateToCart = { navigator.navigate(AppNavigation.Cart) },
-&nbsp;                            onNavigateToLogin = { navigator.navigate(AppNavigation.Login) },
-&nbsp;                        )
-&nbsp;                    }
-&nbsp;                    composable&lt;AppNavigation.Cart&gt; {
-&nbsp;                        CartScreen(
-&nbsp;                            onNavigateBack = { navigator.popBackStack() },
-&nbsp;                            onNavigateToCheckout = { navigator.navigate(AppNavigation.Checkout) },
-&nbsp;                        )
-&nbsp;                    }
-&nbsp;                    composable&lt;AppNavigation.ProductDetail&gt; { backStackEntry -&gt;
-&nbsp;                        val args = backStackEntry.toRoute&lt;AppNavigation.ProductDetail&gt;()
-&nbsp;                        ProductDetailScreen(
-&nbsp;                            productId = args.productId,
-&nbsp;                            onNavigateBack = { navigator.popBackStack() },
-&nbsp;                            onNavigateToCart = { navigator.navigate(AppNavigation.Cart) },
-&nbsp;                            onNavigateToLogin = { navigator.navigate(AppNavigation.Login) },
-&nbsp;                        )
-&nbsp;                    }
-&nbsp;                    composable&lt;AppNavigation.Checkout&gt; {
-&nbsp;                        CheckoutScreen(
-&nbsp;                            onNavigateBack = { navigator.popBackStack() },
-&nbsp;                            onNavigateToTransactionDetail = { isSuccess, message -&gt;
-&nbsp;                                navigator.navigate(
-&nbsp;                                    AppNavigation.TransactionDetail(isSuccess, message),
-&nbsp;                                    navOptions { popUpTo(AppNavigation.Home) { inclusive = false } },
-&nbsp;                                )
-&nbsp;                            },
-&nbsp;                        )
-&nbsp;                    }
-&nbsp;                    composable&lt;AppNavigation.TransactionDetail&gt; { backStackEntry -&gt;
-&nbsp;                        val args = backStackEntry.toRoute&lt;AppNavigation.TransactionDetail&gt;()
-&nbsp;                        TransactionDetailScreen(
-&nbsp;                            isSuccess = args.isSuccess,
-&nbsp;                            message = args.message,
-&nbsp;                            onNavigateToHome = {
-&nbsp;                                navigator.navigate(AppNavigation.Home) {
-&nbsp;                                    popUpTo(AppNavigation.Home) { inclusive = true }
-&nbsp;                                }
-&nbsp;                            },
-&nbsp;                        )
-&nbsp;                    }
+&nbsp;@OptIn(ExperimentalMaterial3Api::class)
+&nbsp;@Composable
+&nbsp;fun ProfileScreenContent(
+&nbsp;    isLoggedIn: Boolean,
+&nbsp;    onNavigateToLogin: () -&gt; Unit,
+&nbsp;    modifier: Modifier = Modifier,
+&nbsp;    viewModel: ProfileViewModel = koinViewModel(),
+&nbsp;) {
+&nbsp;    val state by viewModel.state.collectAsState()
+&nbsp;    val snackbarHostState = remember { SnackbarHostState() }
+&nbsp;
+&nbsp;    LaunchedEffect(Unit) {
+&nbsp;        viewModel.effect.collect { effect -&gt;
+&nbsp;            when (effect) {
+&nbsp;                is ProfileViewModel.Effect.ShowError -&gt; {
+&nbsp;                    snackbarHostState.showSnackbar(effect.message)
 &nbsp;                }
 &nbsp;            }
 &nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    Box(modifier = modifier.fillMaxSize()) {
+&nbsp;        if (!isLoggedIn) {
+&nbsp;            NotLoggedInContent(onNavigateToLogin = onNavigateToLogin)
+&nbsp;        } else {
+&nbsp;            LoggedInProfileContent(
+&nbsp;                state = state,
+&nbsp;                onLogoutClick = { viewModel.processEvent(ProfileViewModel.Event.OnLogoutClick) },
+&nbsp;            )
+&nbsp;        }
+&nbsp;
+&nbsp;        SnackbarHost(
+&nbsp;            hostState = snackbarHostState,
+&nbsp;            modifier = Modifier.align(Alignment.BottomCenter),
+&nbsp;        )
+&nbsp;
+&nbsp;        if (state.showLogoutDialog) {
+&nbsp;            LogoutConfirmationDialog(
+&nbsp;                onConfirm = { viewModel.processEvent(ProfileViewModel.Event.OnConfirmLogout) },
+&nbsp;                onDismiss = { viewModel.processEvent(ProfileViewModel.Event.OnDismissLogoutDialog) },
+&nbsp;            )
+&nbsp;        }
+&nbsp;
+&nbsp;        if (state.isLoggingOut) {
+&nbsp;            Box(
+&nbsp;                modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.3f)),
+&nbsp;                contentAlignment = Alignment.Center,
+&nbsp;            ) {
+&nbsp;                CircularProgressIndicator()
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;@Composable
+&nbsp;fun LogoutConfirmationDialog(onConfirm: () -&gt; Unit, onDismiss: () -&gt; Unit) {
+&nbsp;    AlertDialog(
+&nbsp;        onDismissRequest = onDismiss,
+&nbsp;        title = {
+&nbsp;            Text(
+&nbsp;                text = &quot;Logout&quot;,
+&nbsp;                style = MaterialTheme.typography.headlineSmall,
+&nbsp;                fontWeight = FontWeight.Bold,
+&nbsp;            )
+&nbsp;        },
+&nbsp;        text = {
+&nbsp;            Text(
+&nbsp;                text = &quot;Are you sure you want to logout?&quot;,
+&nbsp;                style = MaterialTheme.typography.bodyMedium,
+&nbsp;            )
+&nbsp;        },
+&nbsp;        confirmButton = { Button(onClick = onConfirm) { Text(&quot;Logout&quot;) } },
+&nbsp;        dismissButton = { TextButton(onClick = onDismiss) { Text(&quot;Cancel&quot;) } },
+&nbsp;    )
+&nbsp;}
+&nbsp;
+&nbsp;@Composable
+&nbsp;fun NotLoggedInContent(onNavigateToLogin: () -&gt; Unit, modifier: Modifier = Modifier) {
+&nbsp;    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+&nbsp;        Column(
+&nbsp;            horizontalAlignment = Alignment.CenterHorizontally,
+&nbsp;            verticalArrangement = Arrangement.Center,
+&nbsp;        ) {
+&nbsp;            Icon(
+&nbsp;                imageVector = Icons.Outlined.Person,
+&nbsp;                contentDescription = null,
+&nbsp;                modifier = Modifier.size(80.dp),
+&nbsp;                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+&nbsp;            )
+&nbsp;            Spacer(modifier = Modifier.height(16.dp))
+&nbsp;            Text(
+&nbsp;                text = &quot;Sign in to your account&quot;,
+&nbsp;                style = MaterialTheme.typography.titleMedium,
+&nbsp;                color = MaterialTheme.colorScheme.onSurfaceVariant,
+&nbsp;            )
+&nbsp;            Spacer(modifier = Modifier.height(8.dp))
+&nbsp;            Text(
+&nbsp;                text = &quot;Access your orders, wishlist and more&quot;,
+&nbsp;                style = MaterialTheme.typography.bodyMedium,
+&nbsp;                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+&nbsp;            )
+&nbsp;            Spacer(modifier = Modifier.height(24.dp))
+&nbsp;            Button(onClick = onNavigateToLogin) { Text(&quot;Sign In&quot;) }
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;@Composable
+&nbsp;fun LoggedInProfileContent(
+&nbsp;    state: ProfileViewModel.State,
+&nbsp;    onLogoutClick: () -&gt; Unit,
+&nbsp;    modifier: Modifier = Modifier,
+&nbsp;) {
+&nbsp;    Column(modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp)) {
+&nbsp;        Card(
+&nbsp;            modifier = Modifier.fillMaxWidth(),
+&nbsp;            shape = RoundedCornerShape(16.dp),
+&nbsp;            colors =
+&nbsp;                CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+&nbsp;        ) {
+&nbsp;            Row(
+&nbsp;                modifier = Modifier.padding(16.dp),
+&nbsp;                verticalAlignment = Alignment.CenterVertically,
+&nbsp;            ) {
+&nbsp;                Box(
+&nbsp;                    modifier =
+&nbsp;                        Modifier.size(64.dp)
+&nbsp;                            .clip(CircleShape)
+&nbsp;                            .background(MaterialTheme.colorScheme.primary),
+&nbsp;                    contentAlignment = Alignment.Center,
+&nbsp;                ) {
+&nbsp;                    Text(
+&nbsp;                        text = state.userInitials.ifEmpty { &quot;U&quot; },
+&nbsp;                        style = MaterialTheme.typography.titleLarge,
+&nbsp;                        color = MaterialTheme.colorScheme.onPrimary,
+&nbsp;                        fontWeight = FontWeight.Bold,
+&nbsp;                    )
+&nbsp;                }
+&nbsp;                Spacer(modifier = Modifier.width(16.dp))
+&nbsp;                Column {
+&nbsp;                    Text(
+&nbsp;                        text = state.userName.ifEmpty { &quot;User&quot; },
+&nbsp;                        style = MaterialTheme.typography.titleMedium,
+&nbsp;                        fontWeight = FontWeight.Bold,
+&nbsp;                    )
+&nbsp;                    Spacer(modifier = Modifier.height(4.dp))
+&nbsp;                    Text(
+&nbsp;                        text = state.userEmail.ifEmpty { &quot;No email&quot; },
+&nbsp;                        style = MaterialTheme.typography.bodyMedium,
+&nbsp;                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f),
+&nbsp;                    )
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+&nbsp;        Spacer(modifier = Modifier.height(24.dp))
+&nbsp;
+&nbsp;        Text(
+&nbsp;            text = &quot;Account&quot;,
+&nbsp;            style = MaterialTheme.typography.titleSmall,
+&nbsp;            color = MaterialTheme.colorScheme.onSurfaceVariant,
+&nbsp;            fontWeight = FontWeight.Medium,
+&nbsp;        )
+&nbsp;        Spacer(modifier = Modifier.height(8.dp))
+&nbsp;
+&nbsp;        Card(
+&nbsp;            modifier = Modifier.fillMaxWidth(),
+&nbsp;            shape = RoundedCornerShape(12.dp),
+&nbsp;            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+&nbsp;            elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+&nbsp;        ) {
+&nbsp;            ProfileMenuItem(icon = Icons.Outlined.Person, title = &quot;Edit Profile&quot;, onClick = {})
+&nbsp;            HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+&nbsp;            ProfileMenuItem(
+&nbsp;                icon = Icons.Outlined.LocationOn,
+&nbsp;                title = &quot;Shipping Addresses&quot;,
+&nbsp;                onClick = {},
+&nbsp;            )
+&nbsp;            HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+&nbsp;            ProfileMenuItem(
+&nbsp;                icon = Icons.Outlined.CreditCard,
+&nbsp;                title = &quot;Payment Methods&quot;,
+&nbsp;                onClick = {},
+&nbsp;            )
+&nbsp;        }
+&nbsp;
+&nbsp;        Spacer(modifier = Modifier.height(24.dp))
+&nbsp;
+&nbsp;        Text(
+&nbsp;            text = &quot;Settings&quot;,
+&nbsp;            style = MaterialTheme.typography.titleSmall,
+&nbsp;            color = MaterialTheme.colorScheme.onSurfaceVariant,
+&nbsp;            fontWeight = FontWeight.Medium,
+&nbsp;        )
+&nbsp;        Spacer(modifier = Modifier.height(8.dp))
+&nbsp;
+&nbsp;        Card(
+&nbsp;            modifier = Modifier.fillMaxWidth(),
+&nbsp;            shape = RoundedCornerShape(12.dp),
+&nbsp;            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+&nbsp;            elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+&nbsp;        ) {
+&nbsp;            ProfileMenuItem(
+&nbsp;                icon = Icons.Outlined.Notifications,
+&nbsp;                title = &quot;Notifications&quot;,
+&nbsp;                onClick = {},
+&nbsp;            )
+&nbsp;            HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+&nbsp;            ProfileMenuItem(icon = Icons.Outlined.Settings, title = &quot;Preferences&quot;, onClick = {})
+&nbsp;            HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+&nbsp;            ProfileMenuItem(
+&nbsp;                icon = Icons.AutoMirrored.Filled.HelpOutline,
+&nbsp;                title = &quot;Help &amp; Support&quot;,
+&nbsp;                onClick = {},
+&nbsp;            )
+&nbsp;        }
+&nbsp;
+&nbsp;        Spacer(modifier = Modifier.height(24.dp))
+&nbsp;
+&nbsp;        Card(
+&nbsp;            modifier = Modifier.fillMaxWidth(),
+&nbsp;            shape = RoundedCornerShape(12.dp),
+&nbsp;            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+&nbsp;            elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+&nbsp;        ) {
+&nbsp;            ProfileMenuItem(
+&nbsp;                icon = Icons.AutoMirrored.Filled.Logout,
+&nbsp;                title = &quot;Logout&quot;,
+&nbsp;                onClick = onLogoutClick,
+&nbsp;                tintColor = MaterialTheme.colorScheme.error,
+&nbsp;            )
+&nbsp;        }
+&nbsp;
+&nbsp;        Spacer(modifier = Modifier.height(16.dp))
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;@Composable
+&nbsp;fun ProfileMenuItem(
+&nbsp;    icon: ImageVector,
+&nbsp;    title: String,
+&nbsp;    onClick: () -&gt; Unit,
+&nbsp;    tintColor: Color = MaterialTheme.colorScheme.onSurface,
+&nbsp;) {
+&nbsp;    Row(
+&nbsp;        modifier = Modifier.fillMaxWidth().clickable(onClick = onClick).padding(16.dp),
+&nbsp;        verticalAlignment = Alignment.CenterVertically,
+&nbsp;    ) {
+&nbsp;        Icon(imageVector = icon, contentDescription = null, tint = tintColor)
+&nbsp;        Spacer(modifier = Modifier.width(16.dp))
+&nbsp;        Text(
+&nbsp;            text = title,
+&nbsp;            style = MaterialTheme.typography.bodyLarge,
+&nbsp;            modifier = Modifier.weight(1f),
+&nbsp;            color = tintColor,
+&nbsp;        )
+&nbsp;        Icon(
+&nbsp;            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+&nbsp;            contentDescription = null,
+&nbsp;            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+&nbsp;        )
 &nbsp;    }
 &nbsp;}
 </code>
@@ -242,7 +438,7 @@ Current scope: composeApp<span class="separator">|</span>    <a href="../../inde
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2026-01-05 01:30</div>
+    <div style="float:right;">generated on 2026-01-06 16:28</div>
 </div>
 </body>
 </html>
