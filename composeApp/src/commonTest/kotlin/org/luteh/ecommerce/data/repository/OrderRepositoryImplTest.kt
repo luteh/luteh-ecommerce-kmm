@@ -7,6 +7,7 @@ import dev.mokkery.mock
 import dev.mokkery.verifySuspend
 import kotlinx.coroutines.test.runTest
 import org.luteh.ecommerce.domain.model.CartItemModel
+import org.luteh.ecommerce.domain.model.ProductImage
 import org.luteh.ecommerce.domain.model.ProductModel
 import org.luteh.ecommerce.domain.model.ShippingAddress
 import org.luteh.ecommerce.domain.repository.CartRepository
@@ -34,10 +35,17 @@ class OrderRepositoryImplTest {
                             id = "1",
                             name = "Product",
                             price = 10.0,
-                            imageUrl = "url",
+                            image =
+                                ProductImage(
+                                    id = "img1",
+                                    thumbnailUrl = "url",
+                                    imageUrls = listOf("url"),
+                                ),
                             shopName = "Shop",
                             rating = 5.0,
                             ratingCount = 10,
+                            description = "Description",
+                            category = "Category",
                         ),
                     quantity = 1,
                 )

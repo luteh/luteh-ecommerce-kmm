@@ -8,13 +8,6 @@ import dev.mokkery.everySuspend
 import dev.mokkery.matcher.any
 import dev.mokkery.mock
 import dev.mokkery.verifySuspend
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -23,6 +16,7 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.luteh.ecommerce.domain.model.CartItemModel
+import org.luteh.ecommerce.domain.model.ProductImage
 import org.luteh.ecommerce.domain.model.ProductModel
 import org.luteh.ecommerce.domain.model.ShippingAddress
 import org.luteh.ecommerce.domain.repository.AddressRepository
@@ -30,6 +24,13 @@ import org.luteh.ecommerce.domain.repository.AuthRepository
 import org.luteh.ecommerce.domain.repository.CartRepository
 import org.luteh.ecommerce.domain.repository.OrderRepository
 import org.luteh.ecommerce.presentation.core.ResultState
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class CheckoutViewModelTest {
@@ -71,12 +72,14 @@ class CheckoutViewModelTest {
         val product =
             ProductModel(
                 id = "1",
-                imageUrl = "Img",
+                image = ProductImage(id = "img1", thumbnailUrl = "url", imageUrls = listOf("url")),
                 name = "Test Product",
                 price = 100.0,
                 shopName = "Shop",
                 rating = 4.5,
                 ratingCount = 10,
+                description = "Description",
+                category = "Category",
             )
         val cartItems = listOf(CartItemModel(product = product, quantity = 2))
 
@@ -199,12 +202,14 @@ class CheckoutViewModelTest {
         val product =
             ProductModel(
                 id = "1",
-                imageUrl = "Img",
+                image = ProductImage(id = "img1", thumbnailUrl = "url", imageUrls = listOf("url")),
                 name = "Test Product",
                 price = 10.0,
                 shopName = "Shop",
                 rating = 4.5,
                 ratingCount = 10,
+                description = "Description",
+                category = "Category",
             )
         val cartItems = listOf(CartItemModel(product = product, quantity = 1))
         val address = ShippingAddress("John", "Street", "City", "12345", "123")

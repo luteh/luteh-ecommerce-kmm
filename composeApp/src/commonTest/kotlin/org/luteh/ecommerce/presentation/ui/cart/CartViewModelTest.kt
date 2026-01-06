@@ -15,6 +15,7 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.luteh.ecommerce.domain.model.CartItemModel
+import org.luteh.ecommerce.domain.model.ProductImage
 import org.luteh.ecommerce.domain.model.ProductModel
 import org.luteh.ecommerce.domain.repository.CartRepository
 import org.luteh.ecommerce.domain.usecase.cart.UpdateCartItemQuantityUseCase
@@ -52,7 +53,18 @@ class CartViewModelTest {
 
     @Test
     fun `init should load cart items and update state`() = runTest {
-        val product = ProductModel("1", "url", "Product 1", 100.0, "Shop", 4.5, 10)
+        val product =
+            ProductModel(
+                id = "1",
+                image = ProductImage(id = "img1", thumbnailUrl = "url", imageUrls = listOf("url")),
+                name = "Product 1",
+                price = 100.0,
+                shopName = "Shop",
+                rating = 4.5,
+                ratingCount = 10,
+                description = "Description",
+                category = "Category",
+            )
         val cartItems = listOf(CartItemModel(product, 2))
         everySuspend { cartRepository.getCartItems() } returns flowOf(cartItems)
 

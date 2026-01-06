@@ -8,14 +8,15 @@ import dev.mokkery.everySuspend
 import dev.mokkery.matcher.any
 import dev.mokkery.mock
 import dev.mokkery.verifySuspend
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.luteh.ecommerce.data.local.database.dao.CartDao
 import org.luteh.ecommerce.data.local.entity.CartEntity
+import org.luteh.ecommerce.domain.model.ProductImage
 import org.luteh.ecommerce.domain.model.ProductModel
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class CartRepositoryImplTest {
 
@@ -48,7 +49,7 @@ class CartRepositoryImplTest {
             assertEquals("1", item.product.id)
             assertEquals("Product 1", item.product.name)
             assertEquals(100.0, item.product.price)
-            assertEquals("image_url", item.product.imageUrl)
+            assertEquals("image_url", item.product.image.thumbnailUrl)
             assertEquals(2, item.quantity)
             awaitComplete()
         }
@@ -61,10 +62,17 @@ class CartRepositoryImplTest {
                 id = "1",
                 name = "Product 1",
                 price = 100.0,
-                imageUrl = "image_url",
+                image =
+                    ProductImage(
+                        id = "img1",
+                        thumbnailUrl = "image_url",
+                        imageUrls = listOf("image_url"),
+                    ),
                 shopName = "Shop",
                 rating = 4.5,
                 ratingCount = 10,
+                description = "Description",
+                category = "Category",
             )
         everySuspend { cartDao.getCartItemById("1") } returns null
         everySuspend { cartDao.insertOrUpdate(any()) } returns Unit
@@ -78,7 +86,7 @@ class CartRepositoryImplTest {
                 price = 100.0,
                 quantity = 1,
                 imageUrl = "image_url",
-                category = "",
+                category = "Category",
             )
         verifySuspend { cartDao.insertOrUpdate(expectedEntity) }
     }
@@ -90,10 +98,17 @@ class CartRepositoryImplTest {
                 id = "1",
                 name = "Product 1",
                 price = 100.0,
-                imageUrl = "image_url",
+                image =
+                    ProductImage(
+                        id = "img1",
+                        thumbnailUrl = "image_url",
+                        imageUrls = listOf("image_url"),
+                    ),
                 shopName = "Shop",
                 rating = 4.5,
                 ratingCount = 10,
+                description = "Description",
+                category = "Category",
             )
         val existingEntity =
             CartEntity(
@@ -116,7 +131,7 @@ class CartRepositoryImplTest {
                 price = 100.0,
                 quantity = 3,
                 imageUrl = "image_url",
-                category = "",
+                category = "Category",
             )
         verifySuspend { cartDao.insertOrUpdate(expectedEntity) }
     }
