@@ -22,6 +22,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -32,7 +34,6 @@ import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.ShoppingCart
-import androidx.compose.material.icons.rounded.Checkroom
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -56,12 +57,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.SubcomposeAsyncImage
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -112,8 +113,8 @@ fun ProductDetailScreen(
                     tween(durationMillis = 500, delayMillis = 300, easing = FastOutSlowInEasing),
             )
 
-        // Use a fixed color for now as ProductModel doesn't have imageColor
-        val imageColor = Color(0xFFE57373)
+        val imageUrls = product?.image?.imageUrls ?: emptyList()
+        val pagerState = rememberPagerState(pageCount = { imageUrls.size.coerceAtLeast(1) })
 
         Box(
             modifier =
@@ -133,24 +134,79 @@ fun ProductDetailScreen(
                                             rememberSharedContentState(key = "image-${productId}"),
                                         animatedVisibilityScope = animatedVisibilityScope,
                                     )
-                                    .background(
-                                        brush =
-                                            Brush.verticalGradient(
-                                                colors =
-                                                    listOf(
-                                                        imageColor.copy(alpha = 0.8f),
-                                                        imageColor,
-                                                    )
-                                            )
-                                    ),
-                            contentAlignment = Alignment.Center,
                         ) {
-                            Icon(
-                                imageVector = Icons.Rounded.Checkroom,
-                                contentDescription = null,
-                                modifier = Modifier.size(150.dp).scale(if (isVisible) 1f else 0.8f),
-                                tint = Color.White.copy(alpha = 0.8f),
-                            )
+                            if (imageUrls.isNotEmpty()) {
+                                HorizontalPager(
+                                    state = pagerState,
+                                    modifier = Modifier.fillMaxSize(),
+                                ) { page ->
+                                    SubcomposeAsyncImage(
+                                        model = imageUrls[page],
+                                        contentDescription = product?.name,
+                                        modifier = Modifier.fillMaxSize(),
+                                        contentScale = ContentScale.Crop,
+                                        loading = {
+                                            Box(
+                                                modifier = Modifier.fillMaxSize(),
+                                                contentAlignment = Alignment.Center,
+                                            ) {
+                                                CircularProgressIndicator(
+                                                    modifier = Modifier.size(48.dp),
+                                                    color = MaterialTheme.colorScheme.primary,
+                                                )
+                                            }
+                                        },
+                                        error = {
+                                            Box(
+                                                modifier =
+                                                    Modifier.fillMaxSize()
+                                                        .background(
+                                                            MaterialTheme.colorScheme.surfaceVariant
+                                                        ),
+                                                contentAlignment = Alignment.Center,
+                                            ) {
+                                                Text(
+                                                    text = "Image not available",
+                                                    style = MaterialTheme.typography.bodyMedium,
+                                                    color =
+                                                        MaterialTheme.colorScheme.onSurfaceVariant,
+                                                )
+                                            }
+                                        },
+                                    )
+                                }
+                            } else {
+                                Box(
+                                    modifier =
+                                        Modifier.fillMaxSize()
+                                            .background(MaterialTheme.colorScheme.surfaceVariant),
+                                    contentAlignment = Alignment.Center,
+                                ) {
+                                    CircularProgressIndicator()
+                                }
+                            }
+                        }
+                    }
+
+                    if (imageUrls.size > 1) {
+                        Row(
+                            modifier =
+                                Modifier.align(Alignment.BottomCenter).padding(bottom = 48.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            repeat(imageUrls.size) { index ->
+                                Box(
+                                    modifier =
+                                        Modifier.size(
+                                                if (pagerState.currentPage == index) 10.dp else 8.dp
+                                            )
+                                            .clip(CircleShape)
+                                            .background(
+                                                if (pagerState.currentPage == index) Color.White
+                                                else Color.White.copy(alpha = 0.5f)
+                                            )
+                                )
+                            }
                         }
                     }
 
@@ -222,7 +278,7 @@ fun ProductDetailScreen(
                         ) {
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
-                                    text = "CATEGORY", // Placeholder
+                                    text = product.category.uppercase(),
                                     style = MaterialTheme.typography.labelMedium,
                                     color = MaterialTheme.colorScheme.primary,
                                 )
@@ -270,7 +326,9 @@ fun ProductDetailScreen(
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text =
-                                "Experience premium quality with this outstanding product. Designed for comfort and durability.", // Placeholder description
+                                product.description.ifEmpty {
+                                    "No description available for this product."
+                                },
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             lineHeight = 24.sp,
