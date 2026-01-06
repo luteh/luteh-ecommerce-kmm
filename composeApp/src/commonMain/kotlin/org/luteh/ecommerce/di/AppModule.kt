@@ -28,8 +28,10 @@ import org.luteh.ecommerce.presentation.ui.cart.CartViewModel
 import org.luteh.ecommerce.presentation.ui.checkout.CheckoutViewModel
 import org.luteh.ecommerce.presentation.ui.home.HomeViewModel
 import org.luteh.ecommerce.presentation.ui.login.LoginViewModel
+import org.luteh.ecommerce.presentation.ui.main.MainViewModel
 import org.luteh.ecommerce.presentation.ui.product_detail.ProductDetailViewModel
 import org.luteh.ecommerce.presentation.ui.product_list.ProductListViewModel
+import org.luteh.ecommerce.presentation.ui.profile.ProfileViewModel
 import org.luteh.ecommerce.presentation.ui.register.RegisterViewModel
 import org.luteh.ecommerce.presentation.ui.transaction_detail.TransactionDetailViewModel
 
@@ -42,6 +44,8 @@ fun appModule() = module {
     factory { CartViewModel(get(), get()) }
     factory { CheckoutViewModel(get(), get(), get(), get()) }
     factory { TransactionDetailViewModel() }
+    factory { ProfileViewModel(get(), get()) }
+    factory { MainViewModel(get()) }
 
     single<AuthRepository> { AuthRepositoryImpl(get(), get(), get()) }
     single<ProductRepository> { ProductRepositoryImpl() }

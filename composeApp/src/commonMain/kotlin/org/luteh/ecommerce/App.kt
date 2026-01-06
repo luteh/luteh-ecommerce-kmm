@@ -116,7 +116,6 @@ fun App(koinConfig: KoinAppDeclaration? = null) {
                         }
                         composable<AppNavigation.Main> {
                             MainScreen(
-                                isLoggedIn = true,
                                 onNavigateToLogin = { navigator.navigate(AppNavigation.Login) },
                                 onNavigateToProductList = {
                                     navigator.navigate(AppNavigation.ProductList)

@@ -27,19 +27,28 @@ import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,6 +56,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -90,12 +100,74 @@ fun ProfileScreenContent(
     isLoggedIn: Boolean,
     onNavigateToLogin: () -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: ProfileViewModel = koinViewModel(),
 ) {
-    if (!isLoggedIn) {
-        NotLoggedInContent(onNavigateToLogin = onNavigateToLogin, modifier = modifier)
-    } else {
-        LoggedInProfileContent(modifier = modifier)
+    val state by viewModel.state.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(Unit) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                is ProfileViewModel.Effect.ShowError -> {
+                    snackbarHostState.showSnackbar(effect.message)
+                }
+            }
+        }
     }
+
+    Box(modifier = modifier.fillMaxSize()) {
+        if (!isLoggedIn) {
+            NotLoggedInContent(onNavigateToLogin = onNavigateToLogin)
+        } else {
+            LoggedInProfileContent(
+                state = state,
+                onLogoutClick = { viewModel.processEvent(ProfileViewModel.Event.OnLogoutClick) },
+            )
+        }
+
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier.align(Alignment.BottomCenter),
+        )
+
+        if (state.showLogoutDialog) {
+            LogoutConfirmationDialog(
+                onConfirm = { viewModel.processEvent(ProfileViewModel.Event.OnConfirmLogout) },
+                onDismiss = { viewModel.processEvent(ProfileViewModel.Event.OnDismissLogoutDialog) },
+            )
+        }
+
+        if (state.isLoggingOut) {
+            Box(
+                modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.3f)),
+                contentAlignment = Alignment.Center,
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+    }
+}
+
+@Composable
+fun LogoutConfirmationDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(
+                text = "Logout",
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold,
+            )
+        },
+        text = {
+            Text(
+                text = "Are you sure you want to logout?",
+                style = MaterialTheme.typography.bodyMedium,
+            )
+        },
+        confirmButton = { Button(onClick = onConfirm) { Text("Logout") } },
+        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } },
+    )
 }
 
 @Composable
@@ -130,7 +202,11 @@ fun NotLoggedInContent(onNavigateToLogin: () -> Unit, modifier: Modifier = Modif
 }
 
 @Composable
-fun LoggedInProfileContent(modifier: Modifier = Modifier) {
+fun LoggedInProfileContent(
+    state: ProfileViewModel.State,
+    onLogoutClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Column(modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp)) {
         Card(
             modifier = Modifier.fillMaxWidth(),
@@ -150,7 +226,7 @@ fun LoggedInProfileContent(modifier: Modifier = Modifier) {
                     contentAlignment = Alignment.Center,
                 ) {
                     Text(
-                        text = "JD",
+                        text = state.userInitials.ifEmpty { "U" },
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.onPrimary,
                         fontWeight = FontWeight.Bold,
@@ -159,13 +235,13 @@ fun LoggedInProfileContent(modifier: Modifier = Modifier) {
                 Spacer(modifier = Modifier.width(16.dp))
                 Column {
                     Text(
-                        text = "John Doe",
+                        text = state.userName.ifEmpty { "User" },
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "john.doe@email.com",
+                        text = state.userEmail.ifEmpty { "No email" },
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f),
                     )
@@ -246,7 +322,7 @@ fun LoggedInProfileContent(modifier: Modifier = Modifier) {
             ProfileMenuItem(
                 icon = Icons.AutoMirrored.Filled.Logout,
                 title = "Logout",
-                onClick = {},
+                onClick = onLogoutClick,
                 tintColor = MaterialTheme.colorScheme.error,
             )
         }

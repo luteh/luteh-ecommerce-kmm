@@ -23,6 +23,7 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -30,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import org.koin.compose.viewmodel.koinViewModel
 import org.luteh.ecommerce.presentation.ui.home.HomeContent
 import org.luteh.ecommerce.presentation.ui.home.HomeTopBar
 import org.luteh.ecommerce.presentation.ui.orders.OrdersScreenContent
@@ -50,14 +52,15 @@ enum class BottomNavItem(
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun MainScreen(
-    isLoggedIn: Boolean,
     onNavigateToLogin: () -> Unit,
     onNavigateToProductList: () -> Unit,
     onNavigateToProductDetail: (String) -> Unit,
     onNavigateToCart: () -> Unit,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
+    viewModel: MainViewModel = koinViewModel(),
 ) {
+    val state by viewModel.state.collectAsState()
     var selectedTab by rememberSaveable { mutableStateOf(BottomNavItem.HOME) }
 
     Scaffold(
@@ -65,11 +68,11 @@ fun MainScreen(
             when (selectedTab) {
                 BottomNavItem.HOME -> {
                     HomeTopBar(
-                        isLoggedIn = isLoggedIn,
+                        isLoggedIn = state.isLoggedIn,
                         onLoginClick = onNavigateToLogin,
                         onProfileClick = { selectedTab = BottomNavItem.PROFILE },
                         onCartClick = {
-                            if (isLoggedIn) {
+                            if (state.isLoggedIn) {
                                 onNavigateToCart()
                             } else {
                                 onNavigateToLogin()
@@ -129,7 +132,7 @@ fun MainScreen(
                 }
                 BottomNavItem.PROFILE -> {
                     ProfileScreenContent(
-                        isLoggedIn = isLoggedIn,
+                        isLoggedIn = state.isLoggedIn,
                         onNavigateToLogin = onNavigateToLogin,
                     )
                 }
