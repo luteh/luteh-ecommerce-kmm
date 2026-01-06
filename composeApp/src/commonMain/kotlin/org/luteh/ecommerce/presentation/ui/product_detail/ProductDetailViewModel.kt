@@ -9,8 +9,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.luteh.ecommerce.domain.model.ProductModel
 import org.luteh.ecommerce.domain.model.SessionResult
-import org.luteh.ecommerce.domain.model.dummyProducts
 import org.luteh.ecommerce.domain.repository.CartRepository
 import org.luteh.ecommerce.domain.usecase.auth.CheckSessionUseCase
 
@@ -76,22 +76,9 @@ class ProductDetailViewModel(
 
     private fun loadProduct(productId: String) {
         // In a real app, this would come from a repository
-        val product = dummyProducts.find { it.id == productId }
+        val product = ProductModel.dummies.find { it.id == productId }
         if (product != null) {
-            _state.update {
-                it.copy(
-                    product =
-                        org.luteh.ecommerce.domain.model.ProductModel(
-                            id = product.id,
-                            name = product.name,
-                            price = product.price.replace("$", "").toDoubleOrNull() ?: 0.0,
-                            thumbnailImageUrl = "", // Dummy doesn't have URL
-                            shopName = "Luteh Shop",
-                            rating = product.rating,
-                            ratingCount = 120,
-                        )
-                )
-            }
+            _state.update { it.copy(product = product) }
         }
     }
 

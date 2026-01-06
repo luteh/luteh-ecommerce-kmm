@@ -8,6 +8,13 @@ import dev.mokkery.everySuspend
 import dev.mokkery.matcher.any
 import dev.mokkery.mock
 import dev.mokkery.verifySuspend
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -23,13 +30,6 @@ import org.luteh.ecommerce.domain.repository.AuthRepository
 import org.luteh.ecommerce.domain.repository.CartRepository
 import org.luteh.ecommerce.domain.repository.OrderRepository
 import org.luteh.ecommerce.presentation.core.ResultState
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class CheckoutViewModelTest {
@@ -71,7 +71,7 @@ class CheckoutViewModelTest {
         val product =
             ProductModel(
                 id = "1",
-                thumbnailImageUrl = "Img",
+                imageUrl = "Img",
                 name = "Test Product",
                 price = 100.0,
                 shopName = "Shop",
@@ -199,7 +199,7 @@ class CheckoutViewModelTest {
         val product =
             ProductModel(
                 id = "1",
-                thumbnailImageUrl = "Img",
+                imageUrl = "Img",
                 name = "Test Product",
                 price = 10.0,
                 shopName = "Shop",

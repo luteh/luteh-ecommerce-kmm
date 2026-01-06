@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.map
 import org.luteh.ecommerce.data.local.database.dao.CartDao
 import org.luteh.ecommerce.data.local.entity.CartEntity
 import org.luteh.ecommerce.domain.model.CartItemModel
+import org.luteh.ecommerce.domain.model.ProductImage
 import org.luteh.ecommerce.domain.model.ProductModel
 import org.luteh.ecommerce.domain.repository.CartRepository
 
@@ -16,12 +17,19 @@ class CartRepositoryImpl(private val cartDao: CartDao) : CartRepository {
                     product =
                         ProductModel(
                             id = entity.productId,
+                            image =
+                                ProductImage(
+                                    id = "cart_${entity.productId}",
+                                    thumbnailUrl = entity.imageUrl ?: "",
+                                    imageUrls = listOf(entity.imageUrl ?: ""),
+                                ),
                             name = entity.name,
                             price = entity.price,
-                            thumbnailImageUrl = entity.imageUrl ?: "",
-                            shopName = "", // Not stored in cart entity
-                            rating = 0.0, // Not stored
-                            ratingCount = 0, // Not stored
+                            shopName = "",
+                            rating = 0.0,
+                            ratingCount = 0,
+                            description = "",
+                            category = entity.category ?: "",
                         ),
                     quantity = entity.quantity,
                 )
@@ -38,8 +46,8 @@ class CartRepositoryImpl(private val cartDao: CartDao) : CartRepository {
                 name = product.name,
                 price = product.price,
                 quantity = quantity,
-                imageUrl = product.thumbnailImageUrl,
-                category = "", // Add category to ProductModel if needed or pass it
+                imageUrl = product.image.thumbnailUrl,
+                category = product.category,
             )
         )
     }

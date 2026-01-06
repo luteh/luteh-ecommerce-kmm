@@ -34,7 +34,7 @@ class OrderRepositoryImplTest {
                             id = "1",
                             name = "Product",
                             price = 10.0,
-                            thumbnailImageUrl = "url",
+                            imageUrl = "url",
                             shopName = "Shop",
                             rating = 5.0,
                             ratingCount = 10,

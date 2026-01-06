@@ -48,7 +48,7 @@ class CartRepositoryImplTest {
             assertEquals("1", item.product.id)
             assertEquals("Product 1", item.product.name)
             assertEquals(100.0, item.product.price)
-            assertEquals("image_url", item.product.thumbnailImageUrl)
+            assertEquals("image_url", item.product.imageUrl)
             assertEquals(2, item.quantity)
             awaitComplete()
         }
@@ -61,7 +61,7 @@ class CartRepositoryImplTest {
                 id = "1",
                 name = "Product 1",
                 price = 100.0,
-                thumbnailImageUrl = "image_url",
+                imageUrl = "image_url",
                 shopName = "Shop",
                 rating = 4.5,
                 ratingCount = 10,
@@ -90,7 +90,7 @@ class CartRepositoryImplTest {
                 id = "1",
                 name = "Product 1",
                 price = 100.0,
-                thumbnailImageUrl = "image_url",
+                imageUrl = "image_url",
                 shopName = "Shop",
                 rating = 4.5,
                 ratingCount = 10,

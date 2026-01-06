@@ -1,5 +1,8 @@
 package org.luteh.ecommerce.presentation.ui.product_list
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,10 +45,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import org.koin.compose.viewmodel.koinViewModel
-import org.luteh.ecommerce.domain.model.dummyProducts
+import org.luteh.ecommerce.domain.model.ProductModel
 import org.luteh.ecommerce.presentation.ui.common.ProductItem
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun ProductListScreen(
     onNavigateBack: () -> Unit,
@@ -53,10 +56,12 @@ fun ProductListScreen(
     onNavigateToCart: () -> Unit,
     onNavigateToLogin: () -> Unit,
     viewModel: ProductListViewModel = koinViewModel(),
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf<String?>(null) }
-    var products by remember { mutableStateOf(dummyProducts) }
+    var products by remember { mutableStateOf(ProductModel.dummies) }
     var isLoading by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -81,7 +86,7 @@ fun ProductListScreen(
                 if (lastIndex != null && lastIndex >= products.size - 2 && !isLoading) {
                     isLoading = true
                     delay(1000) // Simulate network delay
-                    products = products + dummyProducts // Append more dummy data
+                    products = products + ProductModel.dummies // Append more dummy data
                     isLoading = false
                 }
             }
@@ -158,10 +163,18 @@ fun ProductListScreen(
                 modifier = Modifier.fillMaxSize(),
             ) {
                 items(items = filteredProducts, key = { product -> product.id }) { product ->
-                    ProductItem(
-                        product = product,
-                        onClick = { onNavigateToProductDetail(product.id) },
-                    )
+                    with(sharedTransitionScope) {
+                        ProductItem(
+                            product = product,
+                            onClick = { onNavigateToProductDetail(product.id) },
+                            modifier =
+                                Modifier.sharedElement(
+                                    sharedContentState =
+                                        rememberSharedContentState(key = "image-${product.id}"),
+                                    animatedVisibilityScope = animatedVisibilityScope,
+                                ),
+                        )
+                    }
                 }
 
                 if (isLoading) {

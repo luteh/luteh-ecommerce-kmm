@@ -1,5 +1,7 @@
 package org.luteh.ecommerce
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
@@ -12,6 +14,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import androidx.navigation.toRoute
+import coil3.ImageLoader
+import coil3.compose.setSingletonImageLoaderFactory
+import coil3.network.ktor3.KtorNetworkFetcherFactory
+import coil3.request.crossfade
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.KoinApplication
 import org.koin.dsl.KoinAppDeclaration
@@ -32,6 +38,13 @@ import org.luteh.ecommerce.presentation.ui.transaction_detail.TransactionDetailS
 @Composable
 @Preview
 fun App(koinConfig: KoinAppDeclaration? = null) {
+    setSingletonImageLoaderFactory { context ->
+        ImageLoader.Builder(context)
+            .components { add(KtorNetworkFetcherFactory()) }
+            .crossfade(true)
+            .build()
+    }
+
     KoinApplication(
         application = {
             modules(appModule())
@@ -41,120 +54,139 @@ fun App(koinConfig: KoinAppDeclaration? = null) {
         LutehTheme {
             val navigator = rememberNavController()
 
-            Box(modifier = Modifier.fillMaxSize()) {
-                NavHost(
-                    navController = navigator,
-                    startDestination = AppNavigation.Splash,
-                    modifier = Modifier.fillMaxSize(),
-                    enterTransition = {
-                        slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(300))
-                    },
-                    exitTransition = {
-                        slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(300))
-                    },
-                    popEnterTransition = {
-                        slideInHorizontally(initialOffsetX = { -it }, animationSpec = tween(300))
-                    },
-                    popExitTransition = {
-                        slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(300))
-                    },
-                ) {
-                    composable<AppNavigation.Splash> {
-                        SplashScreen(
-                            onNavigateToHome = {
-                                navigator.navigate(
-                                    AppNavigation.Home,
-                                    navOptions {
-                                        popUpTo(AppNavigation.Splash) { inclusive = true }
-                                        launchSingleTop = true
-                                    },
-                                )
-                            }
-                        )
-                    }
-                    composable<AppNavigation.Login> {
-                        LoginScreen(
-                            onNavigateToMainScreen = {
-                                navigator.navigate(
-                                    AppNavigation.Home,
-                                    navOptions {
-                                        popUpTo(AppNavigation.Login) { inclusive = true }
-                                        launchSingleTop = true
-                                    },
-                                )
-                            },
-                            onNavigateToRegisterScreen = {
-                                navigator.navigate(AppNavigation.Register)
-                            },
-                            onNavigateBack = { navigator.popBackStack() },
-                        )
-                    }
-                    composable<AppNavigation.Register> {
-                        RegisterScreen(onNavigateBack = { navigator.popBackStack() })
-                    }
-                    composable<AppNavigation.Home> {
-                        HomeScreen(
-                            onNavigateToLogin = { navigator.navigate(AppNavigation.Login) },
-                            onNavigateToProfile = { navigator.navigate(AppNavigation.Profile) },
-                            onNavigateToProductList = {
-                                navigator.navigate(AppNavigation.ProductList)
-                            },
-                            onNavigateToProductDetail = { productId ->
-                                navigator.navigate(AppNavigation.ProductDetail(productId))
-                            },
-                            onNavigateToCart = { navigator.navigate(AppNavigation.Cart) },
-                        )
-                    }
-                    composable<AppNavigation.Profile> {
-                        ProfileScreen(onNavigateBack = { navigator.popBackStack() })
-                    }
-                    composable<AppNavigation.ProductList> {
-                        ProductListScreen(
-                            onNavigateBack = { navigator.popBackStack() },
-                            onNavigateToProductDetail = { productId ->
-                                navigator.navigate(AppNavigation.ProductDetail(productId))
-                            },
-                            onNavigateToCart = { navigator.navigate(AppNavigation.Cart) },
-                            onNavigateToLogin = { navigator.navigate(AppNavigation.Login) },
-                        )
-                    }
-                    composable<AppNavigation.Cart> {
-                        CartScreen(
-                            onNavigateBack = { navigator.popBackStack() },
-                            onNavigateToCheckout = { navigator.navigate(AppNavigation.Checkout) },
-                        )
-                    }
-                    composable<AppNavigation.ProductDetail> { backStackEntry ->
-                        val args = backStackEntry.toRoute<AppNavigation.ProductDetail>()
-                        ProductDetailScreen(
-                            productId = args.productId,
-                            onNavigateBack = { navigator.popBackStack() },
-                            onNavigateToCart = { navigator.navigate(AppNavigation.Cart) },
-                            onNavigateToLogin = { navigator.navigate(AppNavigation.Login) },
-                        )
-                    }
-                    composable<AppNavigation.Checkout> {
-                        CheckoutScreen(
-                            onNavigateBack = { navigator.popBackStack() },
-                            onNavigateToTransactionDetail = { isSuccess, message ->
-                                navigator.navigate(
-                                    AppNavigation.TransactionDetail(isSuccess, message),
-                                    navOptions { popUpTo(AppNavigation.Home) { inclusive = false } },
-                                )
-                            },
-                        )
-                    }
-                    composable<AppNavigation.TransactionDetail> { backStackEntry ->
-                        val args = backStackEntry.toRoute<AppNavigation.TransactionDetail>()
-                        TransactionDetailScreen(
-                            isSuccess = args.isSuccess,
-                            message = args.message,
-                            onNavigateToHome = {
-                                navigator.navigate(AppNavigation.Home) {
-                                    popUpTo(AppNavigation.Home) { inclusive = true }
+            @OptIn(ExperimentalSharedTransitionApi::class)
+            SharedTransitionLayout {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    NavHost(
+                        navController = navigator,
+                        startDestination = AppNavigation.Splash,
+                        modifier = Modifier.fillMaxSize(),
+                        enterTransition = {
+                            slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(300))
+                        },
+                        exitTransition = {
+                            slideOutHorizontally(
+                                targetOffsetX = { -it },
+                                animationSpec = tween(300),
+                            )
+                        },
+                        popEnterTransition = {
+                            slideInHorizontally(
+                                initialOffsetX = { -it },
+                                animationSpec = tween(300),
+                            )
+                        },
+                        popExitTransition = {
+                            slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(300))
+                        },
+                    ) {
+                        composable<AppNavigation.Splash> {
+                            SplashScreen(
+                                onNavigateToHome = {
+                                    navigator.navigate(
+                                        AppNavigation.Home,
+                                        navOptions {
+                                            popUpTo(AppNavigation.Splash) { inclusive = true }
+                                            launchSingleTop = true
+                                        },
+                                    )
                                 }
-                            },
-                        )
+                            )
+                        }
+                        composable<AppNavigation.Login> {
+                            LoginScreen(
+                                onNavigateToMainScreen = {
+                                    navigator.navigate(
+                                        AppNavigation.Home,
+                                        navOptions {
+                                            popUpTo(AppNavigation.Login) { inclusive = true }
+                                            launchSingleTop = true
+                                        },
+                                    )
+                                },
+                                onNavigateToRegisterScreen = {
+                                    navigator.navigate(AppNavigation.Register)
+                                },
+                                onNavigateBack = { navigator.popBackStack() },
+                            )
+                        }
+                        composable<AppNavigation.Register> {
+                            RegisterScreen(onNavigateBack = { navigator.popBackStack() })
+                        }
+                        composable<AppNavigation.Home> {
+                            HomeScreen(
+                                onNavigateToLogin = { navigator.navigate(AppNavigation.Login) },
+                                onNavigateToProfile = { navigator.navigate(AppNavigation.Profile) },
+                                onNavigateToProductList = {
+                                    navigator.navigate(AppNavigation.ProductList)
+                                },
+                                onNavigateToProductDetail = { productId ->
+                                    navigator.navigate(AppNavigation.ProductDetail(productId))
+                                },
+                                onNavigateToCart = { navigator.navigate(AppNavigation.Cart) },
+                                sharedTransitionScope = this@SharedTransitionLayout,
+                                animatedVisibilityScope = this@composable,
+                            )
+                        }
+                        composable<AppNavigation.Profile> {
+                            ProfileScreen(onNavigateBack = { navigator.popBackStack() })
+                        }
+                        composable<AppNavigation.ProductList> {
+                            ProductListScreen(
+                                onNavigateBack = { navigator.popBackStack() },
+                                onNavigateToProductDetail = { productId ->
+                                    navigator.navigate(AppNavigation.ProductDetail(productId))
+                                },
+                                onNavigateToCart = { navigator.navigate(AppNavigation.Cart) },
+                                onNavigateToLogin = { navigator.navigate(AppNavigation.Login) },
+                                sharedTransitionScope = this@SharedTransitionLayout,
+                                animatedVisibilityScope = this@composable,
+                            )
+                        }
+                        composable<AppNavigation.Cart> {
+                            CartScreen(
+                                onNavigateBack = { navigator.popBackStack() },
+                                onNavigateToCheckout = {
+                                    navigator.navigate(AppNavigation.Checkout)
+                                },
+                            )
+                        }
+                        composable<AppNavigation.ProductDetail> { backStackEntry ->
+                            val args = backStackEntry.toRoute<AppNavigation.ProductDetail>()
+                            ProductDetailScreen(
+                                productId = args.productId,
+                                onNavigateBack = { navigator.popBackStack() },
+                                onNavigateToCart = { navigator.navigate(AppNavigation.Cart) },
+                                onNavigateToLogin = { navigator.navigate(AppNavigation.Login) },
+                                sharedTransitionScope = this@SharedTransitionLayout,
+                                animatedVisibilityScope = this@composable,
+                            )
+                        }
+                        composable<AppNavigation.Checkout> {
+                            CheckoutScreen(
+                                onNavigateBack = { navigator.popBackStack() },
+                                onNavigateToTransactionDetail = { isSuccess, message ->
+                                    navigator.navigate(
+                                        AppNavigation.TransactionDetail(isSuccess, message),
+                                        navOptions {
+                                            popUpTo(AppNavigation.Home) { inclusive = false }
+                                        },
+                                    )
+                                },
+                            )
+                        }
+                        composable<AppNavigation.TransactionDetail> { backStackEntry ->
+                            val args = backStackEntry.toRoute<AppNavigation.TransactionDetail>()
+                            TransactionDetailScreen(
+                                isSuccess = args.isSuccess,
+                                message = args.message,
+                                onNavigateToHome = {
+                                    navigator.navigate(AppNavigation.Home) {
+                                        popUpTo(AppNavigation.Home) { inclusive = true }
+                                    }
+                                },
+                            )
+                        }
                     }
                 }
             }

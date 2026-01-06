@@ -1,5 +1,8 @@
 package org.luteh.ecommerce.presentation.ui.home
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -58,9 +61,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.koin.compose.viewmodel.koinViewModel
 import org.luteh.ecommerce.domain.model.Category
-import org.luteh.ecommerce.domain.model.dummyProducts
+import org.luteh.ecommerce.domain.model.ProductModel
 import org.luteh.ecommerce.presentation.ui.common.ProductItem
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = koinViewModel(),
@@ -69,6 +73,8 @@ fun HomeScreen(
     onNavigateToProductList: () -> Unit,
     onNavigateToProductDetail: (String) -> Unit,
     onNavigateToCart: () -> Unit,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
 ) {
     val state by viewModel.state.collectAsState()
 
@@ -79,9 +85,12 @@ fun HomeScreen(
         onNavigateToProductList = onNavigateToProductList,
         onNavigateToProductDetail = onNavigateToProductDetail,
         onNavigateToCart = onNavigateToCart,
+        sharedTransitionScope = sharedTransitionScope,
+        animatedVisibilityScope = animatedVisibilityScope,
     )
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun HomeScreenContent(
     isLoggedIn: Boolean,
@@ -90,6 +99,8 @@ fun HomeScreenContent(
     onNavigateToProductList: () -> Unit,
     onNavigateToProductDetail: (String) -> Unit,
     onNavigateToCart: () -> Unit,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
 ) {
     Scaffold(
         topBar = {
@@ -111,15 +122,20 @@ fun HomeScreenContent(
             modifier = Modifier.padding(paddingValues),
             onNavigateToProductList = onNavigateToProductList,
             onNavigateToProductDetail = onNavigateToProductDetail,
+            sharedTransitionScope = sharedTransitionScope,
+            animatedVisibilityScope = animatedVisibilityScope,
         )
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun HomeContent(
     modifier: Modifier = Modifier,
     onNavigateToProductList: () -> Unit,
     onNavigateToProductDetail: (String) -> Unit,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -138,8 +154,19 @@ fun HomeContent(
             SectionHeader(title = "Popular Products", onSeeAllClick = onNavigateToProductList)
         }
 
-        items(dummyProducts.take(6)) { product ->
-            ProductItem(product = product, onClick = { onNavigateToProductDetail(product.id) })
+        items(ProductModel.dummies.take(6)) { product ->
+            with(sharedTransitionScope) {
+                ProductItem(
+                    product = product,
+                    onClick = { onNavigateToProductDetail(product.id) },
+                    modifier =
+                        Modifier.sharedElement(
+                            sharedContentState =
+                                rememberSharedContentState(key = "image-${product.id}"),
+                            animatedVisibilityScope = animatedVisibilityScope,
+                        ),
+                )
+            }
         }
     }
 }
