@@ -28,6 +28,7 @@ import org.luteh.ecommerce.presentation.ui.cart.CartScreen
 import org.luteh.ecommerce.presentation.ui.checkout.CheckoutScreen
 import org.luteh.ecommerce.presentation.ui.home.HomeScreen
 import org.luteh.ecommerce.presentation.ui.login.LoginScreen
+import org.luteh.ecommerce.presentation.ui.main.MainScreen
 import org.luteh.ecommerce.presentation.ui.product_detail.ProductDetailScreen
 import org.luteh.ecommerce.presentation.ui.product_list.ProductListScreen
 import org.luteh.ecommerce.presentation.ui.profile.ProfileScreen
@@ -84,7 +85,7 @@ fun App(koinConfig: KoinAppDeclaration? = null) {
                             SplashScreen(
                                 onNavigateToHome = {
                                     navigator.navigate(
-                                        AppNavigation.Home,
+                                        AppNavigation.Main,
                                         navOptions {
                                             popUpTo(AppNavigation.Splash) { inclusive = true }
                                             launchSingleTop = true
@@ -97,7 +98,7 @@ fun App(koinConfig: KoinAppDeclaration? = null) {
                             LoginScreen(
                                 onNavigateToMainScreen = {
                                     navigator.navigate(
-                                        AppNavigation.Home,
+                                        AppNavigation.Main,
                                         navOptions {
                                             popUpTo(AppNavigation.Login) { inclusive = true }
                                             launchSingleTop = true
@@ -112,6 +113,21 @@ fun App(koinConfig: KoinAppDeclaration? = null) {
                         }
                         composable<AppNavigation.Register> {
                             RegisterScreen(onNavigateBack = { navigator.popBackStack() })
+                        }
+                        composable<AppNavigation.Main> {
+                            MainScreen(
+                                isLoggedIn = true,
+                                onNavigateToLogin = { navigator.navigate(AppNavigation.Login) },
+                                onNavigateToProductList = {
+                                    navigator.navigate(AppNavigation.ProductList)
+                                },
+                                onNavigateToProductDetail = { productId ->
+                                    navigator.navigate(AppNavigation.ProductDetail(productId))
+                                },
+                                onNavigateToCart = { navigator.navigate(AppNavigation.Cart) },
+                                sharedTransitionScope = this@SharedTransitionLayout,
+                                animatedVisibilityScope = this@composable,
+                            )
                         }
                         composable<AppNavigation.Home> {
                             HomeScreen(
@@ -169,7 +185,7 @@ fun App(koinConfig: KoinAppDeclaration? = null) {
                                     navigator.navigate(
                                         AppNavigation.TransactionDetail(isSuccess, message),
                                         navOptions {
-                                            popUpTo(AppNavigation.Home) { inclusive = false }
+                                            popUpTo(AppNavigation.Main) { inclusive = false }
                                         },
                                     )
                                 },
@@ -181,8 +197,8 @@ fun App(koinConfig: KoinAppDeclaration? = null) {
                                 isSuccess = args.isSuccess,
                                 message = args.message,
                                 onNavigateToHome = {
-                                    navigator.navigate(AppNavigation.Home) {
-                                        popUpTo(AppNavigation.Home) { inclusive = true }
+                                    navigator.navigate(AppNavigation.Main) {
+                                        popUpTo(AppNavigation.Main) { inclusive = true }
                                     }
                                 },
                             )

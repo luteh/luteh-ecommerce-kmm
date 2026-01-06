@@ -10,6 +10,8 @@ sealed interface AppNavigation {
 
     @Serializable data object Register : AppNavigation
 
+    @Serializable data object Main : AppNavigation
+
     @Serializable data object Home : AppNavigation
 
     @Serializable data object ProductList : AppNavigation

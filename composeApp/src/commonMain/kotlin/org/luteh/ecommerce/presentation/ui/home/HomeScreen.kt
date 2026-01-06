@@ -108,8 +108,10 @@ fun HomeScreenContent(
     onNavigateToCart: () -> Unit,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
+    modifier: Modifier = Modifier,
 ) {
     Scaffold(
+        modifier = modifier,
         topBar = {
             HomeTopBar(
                 isLoggedIn = isLoggedIn,
@@ -123,7 +125,7 @@ fun HomeScreenContent(
                     }
                 },
             )
-        }
+        },
     ) { paddingValues ->
         HomeContent(
             modifier = Modifier.padding(paddingValues),
