@@ -22,7 +22,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Remove
-import androidx.compose.material.icons.rounded.Checkroom
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -48,9 +47,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import coil3.compose.SubcomposeAsyncImage
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 import org.luteh.ecommerce.domain.model.CartItemModel
@@ -195,20 +196,39 @@ fun CartItemCard(
             modifier = Modifier.padding(12.dp).fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Box(
-                modifier =
-                    Modifier.size(80.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(MaterialTheme.colorScheme.secondaryContainer),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(
-                    imageVector = Icons.Rounded.Checkroom,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSecondaryContainer,
-                    modifier = Modifier.size(40.dp),
-                )
-            }
+            SubcomposeAsyncImage(
+                model = item.product.image.thumbnailUrl,
+                contentDescription = item.product.name,
+                modifier = Modifier.size(80.dp).clip(RoundedCornerShape(12.dp)),
+                contentScale = ContentScale.Crop,
+                loading = {
+                    Box(
+                        modifier =
+                            Modifier.fillMaxSize()
+                                .background(MaterialTheme.colorScheme.secondaryContainer),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+                    }
+                },
+                error = {
+                    Box(
+                        modifier =
+                            Modifier.fillMaxSize()
+                                .background(MaterialTheme.colorScheme.surfaceVariant),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(
+                            text = "N/A",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                },
+            )
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
