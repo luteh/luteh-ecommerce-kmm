@@ -10,7 +10,8 @@ import org.luteh.ecommerce.data.local.entity.CartEntity
 
 @Dao
 interface CartDao {
-    @Query("SELECT * FROM cart_items") fun getAllCartItems(): Flow<List<CartEntity>>
+    @Query("SELECT * FROM cart_items ORDER BY productId")
+    fun getAllCartItems(): Flow<List<CartEntity>>
 
     @Query("SELECT * FROM cart_items WHERE productId = :productId")
     suspend fun getCartItemById(productId: String): CartEntity?
